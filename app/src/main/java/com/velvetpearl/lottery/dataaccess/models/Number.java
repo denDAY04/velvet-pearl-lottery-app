@@ -10,7 +10,6 @@ import io.realm.annotations.Required;
 public class Number extends RealmObject {
     @PrimaryKey
     private int numberId;
-    @Required
     private int lotteryNumber;
 
     public int getLotteryNumber() {

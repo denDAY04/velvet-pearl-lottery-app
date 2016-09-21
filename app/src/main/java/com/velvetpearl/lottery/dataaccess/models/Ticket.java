@@ -15,7 +15,6 @@ public class Ticket extends RealmObject {
     private int ticketId;
     @Required
     private String owner;
-    @Required
     private RealmList<Number> numbers;
 
 

@@ -3,7 +3,9 @@ package com.velvetpearl.lottery.dataaccess.models;
 import java.util.ArrayList;
 import java.util.Date;
 
+import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.RealmModel;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
@@ -11,16 +13,11 @@ import io.realm.annotations.Required;
 /**
  * Created by Andreas "denDAY" Stensig on 20-Sep-16.
  */
-public class Lottery extends RealmObject {
-    @PrimaryKey
-    private int lotteryId;
+public class Lottery /*extends Entity*/ implements RealmModel {
     @Required
     private Date created;
-    @Required
     private double pricePerLotteryNum;
-    @Required
     private int lotteryNumLowerBound;
-    @Required
     private int lotteryNumUpperBound;
 
     private RealmList<Prize> prizes;
@@ -83,7 +80,15 @@ public class Lottery extends RealmObject {
         this.numbers = numbers;
     }
 
-    public int getLotteryId() {
-        return lotteryId;
+    @PrimaryKey
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(Realm realmDb) {
+        java.lang.Number currMaxId = realmDb.where(Lottery.class).max("id");
+        id = currMaxId == null ? 1 : currMaxId.intValue() + 1;
     }
 }

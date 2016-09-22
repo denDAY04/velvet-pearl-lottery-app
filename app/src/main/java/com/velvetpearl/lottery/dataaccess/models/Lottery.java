@@ -24,8 +24,8 @@ public class Lottery {
     }
 
     public void setId(long id) {
-        if (id < 1)
-            throw new InvalidParameterException("Object ID may not be less than 1.");
+        if (id < 0)
+            throw new InvalidParameterException("Object ID may not be less than 0.");
         this.id = id;
     }
 

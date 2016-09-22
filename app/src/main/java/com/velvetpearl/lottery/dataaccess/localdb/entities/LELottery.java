@@ -1,31 +1,38 @@
-package com.velvetpearl.lottery.dataaccess.models;
+package com.velvetpearl.lottery.dataaccess.localdb.entities;
 
-import java.security.InvalidParameterException;
-import java.util.ArrayList;
+import com.velvetpearl.lottery.dataaccess.models.Number;
+import com.velvetpearl.lottery.dataaccess.models.Prize;
+import com.velvetpearl.lottery.dataaccess.models.Ticket;
+
 import java.util.Date;
 
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
 
 /**
- * Created by Andreas "denDAY" Stensig on 20-Sep-16.
+ * LocalDb Entity Lottery.
+ * Created by Andreas "denDAY" Stensig on 22-09-2016.
  */
-public class Lottery {
+public class LELottery extends RealmObject {
+    @PrimaryKey
     private long id;
+    @Required
     private Date created;
     private double pricePerLotteryNum;
     private int lotteryNumLowerBound;
     private int lotteryNumUpperBound;
 
-    private ArrayList<Prize> prizes;
-    private ArrayList<Ticket> tickets;
-    private ArrayList<Number> numbers;
+    private RealmList<Prize> prizes;
+    private RealmList<Ticket> tickets;
+    private RealmList<Number> numbers;
 
     public long getId() {
         return id;
     }
 
     public void setId(long id) {
-        if (id < 1)
-            throw new InvalidParameterException("Object ID may not be less than 1.");
         this.id = id;
     }
 
@@ -34,7 +41,7 @@ public class Lottery {
     }
 
     public void setCreated(Date created) {
-        this.created = created == null ? new Date() : created;
+        this.created = created;
     }
 
     public double getPricePerLotteryNum() {
@@ -50,8 +57,6 @@ public class Lottery {
     }
 
     public void setLotteryNumLowerBound(int lotteryNumLowerBound) {
-        if (lotteryNumLowerBound < 1)
-            throw new InvalidParameterException("Lower number boundary must be ");
         this.lotteryNumLowerBound = lotteryNumLowerBound;
     }
 
@@ -63,27 +68,28 @@ public class Lottery {
         this.lotteryNumUpperBound = lotteryNumUpperBound;
     }
 
-    public ArrayList<Prize> getPrizes() {
+    public RealmList<Prize> getPrizes() {
         return prizes;
     }
 
-    public void setPrizes(ArrayList<Prize> prizes) {
+    public void setPrizes(RealmList<Prize> prizes) {
         this.prizes = prizes;
     }
 
-    public ArrayList<Ticket> getTickets() {
+    public RealmList<Ticket> getTickets() {
         return tickets;
     }
 
-    public void setTickets(ArrayList<Ticket> tickets) {
+    public void setTickets(RealmList<Ticket> tickets) {
         this.tickets = tickets;
     }
 
-    public ArrayList<Number> getNumbers() {
+    public RealmList<Number> getNumbers() {
         return numbers;
     }
 
-    public void setNumbers(ArrayList<Number> numbers) {
+    public void setNumbers(RealmList<Number> numbers) {
         this.numbers = numbers;
     }
 }
+

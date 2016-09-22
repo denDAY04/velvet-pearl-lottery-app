@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1073991368983",
+    "firebase_url": "https://velvet-pearl-lottery.firebaseio.com",
+    "project_id": "velvet-pearl-lottery",
+    "storage_bucket": "velvet-pearl-lottery.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1073991368983:android:339310c7cf0955eb",
+        "android_client_info": {
+          "package_name": "com.velvetpearl.lottery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1073991368983-3hccd9n23p9kav3js3k78dardn3bcpal.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKdeTwB_z63N-TAH1ymGVj7h-KGtCqcUs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

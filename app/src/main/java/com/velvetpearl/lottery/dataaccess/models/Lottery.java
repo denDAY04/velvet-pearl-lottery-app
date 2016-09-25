@@ -9,8 +9,8 @@ import java.util.Date;
  * Created by Andreas "denDAY" Stensig on 20-Sep-16.
  */
 public class Lottery {
-    private long id;
-    private Date created;
+    private String id;
+    private long created;   /* In Unix time. */
     private double pricePerLotteryNum;
     private int lotteryNumLowerBound;
     private int lotteryNumUpperBound;
@@ -19,22 +19,20 @@ public class Lottery {
     private ArrayList<Ticket> tickets;
     private ArrayList<Number> numbers;
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
-        if (id < 0)
-            throw new InvalidParameterException("Object ID may not be less than 0.");
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Date getCreated() {
+    public long getCreated() {
         return created;
     }
 
-    public void setCreated(Date created) {
-        this.created = created == null ? new Date() : created;
+    public void setCreated(long created) {
+        this.created = created;
     }
 
     public double getPricePerLotteryNum() {

@@ -9,7 +9,7 @@ import java.util.Date;
  * Created by Andreas "denDAY" Stensig on 20-Sep-16.
  */
 public class Lottery {
-    private String id;
+    private Object id;
     private long created;   /* In Unix time. */
     private double pricePerLotteryNum;
     private int lotteryNumLowerBound;
@@ -19,11 +19,11 @@ public class Lottery {
     private ArrayList<Ticket> tickets;
     private ArrayList<Number> numbers;
 
-    public String getId() {
+    public Object getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Object id) {
         this.id = id;
     }
 

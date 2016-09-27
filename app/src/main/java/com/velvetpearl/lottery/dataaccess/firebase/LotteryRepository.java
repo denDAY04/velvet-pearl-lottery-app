@@ -12,12 +12,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.velvetpearl.lottery.R;
 import com.velvetpearl.lottery.dataaccess.ILotteryRepository;
 import com.velvetpearl.lottery.dataaccess.firebase.scheme.LotteriesScheme;
 import com.velvetpearl.lottery.dataaccess.models.Lottery;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by Stensig on 22-Sep-16.
@@ -25,59 +28,32 @@ import java.util.HashMap;
 public class LotteryRepository implements ILotteryRepository {
 
     private static final String LOG_TAG = "LotteryRepository";
+    private static final long LOCK_TIMEOUT_MS = 10000;
 
     private final FirebaseAuth dbAuth;
     private FirebaseDatabase dbContext = null;
     private ArrayList<Lottery> lotteries = null;
     private Object lock = new Object();
+    private boolean unlockedByNotify = false;
+
 
     public LotteryRepository() {
         dbAuth = FirebaseAuth.getInstance();
-
-        /*dbAuth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (!task.isSuccessful()) {
-                    Log.w(LOG_TAG, "signInAnonymously", task.getException());
-                    Log.d(LOG_TAG, "firebase authentication failed");
-                } else {
-                    dbContext = FirebaseDatabase.getInstance();
-                    //loadLotteryData();
-                }
-            }
-        });*/
-        final Task<AuthResult> authenticationTask = dbAuth.signInAnonymously();
-        synchronized (authenticationTask) {
-            authenticationTask.addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    authenticationTask.notify();
-                }
-            });
-
-            try {
-                authenticationTask.wait();
-            } catch (InterruptedException e) {
-            }
-        }
-        dbContext = FirebaseDatabase.getInstance();
-        Log.d(LOG_TAG, "done");
     }
 
     @Override
-    public Lottery getLottery(long id) {
+    public Lottery getLottery(Object id) throws TimeoutException {
+        authenticate();
+        // TODO
+
+        verifyAsyncTask();
+
         return null;
     }
 
     @Override
-    public ArrayList<Lottery> getAllLotteries() {
-        while (dbContext == null) {
-            try {
-                lock.wait(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+    public ArrayList<Lottery> getAllLotteries() throws TimeoutException {
+        authenticate();
 
         dbContext.getReference(LotteriesScheme.LABEL).addValueEventListener(new ValueEventListener() {
             @Override
@@ -85,14 +61,13 @@ public class LotteryRepository implements ILotteryRepository {
                 synchronized (lock) {
                     lotteries = new ArrayList<>();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        Log.d(LOG_TAG, "getAllLotteries: child read with id " + snapshot.getKey());
                         Lottery entry = snapshot.getValue(Lottery.class);
                         entry.setId(snapshot.getKey());
                         lotteries.add(entry);
                     }
+                    unlockedByNotify = true;
                     lock.notify();
                 }
-
             }
 
             @Override
@@ -100,30 +75,30 @@ public class LotteryRepository implements ILotteryRepository {
                 Log.w(LOG_TAG, "getAllLotteries: data read canceled", databaseError.toException());
             }
         });
-        return lotteries;
 
-        /*
         synchronized (lock) {
-            loadLotteryData();
-            while (lotteries == null) {
-                try {
-                    lock.wait(10);
-                } catch (InterruptedException e) {
-                }
+            try {
+                unlockedByNotify = false;
+                lock.wait(LOCK_TIMEOUT_MS);
+            } catch (InterruptedException e) {
+                Log.w(LOG_TAG, "getAllLotteries: wait on data-fetch interrupted", e);
             }
         }
+        verifyAsyncTask();
+
         return lotteries;
-        */
     }
 
     @Override
-    public Lottery saveLottery(Lottery lottery) {
-        DatabaseReference dbObjRef = null;
+    public Lottery saveLottery(Lottery lottery) throws TimeoutException {
         if (lottery == null)
             return null;
-        else if (lottery.getId() != null && !lottery.getId().isEmpty()) {
+
+        authenticate();
+        DatabaseReference dbObjRef = null;
+        if (lottery.getId() != null && !((String)lottery.getId()).isEmpty()) {
             Log.d(LOG_TAG, "saveLottery: updating existing lottery with ID " + lottery.getId());
-            dbObjRef = dbContext.getReference(LotteriesScheme.LABEL).child(lottery.getId());
+            dbObjRef = dbContext.getReference(LotteriesScheme.LABEL).child((String)lottery.getId());
         } else {
             Log.d(LOG_TAG, "saveLottery: saving new lottery");
             dbObjRef = dbContext.getReference(LotteriesScheme.LABEL).push();
@@ -132,37 +107,83 @@ public class LotteryRepository implements ILotteryRepository {
             lottery.setId(dbObjRef.getKey());
         }
 
+        // TODO: save other entities from lottery
+
         HashMap<String, Object> objMap = new HashMap<>();
         objMap.put(LotteriesScheme.Children.CREATED,lottery.getCreated());
         objMap.put(LotteriesScheme.Children.PRICE_PER_LOTTERY_NUM, lottery.getPricePerLotteryNum());
         objMap.put(LotteriesScheme.Children.LOTTERY_NUM_LOWER_BOUND, lottery.getLotteryNumLowerBound());
         objMap.put(LotteriesScheme.Children.LOTTERY_NUM_UPPER_BOUND, lottery.getLotteryNumUpperBound());
-        dbObjRef.setValue(objMap);
+        dbObjRef.setValue(objMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                synchronized (lock) {
+                    unlockedByNotify = true;
+                    lock.notify();
+                }
+            }
+        });
+
+        synchronized (lock) {
+            try {
+                unlockedByNotify = false;
+                lock.wait(LOCK_TIMEOUT_MS);
+            } catch (InterruptedException e) {
+                Log.d(LOG_TAG, "saveLottery: waiting on save action interrupted");
+            }
+        }
+        verifyAsyncTask();
 
         return lottery;
     }
 
-    private void loadLotteryData() {
-        dbContext.getReference(LotteriesScheme.LABEL).addValueEventListener(new ValueEventListener() {
+    /**
+     * Authenticate access to the Firebase database.
+     * NOTE that this call locks the active thread until the authorization either succeeds or fails.
+     * @throws TimeoutException if the authentication task didn't complete in time.
+     */
+    private void authenticate() throws TimeoutException {
+        if (dbContext != null)
+            return;
+
+        dbAuth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onComplete(@NonNull Task<AuthResult> task) {
                 synchronized (lock) {
-                    lotteries = new ArrayList<>();
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        Log.d(LOG_TAG, "getAllLotteries: child read with id " + snapshot.getKey());
-                        Lottery entry = snapshot.getValue(Lottery.class);
-                        entry.setId(snapshot.getKey());
-                        lotteries.add(entry);
+                    if (!task.isSuccessful()) {
+                        Log.w(LOG_TAG, "authenticate", task.getException());
+                        Log.d(LOG_TAG, "authenticate:signInAnonymously: Firebase authentication failed");
+                    } else {
+                        Log.d(LOG_TAG, "authenticate:signInAnonymously: Firebase authentication succeeded");
+                        dbContext = FirebaseDatabase.getInstance();
                     }
+                    unlockedByNotify = true;
                     lock.notify();
                 }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(LOG_TAG, "getAllLotteries: data read canceled", databaseError.toException());
             }
         });
+
+        synchronized (lock) {
+            while (dbContext == null) {
+                try {
+                    unlockedByNotify = false;
+                    lock.wait(LOCK_TIMEOUT_MS);
+                } catch (InterruptedException e) {
+                    Log.d(LOG_TAG, "authenticate: waiting on authentication interrupted");
+                }
+            }
+        }
+        verifyAsyncTask();
     }
+
+    /**
+     * Verify whether the last async task was completed successfully, as determined by an internal
+     * flag. If not, a timeout exception is thrown to indicate the event.
+     * @throws TimeoutException if the flag was not set.
+     */
+    private void verifyAsyncTask() throws TimeoutException {
+        if (!unlockedByNotify)
+            throw new TimeoutException();
+    }
+
 }

@@ -1,17 +1,16 @@
-package com.velvetpearl.lottery.dataaccess;
+package com.velvetPearl.lottery.dataAccess;
 
-import com.velvetpearl.lottery.dataaccess.models.Lottery;
+import com.velvetPearl.lottery.dataAccess.models.Lottery;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
 /**
  * Interface for read and write operations on the Lottery entities in the data service.
- * <br/><br/>
+ * <p>
  * BE AWARE that all calls through this interface are expected to block the calling thread whenever
  * it accesses the data service. The UI thread should only use this interface asynchronously.
- * <br/><br/>
- * Created by Andras "denDAY" Stensig on 20-Sep-16.
+ * <p/>
  */
 public interface ILotteryRepository {
 

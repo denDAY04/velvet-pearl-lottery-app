@@ -1,4 +1,4 @@
-package com.velvetpearl.lottery;
+package com.velvetPearl.lottery;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

@@ -1,4 +1,4 @@
-package com.velvetpearl.lottery.dataaccess.firebase;
+package com.velvetPearl.lottery.dataAccess.firebase;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -12,12 +12,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.velvetpearl.lottery.R;
-import com.velvetpearl.lottery.dataaccess.ILotteryRepository;
-import com.velvetpearl.lottery.dataaccess.firebase.scheme.LotteriesScheme;
-import com.velvetpearl.lottery.dataaccess.models.Lottery;
+import com.velvetPearl.lottery.dataAccess.ILotteryRepository;
+import com.velvetPearl.lottery.dataAccess.firebase.scheme.LotteriesScheme;
+import com.velvetPearl.lottery.dataAccess.models.Lottery;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeoutException;

@@ -1,8 +1,7 @@
-package com.velvetpearl.lottery.dataaccess.models;
+package com.velvetPearl.lottery.dataAccess.models;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
-import java.util.Date;
 
 
 /**

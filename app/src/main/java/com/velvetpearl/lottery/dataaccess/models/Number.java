@@ -1,8 +1,7 @@
-package com.velvetpearl.lottery.dataaccess.models;
+package com.velvetPearl.lottery.dataAccess.models;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import io.realm.annotations.Required;
 
 /**
  * Created by Andreas "denDAY" Stensig on 20-Sep-16.

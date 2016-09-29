@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Velvet Pearl Lotteriet</string>
+    <string name="home_new_lottery">Nyt Lotteri</string>
+    <string name="home_history">Lotteri Historik</string>
+</resources>

@@ -1,4 +1,4 @@
-package com.velvetpearl.lottery.dataaccess.firebase.scheme;
+package com.velvetPearl.lottery.dataAccess.firebase.scheme;
 
 /**
  * Created by Stensig on 25-Sep-16.

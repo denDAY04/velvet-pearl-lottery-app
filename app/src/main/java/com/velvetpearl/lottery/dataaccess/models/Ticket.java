@@ -1,6 +1,4 @@
-package com.velvetpearl.lottery.dataaccess.models;
-
-import java.util.ArrayList;
+package com.velvetPearl.lottery.dataAccess.models;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;

@@ -1,4 +1,4 @@
-package com.velvetPearl.lottery;
+package com.velvetPearl.lottery.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.velvetPearl.lottery.R;
 
 
 public class Home extends Fragment {
@@ -27,6 +28,7 @@ public class Home extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(LOG_TAG, "onClick: history");
+                getFragmentManager().beginTransaction().replace(R.id.main_fragment, new History()).addToBackStack(null).commit();
             }
         });
 

@@ -3,4 +3,11 @@
     <string name="app_name">Velvet Pearl Lotteriet</string>
     <string name="home_new_lottery">Nyt Lotteri</string>
     <string name="home_history">Lotteri Historik</string>
+    <string name="history_loading_history">Henter historik</string>
+    <string name="history_no_lotteries">Ingen lotterier</string>
+    <string name="history_error_loading_history">Kunne ikke hente historikken. Har du internet adgang?</string>
+    <string name="error">Fejl</string>
+    <string name="retry">Prøv igen</string>
+    <string name="cancel">Annuller</string>
+    <string name="back">Tilbage</string>
 </resources>

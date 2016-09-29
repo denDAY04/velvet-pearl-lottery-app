@@ -3,4 +3,11 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="home_new_lottery">New Lottery</string>
     <string name="home_history">Lottery History</string>
+    <string name="history_loading_history">Loading history</string>
+    <string name="history_no_lotteries">No lotteries</string>
+    <string name="history_error_loading_history">Could not load history. Do you have internet access?</string>
+    <string name="error">Error</string>
+    <string name="retry">Retry</string>
+    <string name="back">Back</string>
+    <string name="cancel">Cancel</string>
 </resources>

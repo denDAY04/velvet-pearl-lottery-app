@@ -17,6 +17,9 @@ import com.velvetPearl.lottery.dataAccess.firebase.scheme.LotteriesScheme;
 import com.velvetPearl.lottery.dataAccess.models.Lottery;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.concurrent.TimeoutException;
 
@@ -63,6 +66,14 @@ public class LotteryRepository implements ILotteryRepository {
                         entry.setId(snapshot.getKey());
                         lotteries.add(entry);
                     }
+                    Collections.sort(lotteries, new Comparator<Lottery>() {
+                        @Override
+                        public int compare(Lottery o1, Lottery o2) {
+                            // Arguments swapped to force descending order
+                            return Long.compare(o2.getCreated(), o1.getCreated());
+                        }
+                    });
+
                     unlockedByNotify = true;
                     lock.notify();
                 }

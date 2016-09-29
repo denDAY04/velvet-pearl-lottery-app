@@ -23,7 +23,7 @@ public interface ILotteryRepository {
     Lottery getLottery(Object id) throws TimeoutException;
 
     /**
-     * Get all lottery entities in the data service.
+     * Get all lottery entities in the data service sorted by created date (descending).
      * @return A collection of all the entities.
      * @throws TimeoutException if the action did not complete before a given timeout period.
      */

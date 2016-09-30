@@ -26,20 +26,15 @@ import java.util.concurrent.TimeoutException;
 /**
  * Created by Stensig on 22-Sep-16.
  */
-public class LotteryRepository implements ILotteryRepository {
+public class LotteryRepository extends FirebaseRepository implements ILotteryRepository {
 
     private static final String LOG_TAG = "LotteryRepository";
-    private static final long LOCK_TIMEOUT_MS = 10000;
 
-    private final FirebaseAuth dbAuth;
-    private FirebaseDatabase dbContext = null;
-    private ArrayList<Lottery> lotteries = null;
-    private Object lock = new Object();
-    private boolean unlockedByNotify = false;
+    //private ArrayList<Lottery> lotteries = null;
 
 
     public LotteryRepository() {
-        dbAuth = FirebaseAuth.getInstance();
+        super();
     }
 
     @Override
@@ -55,12 +50,11 @@ public class LotteryRepository implements ILotteryRepository {
     @Override
     public ArrayList<Lottery> getAllLotteries() throws TimeoutException {
         authenticate();
-
+        final ArrayList<Lottery> lotteries = new ArrayList<>();
         dbContext.getReference(LotteriesScheme.LABEL).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 synchronized (lock) {
-                    lotteries = new ArrayList<>();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         Lottery entry = snapshot.getValue(Lottery.class);
                         entry.setId(snapshot.getKey());
@@ -144,55 +138,6 @@ public class LotteryRepository implements ILotteryRepository {
         verifyAsyncTask();
 
         return lottery;
-    }
-
-    /**
-     * Authenticate access to the Firebase database.
-     * NOTE that this call locks the active thread until the authorization either succeeds or fails.
-     * @throws TimeoutException if the authentication task didn't complete in time.
-     */
-    private void authenticate() throws TimeoutException {
-        if (dbContext != null)
-            return;
-
-        dbAuth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                synchronized (lock) {
-                    if (!task.isSuccessful()) {
-                        Log.w(LOG_TAG, "authenticate", task.getException());
-                        Log.d(LOG_TAG, "authenticate:signInAnonymously: Firebase authentication failed");
-                    } else {
-                        Log.d(LOG_TAG, "authenticate:signInAnonymously: Firebase authentication succeeded");
-                        dbContext = FirebaseDatabase.getInstance();
-                    }
-                    unlockedByNotify = true;
-                    lock.notify();
-                }
-            }
-        });
-
-        synchronized (lock) {
-            while (dbContext == null) {
-                try {
-                    unlockedByNotify = false;
-                    lock.wait(LOCK_TIMEOUT_MS);
-                } catch (InterruptedException e) {
-                    Log.d(LOG_TAG, "authenticate: waiting on authentication interrupted");
-                }
-            }
-        }
-        verifyAsyncTask();
-    }
-
-    /**
-     * Verify whether the last async task was completed successfully, as determined by an internal
-     * flag. If not, a timeout exception is thrown to indicate the event.
-     * @throws TimeoutException if the flag was not set.
-     */
-    private void verifyAsyncTask() throws TimeoutException {
-        if (!unlockedByNotify)
-            throw new TimeoutException();
     }
 
 }

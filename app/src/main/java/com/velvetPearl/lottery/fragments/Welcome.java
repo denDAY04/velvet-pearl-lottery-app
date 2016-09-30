@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.velvetPearl.lottery.R;
+import com.velvetPearl.lottery.dataAccess.models.Ticket;
 
 
 public class Welcome extends Fragment {
@@ -21,6 +22,11 @@ public class Welcome extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(LOG_TAG, "onClick: new lottery");
+
+                String lotteryId = "-KSWN3Cc8asmcV6zklc0";
+                Ticket ticket = new Ticket();
+                ticket.setOwner("");
+
             }
         });
 

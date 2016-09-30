@@ -17,22 +17,16 @@ import android.widget.TextView;
 
 import com.velvetPearl.lottery.R;
 import com.velvetPearl.lottery.dataAccess.LotterySingleton;
-import com.velvetPearl.lottery.dataAccess.firebase.LotteryRepository;
 import com.velvetPearl.lottery.dataAccess.models.Lottery;
 
-import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeoutException;
-import java.util.zip.Inflater;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Fragment containing a list view of the lottery history.
  */
 public class History extends Fragment {
 
@@ -53,16 +47,27 @@ public class History extends Fragment {
         return fragView;
     }
 
+    /**
+     * Initialize the progress dialog for when loading the history data.
+     * This method does not show the dialog.
+     */
     public void initLoadingDialog() {
         loadingDlg = ProgressDialog.show(getContext(), null, getString(R.string.history_loading_history), true, true, new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                // Switch back to home.
-                getFragmentManager().beginTransaction().replace(R.id.main_fragment, new Home()).commit();
+                // Switch back to home on cancel.
+                Log.d(LOG_TAG, "progressDialog:onCancelListener canceling history data load");
+                getFragmentManager().beginTransaction().replace(R.id.main_fragment, new Welcome()).commit();
             }
         });
     }
 
+    /**
+     * Load the history data asynchronously and display it.
+     * This method dismisses the progress dialog when the loading has completed or failed. Upon
+     * failure it displays an alert enabling the user to either retry the loading or return to
+     * the welcome screen. Upon success the history is loaded into a list view.
+     */
     private void loadHistoryAsync() {
         new AsyncTask() {
             @Override
@@ -83,8 +88,8 @@ public class History extends Fragment {
                             .setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    // Back to home
-                                    getFragmentManager().beginTransaction().replace(R.id.main_fragment, new Home()).commit();
+                                    // Back to welcome
+                                    getFragmentManager().beginTransaction().replace(R.id.main_fragment, new Welcome()).commit();
                                 }
                             });
                     AlertDialog dlg = dlgBuilder.create();
@@ -105,6 +110,14 @@ public class History extends Fragment {
                                 long createdUnixT = lotteries.get(position).getCreated();
                                 String dateTimeStamp = SimpleDateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(new Date(createdUnixT));
                                 itemTitle.setText(dateTimeStamp);
+
+                                // Redirect to Lottery home view for the clicked entity
+                                view.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+                                    }
+                                });
 
                                 return view;
                             }

@@ -10,12 +10,12 @@ import android.view.ViewGroup;
 import com.velvetPearl.lottery.R;
 
 
-public class Home extends Fragment {
+public class Welcome extends Fragment {
     private static final String LOG_TAG = "HomeFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View fragView = inflater.inflate(R.layout.fragment_home, container, false);
+        View fragView = inflater.inflate(R.layout.fragment_welcome, container, false);
 
         fragView.findViewById(R.id.home_btn_new_lottery).setOnClickListener(new View.OnClickListener() {
             @Override

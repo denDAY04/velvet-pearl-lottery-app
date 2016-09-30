@@ -3,7 +3,7 @@ package com.velvetPearl.lottery;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.velvetPearl.lottery.fragments.Home;
+import com.velvetPearl.lottery.fragments.Welcome;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().add(R.id.main_fragment, new Home()).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.main_fragment, new Welcome()).commit();
         }
     }
 

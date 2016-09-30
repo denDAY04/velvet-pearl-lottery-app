@@ -83,4 +83,17 @@ public class Lottery {
     public void setNumbers(ArrayList<Number> numbers) {
         this.numbers = numbers;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("Lottery ID %s", (String)id));
+        sb.append(String.format(", created %d", created));
+        sb.append(String.format(", price pr. num %.2f", pricePerLotteryNum));
+        sb.append(String.format(", num bounds {low, high} {%d, %d}", lotteryNumLowerBound, lotteryNumUpperBound));
+        sb.append(String.format(", #prizes %d", prizes != null ? prizes.size() : 0));
+        sb.append(String.format(", #tickets %d", tickets != null ? tickets.size() : 0));
+        sb.append(String.format(", #numbers %d" , numbers != null ? numbers.size() : 0));
+        return sb.toString();
+    }
 }

@@ -1,19 +1,15 @@
 package com.velvetPearl.lottery.dataAccess.models;
 
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-import io.realm.annotations.Required;
+import java.util.ArrayList;
+
 
 /**
  * Created by Andreas "denDAY" Stensig on 20-Sep-16.
  */
-public class Ticket extends RealmObject {
-    @PrimaryKey
-    private int ticketId;
-    @Required
+public class Ticket {
+    private Object id;
     private String owner;
-    private RealmList<Number> numbers;
+    private ArrayList<Number> numbers;
 
 
     public String getOwner() {
@@ -24,15 +20,19 @@ public class Ticket extends RealmObject {
         this.owner = owner;
     }
 
-    public RealmList<Number> getNumbers() {
+    public ArrayList<Number> getNumbers() {
         return numbers;
     }
 
-    public void setNumbers(RealmList<Number> numbers) {
+    public void setNumbers(ArrayList<Number> numbers) {
         this.numbers = numbers;
     }
 
-    public int getTicketId() {
-        return ticketId;
+    public Object getId() {
+        return id;
+    }
+
+    public void setId(Object id) {
+        this.id = id;
     }
 }

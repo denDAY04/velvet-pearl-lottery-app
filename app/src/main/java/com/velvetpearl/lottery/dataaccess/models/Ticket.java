@@ -7,10 +7,13 @@ import java.util.ArrayList;
  * Created by Andreas "denDAY" Stensig on 20-Sep-16.
  */
 public class Ticket {
+    // Entity member fields
     private Object id;
     private String owner;
-    private ArrayList<Number> numbers;
+    private ArrayList<LotteryNumber> lotteryNumbers;
 
+    // Navigational member fields
+    private Object lotteryId;
 
     public String getOwner() {
         return owner;
@@ -20,12 +23,12 @@ public class Ticket {
         this.owner = owner;
     }
 
-    public ArrayList<Number> getNumbers() {
-        return numbers;
+    public ArrayList<LotteryNumber> getLotteryNumbers() {
+        return lotteryNumbers;
     }
 
-    public void setNumbers(ArrayList<Number> numbers) {
-        this.numbers = numbers;
+    public void setLotteryNumbers(ArrayList<LotteryNumber> lotteryNumbers) {
+        this.lotteryNumbers = lotteryNumbers;
     }
 
     public Object getId() {
@@ -34,5 +37,13 @@ public class Ticket {
 
     public void setId(Object id) {
         this.id = id;
+    }
+
+    public Object getLotteryId() {
+        return lotteryId;
+    }
+
+    public void setLotteryId(Object lotteryId) {
+        this.lotteryId = lotteryId;
     }
 }

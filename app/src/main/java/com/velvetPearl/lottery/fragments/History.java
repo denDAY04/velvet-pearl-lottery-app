@@ -120,14 +120,14 @@ public class History extends Fragment {
                                 view.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-
+                                        // TODO: add click listener to direct to lottery screen for item
                                     }
                                 });
 
                                 return view;
                             }
                         });
-                        // TODO: add click listener to direct to lottery screen for item
+
                     } else {
                         ArrayList<String> tempList = new ArrayList<>();
                         tempList.add(getString(R.string.history_no_lotteries));

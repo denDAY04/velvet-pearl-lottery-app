@@ -16,7 +16,7 @@ public class Lottery {
 
     private ArrayList<Prize> prizes;
     private ArrayList<Ticket> tickets;
-    private ArrayList<Number> numbers;
+    private ArrayList<LotteryNumber> lotteryNumbers;
 
     public Object getId() {
         return id;
@@ -76,12 +76,12 @@ public class Lottery {
         this.tickets = tickets;
     }
 
-    public ArrayList<Number> getNumbers() {
-        return numbers;
+    public ArrayList<LotteryNumber> getLotteryNumbers() {
+        return lotteryNumbers;
     }
 
-    public void setNumbers(ArrayList<Number> numbers) {
-        this.numbers = numbers;
+    public void setLotteryNumbers(ArrayList<LotteryNumber> lotteryNumbers) {
+        this.lotteryNumbers = lotteryNumbers;
     }
 
     @Override
@@ -93,7 +93,7 @@ public class Lottery {
         sb.append(String.format(", num bounds {low, high} {%d, %d}", lotteryNumLowerBound, lotteryNumUpperBound));
         sb.append(String.format(", #prizes %d", prizes != null ? prizes.size() : 0));
         sb.append(String.format(", #tickets %d", tickets != null ? tickets.size() : 0));
-        sb.append(String.format(", #numbers %d" , numbers != null ? numbers.size() : 0));
+        sb.append(String.format(", #lotteryNumbers %d" , lotteryNumbers != null ? lotteryNumbers.size() : 0));
         return sb.toString();
     }
 }

@@ -11,4 +11,6 @@ public interface IPrizeRepository {
 
     Prize getPrizeForNumber(Object numberId) throws TimeoutException;
 
+    Prize savePrize(Prize prize) throws TimeoutException;
+
 }

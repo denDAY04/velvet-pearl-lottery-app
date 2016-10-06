@@ -2,7 +2,10 @@ package com.velvetPearl.lottery.dataAccess;
 
 import android.app.Application;
 
+import com.velvetPearl.lottery.dataAccess.firebase.LotteryNumberRepository;
 import com.velvetPearl.lottery.dataAccess.firebase.LotteryRepository;
+import com.velvetPearl.lottery.dataAccess.firebase.PrizeRepository;
+import com.velvetPearl.lottery.dataAccess.firebase.TicketRepository;
 import com.velvetPearl.lottery.dataAccess.models.Lottery;
 
 /**
@@ -11,8 +14,11 @@ import com.velvetPearl.lottery.dataAccess.models.Lottery;
 public class LotterySingleton extends Application {
 
     private static ILotteryRepository lotteryRepository = null;
-    private static Lottery activeLottery = null;
+    private static ITicketRepository ticketRepository = null;
+    private static ILotteryNumberRepository lotteryNumberRepository = null;
+    private static IPrizeRepository prizeRepository = null;
 
+    private static Lottery activeLottery = null;
 
     /**
      * Get a reference to the Lottery repository object.
@@ -23,6 +29,27 @@ public class LotterySingleton extends Application {
             lotteryRepository = new LotteryRepository();
         }
         return lotteryRepository;
+    }
+
+    public static ITicketRepository getTicketInstance() {
+        if (ticketRepository == null) {
+            ticketRepository = new TicketRepository();
+        }
+        return ticketRepository;
+    }
+
+    public static ILotteryNumberRepository getLotteryNumberInstance() {
+        if (lotteryNumberRepository == null) {
+            lotteryNumberRepository = new LotteryNumberRepository();
+        }
+        return lotteryNumberRepository;
+    }
+
+    public static IPrizeRepository getPrizeRepository() {
+        if (prizeRepository == null) {
+            prizeRepository = new PrizeRepository();
+        }
+        return prizeRepository;
     }
 
     /**
@@ -46,5 +73,8 @@ public class LotterySingleton extends Application {
         super.onCreate();
 
         lotteryRepository = new LotteryRepository();
+        ticketRepository = new TicketRepository();
+        lotteryNumberRepository = new LotteryNumberRepository();
+        prizeRepository = new PrizeRepository();
     }
 }

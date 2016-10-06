@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,14 +83,18 @@ public class History extends Fragment {
                             .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    loadingDlg.show();
                                     loadHistoryAsync();
                                 }
                             })
                             .setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    // Back to welcome
-                                    getFragmentManager().beginTransaction().replace(R.id.main_fragment, new Welcome()).commit();
+                                    // Back to welcome - clearing the stack at the same time
+                                    FragmentManager fragmentManager = getFragmentManager();
+                                    FragmentManager.BackStackEntry first = fragmentManager.getBackStackEntryAt(0);
+                                    fragmentManager.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                    fragmentManager.beginTransaction().replace(R.id.main_fragment, new Welcome()).commit();
                                 }
                             });
                     AlertDialog dlg = dlgBuilder.create();

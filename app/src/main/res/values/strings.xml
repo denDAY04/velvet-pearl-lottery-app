@@ -10,7 +10,8 @@
     <string name="retry">Retry</string>
     <string name="back">Back</string>
     <string name="cancel">Cancel</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="authentication">Authentication</string>
+    <string name="initializing_app">Initializing app</string>
+    <string name="error_network_required">Network access is required.</string>
+    <string name="ok" translatable="false">Ok</string>
 </resources>

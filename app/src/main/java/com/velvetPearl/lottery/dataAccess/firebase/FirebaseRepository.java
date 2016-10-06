@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,11 +44,20 @@ public abstract class FirebaseRepository {
                 synchronized (lock) {
                     if (!task.isSuccessful()) {
                         Log.w(LOG_TAG, "authenticate", task.getException());
-                        Log.d(LOG_TAG, "authenticate:signInAnonymously: Firebase authentication failed");
+                        Log.d(LOG_TAG, "authenticate:signInAnonymously Firebase authentication failed");
                     } else {
-                        Log.d(LOG_TAG, "authenticate:signInAnonymously: Firebase authentication succeeded");
+                        Log.d(LOG_TAG, "authenticate:signInAnonymously Firebase authentication succeeded");
                         dbContext = FirebaseDatabase.getInstance();
                     }
+                    unlockedByNotify = true;
+                    lock.notify();
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                synchronized (lock) {
+                    Log.w(LOG_TAG, "authenticate:signInAnonymously action failed", e);
                     unlockedByNotify = true;
                     lock.notify();
                 }
@@ -55,13 +65,11 @@ public abstract class FirebaseRepository {
         });
 
         synchronized (lock) {
-            while (dbContext == null) {
-                try {
-                    unlockedByNotify = false;
-                    lock.wait(LOCK_TIMEOUT_MS);
-                } catch (InterruptedException e) {
-                    Log.d(LOG_TAG, "authenticate: waiting on authentication interrupted");
-                }
+            try {
+                unlockedByNotify = false;
+                lock.wait(LOCK_TIMEOUT_MS);
+            } catch (InterruptedException e) {
+                Log.d(LOG_TAG, "authenticate: waiting on authentication interrupted");
             }
         }
         verifyAsyncTask();

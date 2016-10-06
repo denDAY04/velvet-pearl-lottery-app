@@ -10,4 +10,7 @@
     <string name="retry">Prøv igen</string>
     <string name="cancel">Annuller</string>
     <string name="back">Tilbage</string>
+    <string name="authentication">Godkendelse</string>
+    <string name="initializing_app">initialiserer app</string>
+    <string name="error_network_required">"Netværksadgang er krævet. "</string>
 </resources>

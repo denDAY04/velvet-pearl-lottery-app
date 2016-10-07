@@ -107,7 +107,7 @@ public class History extends Fragment {
                     if (lotteries.size() > 0) {
                         historyListView.setAdapter(new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, lotteries){
                             @Override
-                            public View getView(int position, View cachedView, ViewGroup parent) {
+                            public View getView(final int position, View cachedView, ViewGroup parent) {
                                 View view = super.getView(position, cachedView, parent);
                                 TextView itemTitle = (TextView) view.findViewById(android.R.id.text1);
 
@@ -121,9 +121,16 @@ public class History extends Fragment {
                                     @Override
                                     public void onClick(View v) {
                                         // TODO: add click listener to direct to lottery screen for item
+                                        Log.d(LOG_TAG, String.format("clicked item %d", position));
+                                        try {
+                                            Lottery lottery = LotterySingleton.getInstance().getLottery(lotteries.get(position).getId());
+                                            Log.d(LOG_TAG, lottery.toString());
+                                        } catch (TimeoutException e) {
+                                            Log.w(LOG_TAG, "loadHistoryAsync: history item click failed", e);
+                                        }
                                     }
                                 });
-
+                                Log.d(LOG_TAG, "initialized list item for lottery id " + lotteries.get(position).getId());
                                 return view;
                             }
                         });

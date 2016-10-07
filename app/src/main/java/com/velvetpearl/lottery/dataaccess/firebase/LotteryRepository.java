@@ -28,6 +28,8 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
 
     private static final String LOG_TAG = "LotteryRepository";
 
+    private Query activeQuery = null;
+    private ValueEventListener entityListener = null;
 
     public LotteryRepository() {
         super();
@@ -41,31 +43,62 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
         }
 
         authenticate();
-        // TODO
 
-        LotterySingleton.setActiveLottery(new Lottery());
+        // Decouple the listener for the last query (if any) so that it doesn't keep updating
+        // on that previous data.
+        detachEntityListener(activeQuery, entityListener);
 
-        Query query = dbContext.getReference(LotteriesScheme.LABEL).orderByKey().equalTo((String)id);
-        attachLotteryBaseListener(query);
+        activeQuery = dbContext.getReference(LotteriesScheme.LABEL).equalTo((String)id);
+        entityListener = attachEntityListener(activeQuery);
 
+        // TODO: figure out why this lock is bad, and removing it makes the data-fetch work
+/*
+        synchronized (lock) {
+            try {
+                unlockedByNotify = false;
+                lock.wait(LOCK_TIMEOUT_MS);
+            } catch (InterruptedException e) {
+                Log.w(LOG_TAG, "getLottery: data fetch sleep interrupted", e);
+            }
+        }
         verifyAsyncTask();
-
+*/
         return LotterySingleton.getActiveLottery();
     }
 
-    private void attachLotteryBaseListener(Query query) {
-        query.addValueEventListener(new ValueEventListener() {
+    private ValueEventListener attachEntityListener(Query query) {
+        ValueEventListener listener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(LOG_TAG, "updating fetched base lottery data for lottery ID " + dataSnapshot.getKey());
-                LotterySingleton.setActiveLottery((Lottery) dataSnapshot.getValue());
+                synchronized (lock) {
+                    if (dataSnapshot.getChildrenCount() == 1) {
+                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                            Log.d(LOG_TAG, "reading lottery entity for ID " + data.getKey());
+                            Lottery result = data.getValue(Lottery.class);
+                            result.setId(data.getKey());
+                            LotterySingleton.setActiveLottery(result);
+                        }
+
+                    }
+                    unlockedByNotify = true;
+                    lock.notify();
+                }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.w(LOG_TAG, "reading lottery entity error", databaseError.toException());
             }
-        });
+        };
+
+        query.addValueEventListener(listener);
+        return listener;
+    }
+
+    private void detachEntityListener(Query query, ValueEventListener listener) {
+        if (query != null && listener != null) {
+            query.removeEventListener(entityListener);
+        }
     }
 
     @Override

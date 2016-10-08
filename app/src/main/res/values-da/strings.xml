@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Velvet Pearl Lotteriet</string>
-    <string name="home_new_lottery">Nyt Lotteri</string>
-    <string name="home_history">Lotteri Historik</string>
+    <string name="welcome_new_lottery">Nyt Lotteri</string>
+    <string name="welcome_lottery_history">Lotteri Historik</string>
     <string name="history_loading_history">Henter historik</string>
     <string name="history_no_lotteries">Ingen lotterier</string>
-    <string name="history_error_loading_history">Kunne ikke hente historikken. Har du internet adgang?</string>
+    <string name="history_error_loading_history">Kunne ikke hente historikken. \nHar du internet adgang?</string>
     <string name="error">Fejl</string>
     <string name="retry">Prøv igen</string>
     <string name="cancel">Annuller</string>
@@ -13,4 +13,6 @@
     <string name="authentication">Godkendelse</string>
     <string name="initializing_app">initialiserer app</string>
     <string name="error_network_required">"Netværksadgang er krævet. "</string>
+    <string name="lotteryhome_loading_lottery">Henter lotteri</string>
+    <string name="lotteryhome_error_timeout">Kunne ikke hente lotteriet. \nHar du internet adgang?</string>
 </resources>

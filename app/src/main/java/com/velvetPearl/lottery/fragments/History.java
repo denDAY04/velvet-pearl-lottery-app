@@ -12,18 +12,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.velvetPearl.lottery.R;
 import com.velvetPearl.lottery.dataAccess.LotterySingleton;
 import com.velvetPearl.lottery.dataAccess.models.Lottery;
+import com.velvetPearl.lottery.viewModels.LotteryListViewModel;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -103,35 +101,26 @@ public class History extends Fragment {
 
                 } else {
 
-                    final ArrayList<Lottery> lotteries = (ArrayList<Lottery>) result;
+                    ArrayList<Lottery> lotteries = (ArrayList<Lottery>) result;
                     if (lotteries.size() > 0) {
-                        historyListView.setAdapter(new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, lotteries){
+
+                        ArrayList<LotteryListViewModel> viewModels = new ArrayList<>();
+                        for (Lottery entity : lotteries) {
+                            viewModels.add(new LotteryListViewModel(entity));
+                        }
+
+                        historyListView.setAdapter(new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, viewModels));
+
+                        // Add click listener for navigating to Lottery Home fragment on item click
+                        historyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
-                            public View getView(final int position, View cachedView, ViewGroup parent) {
-                                View view = super.getView(position, cachedView, parent);
-                                TextView itemTitle = (TextView) view.findViewById(android.R.id.text1);
-
-                                // Format the unix time to list date on the item in the view
-                                long createdUnixT = lotteries.get(position).getCreated();
-                                String dateTimeStamp = SimpleDateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(new Date(createdUnixT));
-                                itemTitle.setText(dateTimeStamp);
-
-                                // Redirect to Lottery home view for the clicked entity
-                                view.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        // TODO: add click listener to direct to lottery screen for item
-                                        Log.d(LOG_TAG, String.format("clicked item %d", position));
-                                        try {
-                                            Lottery lottery = LotterySingleton.getInstance().getLottery(lotteries.get(position).getId());
-                                            Log.d(LOG_TAG, lottery.toString());
-                                        } catch (TimeoutException e) {
-                                            Log.w(LOG_TAG, "loadHistoryAsync: history item click failed", e);
-                                        }
-                                    }
-                                });
-                                Log.d(LOG_TAG, "initialized list item for lottery id " + lotteries.get(position).getId());
-                                return view;
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                LotteryListViewModel item = (LotteryListViewModel) historyListView.getItemAtPosition(i);
+                                Bundle args = new Bundle();
+                                args.putString("lotteryId", (String) item.getId());
+                                Fragment destination = new LotteryHome();
+                                destination.setArguments(args);
+                                getFragmentManager().beginTransaction().replace(R.id.main_fragment,destination).addToBackStack(null).commit();
                             }
                         });
 

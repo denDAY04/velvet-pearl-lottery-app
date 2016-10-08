@@ -66,6 +66,7 @@ public class TicketRepository extends FirebaseRepository implements ITicketRepos
 
         synchronized (lock) {
             try {
+                unlockedByNotify = false;
                 lock.wait(LOCK_TIMEOUT_MS);
             } catch (InterruptedException e) {
                 Log.w(LOG_TAG, "getTicketsForLottery wait on data fetch interrupted", e);

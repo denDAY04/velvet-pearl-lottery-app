@@ -1,6 +1,8 @@
 package com.velvetPearl.lottery.dataAccess;
 
+import com.velvetPearl.lottery.IEntityUiUpdater;
 import com.velvetPearl.lottery.dataAccess.models.Lottery;
+import com.velvetPearl.lottery.fragments.LotteryHome;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
@@ -13,6 +15,8 @@ import java.util.concurrent.TimeoutException;
  * <p/>
  */
 public interface ILotteryRepository {
+
+    Lottery getLottery(Object id, IEntityUiUpdater uiCallback) throws TimeoutException;
 
     /**
      *

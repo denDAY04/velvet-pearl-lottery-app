@@ -10,6 +10,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.velvetPearl.lottery.IEntityUiUpdater;
 import com.velvetPearl.lottery.dataAccess.ILotteryRepository;
 import com.velvetPearl.lottery.dataAccess.LotterySingleton;
 import com.velvetPearl.lottery.dataAccess.firebase.scheme.LotteriesScheme;
@@ -37,51 +38,75 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
 
 
     @Override
-    public Lottery getLottery(Object id) throws TimeoutException {
+    public Lottery getLottery(Object id, IEntityUiUpdater uiCallback) throws TimeoutException {
         if (id == null || id.getClass() != String.class) {
             return null;
         }
-
+        String entityId = (String) id;
         authenticate();
+        resetState();
 
-        // Decouple the listener for the last query (if any) so that it doesn't keep updating
-        // on that previous data.
-        detachEntityListener(activeQuery, entityListener);
+        Log.d(LOG_TAG, "getLottery querying for lottery ID " + entityId);
+        activeQuery = dbContext.getReference(LotteriesScheme.LABEL).orderByKey().equalTo(entityId);
+        entityListener = attachEntityListener(activeQuery, entityId, uiCallback);
 
-        activeQuery = dbContext.getReference(LotteriesScheme.LABEL).equalTo((String)id);
-        entityListener = attachEntityListener(activeQuery);
-
-        // TODO: figure out why this lock is bad, and removing it makes the data-fetch work
-/*
         synchronized (lock) {
             try {
                 unlockedByNotify = false;
                 lock.wait(LOCK_TIMEOUT_MS);
             } catch (InterruptedException e) {
-                Log.w(LOG_TAG, "getLottery: data fetch sleep interrupted", e);
+                Log.w(LOG_TAG, "getLottery data fetch sleep interrupted", e);
             }
         }
         verifyAsyncTask();
-*/
+
         return LotterySingleton.getActiveLottery();
     }
 
-    private ValueEventListener attachEntityListener(Query query) {
+    @Override
+    public Lottery getLottery(Object id) throws TimeoutException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    /**
+     * Reset the state for the active lottery and its query.
+     * <p>
+     * This leaves the LotterySingleton's active lottery reference null and decouples any Firebase
+     * listeners on the previous query.
+     */
+    private void resetState() {
+        // Decouple the listener for the last query (if any) so that it doesn't keep updating
+        // on that previous data.
+        detachEntityListener(activeQuery, entityListener);
+
+        // Clear active lottery such that a bad search leaves a null ref for the program to test on.
+        LotterySingleton.setActiveLottery(null);
+    }
+
+    /**
+     * Attach a Firebase {@Link ValueEventListener} to the {@Link Query} object and sync any reads
+     * to LotterySingleton's active lottery reference.
+     * @param query The query on which to attach the listener.
+     * @param entityId The ID (Firebase key value) of the entity that will be synced.
+     * @param uiUpdater The callback object for updating the UI whenever the query data is synced.
+     * @return The listener that has been attached.
+     */
+    private ValueEventListener attachEntityListener(Query query, final String entityId, final IEntityUiUpdater uiUpdater) {
         ValueEventListener listener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 synchronized (lock) {
-                    if (dataSnapshot.getChildrenCount() == 1) {
-                        for (DataSnapshot data : dataSnapshot.getChildren()) {
-                            Log.d(LOG_TAG, "reading lottery entity for ID " + data.getKey());
-                            Lottery result = data.getValue(Lottery.class);
-                            result.setId(data.getKey());
-                            LotterySingleton.setActiveLottery(result);
-                        }
-
+                    DataSnapshot data = dataSnapshot.child(entityId);
+                    if (data.getChildrenCount() != 0) {     // The query-result for ID is not empty
+                        Log.d(LOG_TAG, "reading lottery entity for ID " + data.getKey());
+                        Lottery result = data.getValue(Lottery.class);
+                        result.setId(data.getKey());
+                        LotterySingleton.setActiveLottery(result);
+                        uiUpdater.updateUi();
                     }
+
                     unlockedByNotify = true;
-                    lock.notify();
+                    lock.notifyAll();
                 }
             }
 
@@ -95,6 +120,11 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
         return listener;
     }
 
+    /**
+     * Remove the {@Link ValueEventListener} from the {@Link Query} object.
+     * @param query The query from which to remove the listener.
+     * @param listener The listener that should be removed.
+     */
     private void detachEntityListener(Query query, ValueEventListener listener) {
         if (query != null && listener != null) {
             query.removeEventListener(entityListener);
@@ -105,7 +135,7 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
     public ArrayList<Lottery> getAllLotteries() throws TimeoutException {
         authenticate();
         final ArrayList<Lottery> lotteries = new ArrayList<>();
-        dbContext.getReference(LotteriesScheme.LABEL).addValueEventListener(new ValueEventListener() {
+        dbContext.getReference(LotteriesScheme.LABEL).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 synchronized (lock) {

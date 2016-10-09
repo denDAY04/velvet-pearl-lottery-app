@@ -20,4 +20,7 @@
     <string name="price_per_number">Pris pr. nummer</string>
     <string name="tickets">Billetter</string>
     <string name="prizes">Gevinster</string>
+    <string name="winners">Vindere</string>
+    <string name="home">Hjem</string>
+    <string name="numbers_sold">Nummre solgt</string>
 </resources>

@@ -21,4 +21,7 @@
     <string name="price_per_number">Price per number</string>
     <string name="tickets">Tickets</string>
     <string name="prizes">Prizes</string>
+    <string name="winners">Winners</string>
+    <string name="home">Home</string>
+    <string name="numbers_sold">Numbers sold</string>
 </resources>

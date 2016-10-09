@@ -12,11 +12,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.velvetPearl.lottery.IEntityUiUpdater;
 import com.velvetPearl.lottery.R;
 import com.velvetPearl.lottery.dataAccess.LotterySingleton;
+import com.velvetPearl.lottery.dataAccess.models.Lottery;
+import com.velvetPearl.lottery.dataAccess.models.Ticket;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.TimeoutException;
 
 
@@ -24,17 +31,24 @@ public class LotteryHome extends Fragment implements IEntityUiUpdater {
 
     private static final String LOG_TAG = "LotteryHome";
 
+    // UI refs
+    private TextView timestampLab = null;
+    private TextView lotteryNumRangeLab = null;
+    private TextView pricePerNumLab = null;
+    private TextView lotteryNumSoldCount = null;
+
     private ProgressDialog loadingDialog = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View fragView = inflater.inflate(R.layout.fragment_history, container, false);
+        View fragView = inflater.inflate(R.layout.fragment_lottery_home, container, false);
 
         Bundle args = getArguments();
         String lotteryId = args.getString("lotteryId");
         Log.d(LOG_TAG, "loading ID " + lotteryId);
 
         initLoadingDialog();
+        initUi(fragView);
         loadingDialog.show();
         loadLotteryAsync(lotteryId);
 
@@ -42,11 +56,22 @@ public class LotteryHome extends Fragment implements IEntityUiUpdater {
     }
 
     /**
+     * Initialize the UI references.
+     * @param view The view on which to collect the UI references.
+     */
+    private void initUi(View view) {
+        timestampLab = (TextView) view.findViewById(R.id.lotteryhome_timestamp);
+        lotteryNumRangeLab = (TextView) view.findViewById(R.id.lotteryhome_num_range_var);
+        pricePerNumLab = (TextView) view.findViewById(R.id.lotteryhome_price_per_number_var);
+        lotteryNumSoldCount = (TextView) view.findViewById(R.id.lotteryhome_numbers_sold_var);
+    }
+
+    /**
      * Initialize the loading dialog, without showing it.
      */
     private void initLoadingDialog() {
         loadingDialog = ProgressDialog.show(getContext(),
-                null,       /* title */
+                null,       /* timestampLab */
                 getString(R.string.lotteryhome_loading_lottery),
                 false,      /* indeterminate */
                 true,       /* cancelable */
@@ -62,7 +87,21 @@ public class LotteryHome extends Fragment implements IEntityUiUpdater {
     @Override
     public void updateUi() {
         Log.d(LOG_TAG, "update ui!");
+
         // TODO populate UI with
+        Lottery lottery = LotterySingleton.getActiveLottery();
+        Locale locale = Locale.getDefault();
+        String timestamp = SimpleDateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(new Date(lottery.getCreated()));
+        timestampLab.setText(String.format(locale, "%s", timestamp));
+        lotteryNumRangeLab.setText(String.format(locale, "%d - %d", lottery.getLotteryNumLowerBound(), lottery.getLotteryNumUpperBound()));
+        pricePerNumLab.setText(String.format(locale, "%.2f", lottery.getPricePerLotteryNum()));
+        int count = 0;
+        if (lottery.getTickets() != null) {
+            for (Ticket ticket : lottery.getTickets()) {
+                count += ticket.getLotteryNumbers().size();
+            }
+        }
+        lotteryNumSoldCount.setText(Integer.toString(count));
     }
 
 

@@ -16,4 +16,6 @@
     <string name="ok" translatable="false">Ok</string>
     <string name="lotteryhome_loading_lottery">Loading lottery</string>
     <string name="lotteryhome_error_timeout">Could not load the lottery. \nDo you have internet access?</string>
+    <string name="lottery">Lottery</string>
+    <string name="lotteryhome_number_range">Number range</string>
 </resources>

@@ -16,5 +16,8 @@
     <string name="lotteryhome_loading_lottery">Henter lotteri</string>
     <string name="lotteryhome_error_timeout">Kunne ikke hente lotteriet. \nHar du internet adgang?</string>
     <string name="lottery">Lotteri</string>
-    <string name="lotteryhome_number_range">Nummer række</string>
+    <string name="number_range">Nummer række</string>
+    <string name="price_per_number">Pris pr. nummer</string>
+    <string name="tickets">Billetter</string>
+    <string name="prizes">Gevinster</string>
 </resources>

@@ -29,13 +29,10 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
 
     private static final String LOG_TAG = "LotteryRepository";
 
-    private Query activeQuery = null;
-    private ValueEventListener entityListener = null;
 
     public LotteryRepository() {
         super();
     }
-
 
     @Override
     public Lottery getLottery(Object id, IEntityUiUpdater uiCallback) throws TimeoutException {
@@ -47,8 +44,8 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
         resetState();
 
         Log.d(LOG_TAG, "getLottery querying for lottery ID " + entityId);
-        activeQuery = dbContext.getReference(LotteriesScheme.LABEL).orderByKey().equalTo(entityId);
-        entityListener = attachEntityListener(activeQuery, entityId, uiCallback);
+        query = dbContext.getReference(LotteriesScheme.LABEL).orderByKey().equalTo(entityId);
+        entityListener = attachEntityListener(query, entityId, uiCallback);
 
         synchronized (lock) {
             try {
@@ -77,21 +74,14 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
     private void resetState() {
         // Decouple the listener for the last query (if any) so that it doesn't keep updating
         // on that previous data.
-        detachEntityListener(activeQuery, entityListener);
+        detachEntityListener(query, entityListener);
 
         // Clear active lottery such that a bad search leaves a null ref for the program to test on.
         LotterySingleton.setActiveLottery(null);
     }
 
-    /**
-     * Attach a Firebase {@Link ValueEventListener} to the {@Link Query} object and sync any reads
-     * to LotterySingleton's active lottery reference.
-     * @param query The query on which to attach the listener.
-     * @param entityId The ID (Firebase key value) of the entity that will be synced.
-     * @param uiUpdater The callback object for updating the UI whenever the query data is synced.
-     * @return The listener that has been attached.
-     */
-    private ValueEventListener attachEntityListener(Query query, final String entityId, final IEntityUiUpdater uiUpdater) {
+    @Override
+    protected ValueEventListener attachEntityListener(Query query, final String entityId, final IEntityUiUpdater uiUpdater) {
         ValueEventListener listener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -118,17 +108,6 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
 
         query.addValueEventListener(listener);
         return listener;
-    }
-
-    /**
-     * Remove the {@Link ValueEventListener} from the {@Link Query} object.
-     * @param query The query from which to remove the listener.
-     * @param listener The listener that should be removed.
-     */
-    private void detachEntityListener(Query query, ValueEventListener listener) {
-        if (query != null && listener != null) {
-            query.removeEventListener(entityListener);
-        }
     }
 
     @Override

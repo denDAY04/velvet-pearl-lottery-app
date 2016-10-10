@@ -8,7 +8,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.velvetPearl.lottery.IEntityUiUpdater;
 import com.velvetPearl.lottery.dataAccess.ITicketRepository;
 import com.velvetPearl.lottery.dataAccess.firebase.scheme.LotteriesScheme;
 import com.velvetPearl.lottery.dataAccess.firebase.scheme.TicketsScheme;
@@ -24,6 +26,7 @@ import java.util.concurrent.TimeoutException;
 public class TicketRepository extends FirebaseRepository implements ITicketRepository {
 
     private static final String LOG_TAG = "TicketRepository";
+
 
     @Override
     public Ticket getTicket(Object id) throws TimeoutException {
@@ -120,5 +123,23 @@ public class TicketRepository extends FirebaseRepository implements ITicketRepos
         verifyAsyncTask();
 
         return ticket;
+    }
+
+    @Override
+    protected ValueEventListener attachEntityListener(Query query, String entityId, IEntityUiUpdater uiUpdater) {
+        ValueEventListener listener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // TODO: implement
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(LOG_TAG, "Cancelled data sync", databaseError.toException());
+            }
+        };
+
+        query.addValueEventListener(listener);
+        return listener;
     }
 }

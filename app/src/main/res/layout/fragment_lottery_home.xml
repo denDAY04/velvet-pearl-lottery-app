@@ -27,7 +27,6 @@
         <TableRow
             android:layout_weight="1">
             <TextView
-                android:text="MMM dd, yyyy hh:mm"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -50,7 +49,6 @@
                 android:layout_marginTop="15dp"
                 android:textSize="22sp" />
             <TextView
-                android:text="1 - 100"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -75,7 +73,6 @@
                 android:layout_marginTop="15dp"
                 android:textSize="22sp"/>
             <TextView
-                android:text="5000"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -100,7 +97,6 @@
                 android:layout_marginTop="15dp"
                 android:textSize="22sp"/>
             <TextView
-                android:text="42"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

@@ -1,4 +1,4 @@
-package com.velvetPearl.lottery.dataAccess;
+package com.velvetPearl.lottery.dataAccess.repositories;
 
 import com.velvetPearl.lottery.dataAccess.models.Ticket;
 
@@ -16,7 +16,7 @@ public interface ITicketRepository {
      * @return
      * @throws TimeoutException if the action did not complete before a given timeout period.
      */
-    Ticket getTicket(Object id) throws TimeoutException;
+    Ticket getTicket(Object id);
 
     /**
      *
@@ -24,7 +24,7 @@ public interface ITicketRepository {
      * @return
      * @throws TimeoutException if the action did not complete before a given timeout period.
      */
-    ArrayList<Ticket> getTicketsForLottery(Object lotteryId) throws TimeoutException;
+    ArrayList<Ticket> getTicketsForLottery(Object lotteryId);
 
     /**
      *

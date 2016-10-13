@@ -1,4 +1,4 @@
-package com.velvetPearl.lottery.dataAccess;
+package com.velvetPearl.lottery.dataAccess.repositories;
 
 import com.velvetPearl.lottery.dataAccess.models.LotteryNumber;
 import com.velvetPearl.lottery.dataAccess.models.Ticket;

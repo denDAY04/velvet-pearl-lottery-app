@@ -1,4 +1,4 @@
-package com.velvetPearl.lottery.dataAccess.firebase;
+package com.velvetPearl.lottery.dataAccess.firebase.repositories;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -8,12 +8,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.velvetPearl.lottery.IEntityUiUpdater;
-import com.velvetPearl.lottery.dataAccess.ILotteryNumberRepository;
+import com.velvetPearl.lottery.dataAccess.repositories.ILotteryNumberRepository;
 import com.velvetPearl.lottery.dataAccess.firebase.scheme.LotteryNumbersScheme;
-import com.velvetPearl.lottery.dataAccess.firebase.scheme.TicketsScheme;
 import com.velvetPearl.lottery.dataAccess.models.LotteryNumber;
 
 import java.util.ArrayList;
@@ -27,6 +27,10 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
 
     private static final String LOG_TAG = "TicketRepository";
 
+    public LotteryNumberRepository(FirebaseDatabase dbContext) {
+        super(dbContext);
+    }
+
 
     @Override
     public ArrayList<LotteryNumber> getLotteryNumbersForTicket(Object ticketId) throws TimeoutException {
@@ -35,7 +39,7 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
         }
 
         final ArrayList<LotteryNumber> result = new ArrayList<>();
-        authenticate();
+        //authenticate();
         dbContext.getReference(LotteryNumbersScheme.LABEL)
                 .equalTo((String) ticketId, LotteryNumbersScheme.Children.TICKET_ID)
                 .addValueEventListener(new ValueEventListener() {
@@ -76,7 +80,7 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
         if (lotteryNumber == null) {
             return null;
         }
-        authenticate();
+        //authenticate();
 
         DatabaseReference dbObjRef = null;
         if (lotteryNumber.getId() != null && !((String)lotteryNumber.getId()).isEmpty()) {
@@ -117,7 +121,7 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
     }
 
     @Override
-    protected ValueEventListener attachEntityListener(Query query, String entityId, IEntityUiUpdater uiUpdater) {
+    protected ValueEventListener attachEntityListener(Query query, String entityId) {
         return null;
     }
 }

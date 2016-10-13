@@ -1,25 +1,21 @@
-package com.velvetPearl.lottery.dataAccess.firebase;
+package com.velvetPearl.lottery.dataAccess.firebase.repositories;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.velvetPearl.lottery.IEntityUiUpdater;
-import com.velvetPearl.lottery.dataAccess.ITicketRepository;
-import com.velvetPearl.lottery.dataAccess.LotterySingleton;
-import com.velvetPearl.lottery.dataAccess.firebase.scheme.LotteriesScheme;
+import com.velvetPearl.lottery.dataAccess.ApplicationDomain;
+import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
+import com.velvetPearl.lottery.dataAccess.repositories.ITicketRepository;
 import com.velvetPearl.lottery.dataAccess.firebase.scheme.TicketsScheme;
 import com.velvetPearl.lottery.dataAccess.models.Ticket;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -29,39 +25,43 @@ public class TicketRepository extends FirebaseRepository implements ITicketRepos
 
     private static final String LOG_TAG = "TicketRepository";
 
+    public TicketRepository(FirebaseDatabase dbContext) {
+        super(dbContext);
+    }
+
 
     @Override
-    public Ticket getTicket(Object id) throws TimeoutException {
+    public Ticket getTicket(Object id) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
-    public ArrayList<Ticket> getTicketsForLottery(Object lotteryId) throws TimeoutException {
-        authenticate();
+    public ArrayList<Ticket> getTicketsForLottery(Object lotteryId)  {
+        //authenticate();
 
         if (lotteryId == null || lotteryId.getClass() != String.class) {
             return null;
         }
 
 
-        authenticate();
+        //authenticate();
         query = dbContext.getReference(TicketsScheme.LABEL).orderByChild(TicketsScheme.Children.LOTTERY_ID).equalTo((String)lotteryId);
-        entityListener = attachEntityListener(query, null, null);
+        entityListener = attachEntityListener(query, null);
 
-        synchronized (lock) {
-            Log.d(LOG_TAG, "locking ticket repo");
+//        synchronized (lock) {
+//            Log.d(LOG_TAG, "locking ticket repo");
+//
+//            try {
+//                unlockedByNotify = false;
+//                lock.wait(LOCK_TIMEOUT_MS);
+//            } catch (InterruptedException e) {
+//                Log.w(LOG_TAG, "getLottery data fetch sleep interrupted", e);
+//            }
+//        }
+//        Log.d(LOG_TAG, "unlocked ticket repo");
+//        verifyAsyncTask();
 
-            try {
-                unlockedByNotify = false;
-                lock.wait(LOCK_TIMEOUT_MS);
-            } catch (InterruptedException e) {
-                Log.w(LOG_TAG, "getLottery data fetch sleep interrupted", e);
-            }
-        }
-        Log.d(LOG_TAG, "unlocked ticket repo");
-        verifyAsyncTask();
-
-        return LotterySingleton.getActiveLottery().getTickets();
+//        return ApplicationDomain.getInstance().getActiveLottery().getTickets();
 
 
 //        final ArrayList<Ticket> result = new ArrayList<>();
@@ -150,16 +150,16 @@ public class TicketRepository extends FirebaseRepository implements ITicketRepos
     }
 
     @Override
-    protected ValueEventListener attachEntityListener(Query query, String entityId, IEntityUiUpdater uiUpdater) {
+    protected ValueEventListener attachEntityListener(Query query, String entityId) {
         ValueEventListener listener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // TODO: implement
-                synchronized (lock) {
-                    ArrayList<Ticket> tickets = LotterySingleton.getActiveLottery().getTickets();
+//                synchronized (lock) {
+                    ArrayList<Ticket> tickets = ApplicationDomain.getInstance().getActiveLottery().getTickets();
                     for (DataSnapshot entry : dataSnapshot.getChildren()) {
                         Ticket ticket = entry.getValue(Ticket.class);
                         ticket.setId(entry.getKey());
+
                         int existingIndex = tickets.indexOf(ticket);
                         if (existingIndex > -1) {
                             Log.d(LOG_TAG, "updating ticket with ID " + ticket.getId());
@@ -169,9 +169,11 @@ public class TicketRepository extends FirebaseRepository implements ITicketRepos
                             tickets.add(ticket);
                         }
                     }
-                    unlockedByNotify = true;
-                    lock.notify();
-                }
+                    ApplicationDomain.getInstance().setModelChanged();
+                    ApplicationDomain.getInstance().notifyObservers(DataAccessEvent.TICKET_LIST_UPDATED);
+//                    unlockedByNotify = true;
+//                    lock.notify();
+//                }
             }
 
             @Override

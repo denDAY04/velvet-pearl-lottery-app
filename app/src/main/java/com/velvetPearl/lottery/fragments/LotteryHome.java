@@ -17,7 +17,8 @@ import android.widget.TextView;
 
 import com.velvetPearl.lottery.IEntityUiUpdater;
 import com.velvetPearl.lottery.R;
-import com.velvetPearl.lottery.dataAccess.LotterySingleton;
+import com.velvetPearl.lottery.dataAccess.ApplicationDomain;
+import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
 import com.velvetPearl.lottery.dataAccess.models.Lottery;
 import com.velvetPearl.lottery.dataAccess.models.Ticket;
 
@@ -25,10 +26,12 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.TimeoutException;
 
 
-public class LotteryHome extends Fragment implements IEntityUiUpdater, View.OnClickListener {
+public class LotteryHome extends Fragment implements IEntityUiUpdater, View.OnClickListener, Observer {
 
     private static final String LOG_TAG = "LotteryHome";
 
@@ -48,7 +51,9 @@ public class LotteryHome extends Fragment implements IEntityUiUpdater, View.OnCl
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_lottery_home, container, false);
 
-        if (savedInstanceState == null && LotterySingleton.getActiveLottery() == null) {
+        ApplicationDomain.getInstance().addObserver(this);
+
+        if (savedInstanceState == null && ApplicationDomain.getInstance().getActiveLottery() == null) {
             Bundle args = getArguments();
             String lotteryId = args.getString("lotteryId");
             Log.d(LOG_TAG, "loading ID " + lotteryId);
@@ -56,13 +61,21 @@ public class LotteryHome extends Fragment implements IEntityUiUpdater, View.OnCl
             initLoadingDialog();
             initUi(root);
             loadingDialog.show();
-            loadLotteryAsync(lotteryId);
+            loadLottery(lotteryId);
+            //loadLotteryAsync(lotteryId);
         } else {
             initUi(root);
             updateUi();
         }
 
         return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        Log.d(LOG_TAG, "unsubscribing from model updates");
+        ApplicationDomain.getInstance().deleteObserver(this);
+        super.onDestroyView();
     }
 
     /**
@@ -103,9 +116,7 @@ public class LotteryHome extends Fragment implements IEntityUiUpdater, View.OnCl
 
     @Override
     public void updateUi() {
-        Log.d(LOG_TAG, "update ui!");
-
-        Lottery lottery = LotterySingleton.getActiveLottery();
+        Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
         Locale locale = Locale.getDefault();
         String timestamp = SimpleDateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(new Date(lottery.getCreated()));
         timestampLab.setText(String.format(locale, "%s", timestamp));
@@ -121,55 +132,65 @@ public class LotteryHome extends Fragment implements IEntityUiUpdater, View.OnCl
     }
 
 
-    /**
-     * Load the full lottery for the specific lottery ID and update the UI when the data has been
-     * loaded.
-     * @param lotteryId ID of the lottery to load.
-     */
-    private void loadLotteryAsync(final String lotteryId) {
-        new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                try {
-                    // TODO: load all children data of the lottery
-                    return LotterySingleton.getInstance().getLottery(lotteryId, LotteryHome.this);
-                } catch (TimeoutException e) {
-                    Log.w(LOG_TAG, "fetching lottery data failed", e);
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Object result) {
-                loadingDialog.dismiss();
-                if (result == null) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder
-                            .setTitle(R.string.error)
-                            .setMessage(R.string.lotteryhome_error_timeout)
-                            .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    loadingDialog.show();
-                                    loadLotteryAsync(lotteryId);
-                                }
-                            })
-                            .setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    // Back to welcome - clearing the stack at the same time
-                                    FragmentManager fragmentManager = getFragmentManager();
-                                    FragmentManager.BackStackEntry first = fragmentManager.getBackStackEntryAt(0);
-                                    fragmentManager.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                                    fragmentManager.beginTransaction().replace(R.id.main_fragment_container, new Welcome()).commit();
-                                }
-                            });
-                    loadingDialog.dismiss();
-                    builder.create().show();
-                }
-            }
-        }.execute();
+    private void loadLottery(String lotteryId) {
+        ApplicationDomain.getInstance().lotteryRepository.getLottery(lotteryId);
+        ApplicationDomain.getInstance().ticketRepository.getTicketsForLottery(lotteryId);
     }
+
+//    /**
+//     * Load the full lottery for the specific lottery ID and update the UI when the data has been
+//     * loaded.
+//     * @param lotteryId ID of the lottery to load.
+//     */
+//    private void loadLotteryAsync(final String lotteryId) {
+//        new AsyncTask() {
+//            @Override
+//            protected Object doInBackground(Object[] objects) {
+//                try {
+//                    // TODO: load all children data of the lottery
+//                    Lottery lottery = ApplicationDomain.getInstance().lotteryRepository.getLottery(lotteryId, LotteryHome.this);
+//                    ApplicationDomain.getInstance().ticketRepository.getTicketsForLottery(lotteryId);
+//                    for (Ticket ticket : lottery.getTickets()) {
+//                        ApplicationDomain.getInstance().lotteryNumberRepository.getLotteryNumbersForTicket(ticket.getId());
+//                    }
+//                    return lottery;
+//                } catch (TimeoutException e) {
+//                    Log.w(LOG_TAG, "fetching lottery data failed", e);
+//                }
+//                return null;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(Object result) {
+//                loadingDialog.dismiss();
+//                if (result == null) {
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+//                    builder
+//                            .setTitle(R.string.error)
+//                            .setMessage(R.string.lotteryhome_error_timeout)
+//                            .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialogInterface, int i) {
+//                                    loadingDialog.show();
+//                                    loadLotteryAsync(lotteryId);
+//                                }
+//                            })
+//                            .setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialogInterface, int i) {
+//                                    // Back to welcome - clearing the stack at the same time
+//                                    FragmentManager fragmentManager = getFragmentManager();
+//                                    FragmentManager.BackStackEntry first = fragmentManager.getBackStackEntryAt(0);
+//                                    fragmentManager.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//                                    fragmentManager.beginTransaction().replace(R.id.main_fragment_container, new Welcome()).commit();
+//                                }
+//                            });
+//                    loadingDialog.dismiss();
+//                    builder.create().show();
+//                }
+//            }
+//        }.execute();
+//    }
 
     @Override
     public void onClick(View v) {
@@ -179,6 +200,18 @@ public class LotteryHome extends Fragment implements IEntityUiUpdater, View.OnCl
             Log.d(LOG_TAG, "NOT IMPLEMENTED");
         } else if (v == prizesBtn) {
             Log.d(LOG_TAG, "NOT IMPLEMENTED");
+        }
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if (arg.getClass() != DataAccessEvent.class || arg != DataAccessEvent.LOTTERY_UPDATED) {
+            return;
+        }
+
+        updateUi();
+        if (loadingDialog.isShowing()) {
+            loadingDialog.dismiss();
         }
     }
 }

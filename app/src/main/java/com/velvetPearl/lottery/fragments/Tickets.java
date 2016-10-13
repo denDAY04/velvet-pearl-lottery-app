@@ -3,42 +3,51 @@ package com.velvetPearl.lottery.fragments;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.velvetPearl.lottery.MainActivity;
 import com.velvetPearl.lottery.R;
-import com.velvetPearl.lottery.dataAccess.LotterySingleton;
+import com.velvetPearl.lottery.dataAccess.ApplicationDomain;
+import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
 import com.velvetPearl.lottery.dataAccess.models.Ticket;
-import com.velvetPearl.lottery.viewModels.LotteryListViewModel;
 import com.velvetPearl.lottery.viewModels.TicketListViewModel;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
-public class Tickets extends Fragment {
+public class Tickets extends Fragment implements Observer {
 
+    private static final String LOG_TAG = "TicketsFragment";
     private ListView ticketsListView = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_tickets, container, false);
-
+        ApplicationDomain.getInstance().addObserver(this);
         ticketsListView = (ListView) root.findViewById(R.id.tickets_list_container);
 
         if (savedInstanceState == null) {
-            initUi();
+            updateUi();
         }
 
         return root;
     }
 
-    private void initUi() {
-        final ArrayList<TicketListViewModel> viewModels = convertToViewModels(LotterySingleton.getActiveLottery().getTickets());
+    @Override
+    public void onDestroyView() {
+        Log.d(LOG_TAG, "unsubscribing from model updates");
+        ApplicationDomain.getInstance().deleteObserver(this);
+        super.onDestroyView();
+    }
+
+    private void updateUi() {
+        final ArrayList<TicketListViewModel> viewModels = convertToViewModels(ApplicationDomain.getInstance().getActiveLottery().getTickets());
 
         ticketsListView.setAdapter(new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_2, android.R.id.text1, viewModels){
             @NonNull
@@ -83,5 +92,13 @@ public class Tickets extends Fragment {
             viewModels.add(new TicketListViewModel(ticket));
         }
         return viewModels;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if (arg.getClass() != DataAccessEvent.class || arg != DataAccessEvent.TICKET_LIST_UPDATED) {
+            return;
+        }
+        updateUi();
     }
 }

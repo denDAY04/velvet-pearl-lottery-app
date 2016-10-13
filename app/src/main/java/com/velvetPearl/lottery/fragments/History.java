@@ -17,17 +17,20 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.velvetPearl.lottery.R;
-import com.velvetPearl.lottery.dataAccess.LotterySingleton;
+import com.velvetPearl.lottery.dataAccess.ApplicationDomain;
+import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
 import com.velvetPearl.lottery.dataAccess.models.Lottery;
 import com.velvetPearl.lottery.viewModels.LotteryListViewModel;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.TimeoutException;
 
 /**
  * Fragment containing a list view of the lottery history.
  */
-public class History extends Fragment {
+public class History extends Fragment implements Observer {
 
     private static final String LOG_TAG = "HistoryFragment";
     private ProgressDialog loadingDlg;
@@ -36,14 +39,21 @@ public class History extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragView = inflater.inflate(R.layout.fragment_history, container, false);
-
+        ApplicationDomain.getInstance().addObserver(this);
         historyListView = (ListView) fragView.findViewById(R.id.history_lottery_listview);
 
         initLoadingDialog();
         loadingDlg.show();
-        loadHistoryAsync();
+        loadHistory();
 
         return fragView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        Log.d(LOG_TAG, "unsubscribing from model updates");
+        ApplicationDomain.getInstance().deleteObserver(this);
+        super.onDestroyView();
     }
 
     /**
@@ -62,89 +72,50 @@ public class History extends Fragment {
     }
 
     /**
-     * Load the history data asynchronously and display it.
-     * This method dismisses the progress dialog when the loading has completed or failed. Upon
-     * failure it displays an alert enabling the user to either retry the loading or return to
-     * the welcome screen. Upon success the history is loaded into a list view.
+     *
      */
-    private void loadHistoryAsync() {
-        new AsyncTask() {
-            @Override
-            public void onPostExecute(final Object result) {
-                if (result == null) {
+    private void loadHistory() {
+        ApplicationDomain.getInstance().lotteryRepository.getAllLotteries();
+    }
 
-                    // Error occurred, so show dialog with option to retry or go back to home.
-                    AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(getContext());
-                    dlgBuilder
-                            .setTitle(getString(R.string.error))
-                            .setMessage(getString(R.string.history_error_loading_history))
-                            .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    loadingDlg.show();
-                                    loadHistoryAsync();
-                                }
-                            })
-                            .setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // Back to welcome - clearing the stack at the same time
-                                    FragmentManager fragmentManager = getFragmentManager();
-                                    FragmentManager.BackStackEntry first = fragmentManager.getBackStackEntryAt(0);
-                                    fragmentManager.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                                    fragmentManager.beginTransaction().replace(R.id.main_fragment_container, new Welcome()).commit();
-                                }
-                            });
-                    AlertDialog dlg = dlgBuilder.create();
-                    loadingDlg.dismiss();
-                    dlg.show();
+    @Override
+    public void update(Observable o, Object arg) {
+        if (arg.getClass() != DataAccessEvent.class || arg != DataAccessEvent.LOTTERY_LIST_UPDATED) {
+            return;
+        }
 
-                } else {
+        ArrayList<Lottery> lotteries = ApplicationDomain.getInstance().getAllLotteries();
+        if (lotteries.size() > 0) {
 
-                    ArrayList<Lottery> lotteries = (ArrayList<Lottery>) result;
-                    if (lotteries.size() > 0) {
-
-                        ArrayList<LotteryListViewModel> viewModels = new ArrayList<>();
-                        for (Lottery entity : lotteries) {
-                            viewModels.add(new LotteryListViewModel(entity));
-                        }
-
-                        historyListView.setAdapter(new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, viewModels));
-
-                        // Add click listener for navigating to Lottery Home fragment on item click
-                        historyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                LotteryListViewModel item = (LotteryListViewModel) historyListView.getItemAtPosition(i);
-                                Bundle args = new Bundle();
-                                args.putString("lotteryId", (String) item.getId());
-                                Fragment destination = new LotteryHome();
-                                destination.setArguments(args);
-                                LotterySingleton.setActiveLottery(null);
-                                getFragmentManager().beginTransaction().replace(R.id.main_fragment_container,destination).addToBackStack(null).commit();
-                            }
-                        });
-
-                    } else {
-                        ArrayList<String> tempList = new ArrayList<>();
-                        tempList.add(getString(R.string.history_no_lotteries));
-                        historyListView.setAdapter(new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, tempList));
-                    }
-
-                    loadingDlg.dismiss();
-                }
+            ArrayList<LotteryListViewModel> viewModels = new ArrayList<>();
+            for (Lottery entity : lotteries) {
+                viewModels.add(new LotteryListViewModel(entity));
             }
 
+            historyListView.setAdapter(new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, viewModels));
 
-            @Override
-            protected Object doInBackground(Object[] params) {
-                try {
-                    return LotterySingleton.getInstance().getAllLotteries();
-                } catch (TimeoutException e) {
-                    Log.w(LOG_TAG, "loadHistoryAsync:doInBackground data load failed", e);
+            // Add click listener for navigating to Lottery Home fragment on item click
+            historyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    LotteryListViewModel item = (LotteryListViewModel) historyListView.getItemAtPosition(i);
+                    Bundle args = new Bundle();
+                    args.putString("lotteryId", (String) item.getId());
+                    Fragment destination = new LotteryHome();
+                    destination.setArguments(args);
+                    ApplicationDomain.getInstance().setActiveLottery(null);
+                    getFragmentManager().beginTransaction().replace(R.id.main_fragment_container,destination).addToBackStack(null).commit();
                 }
-                return null;
-            }
-        }.execute();
+            });
+
+        } else {
+            ArrayList<String> tempList = new ArrayList<>();
+            tempList.add(getString(R.string.history_no_lotteries));
+            historyListView.setAdapter(new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, tempList));
+        }
+
+        if (loadingDlg.isShowing()) {
+            loadingDlg.dismiss();
+        }
     }
 }

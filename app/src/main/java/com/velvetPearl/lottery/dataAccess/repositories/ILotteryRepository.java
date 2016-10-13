@@ -1,4 +1,4 @@
-package com.velvetPearl.lottery.dataAccess;
+package com.velvetPearl.lottery.dataAccess.repositories;
 
 import com.velvetPearl.lottery.IEntityUiUpdater;
 import com.velvetPearl.lottery.dataAccess.models.Lottery;
@@ -16,22 +16,13 @@ import java.util.concurrent.TimeoutException;
  */
 public interface ILotteryRepository {
 
-    Lottery getLottery(Object id, IEntityUiUpdater uiCallback) throws TimeoutException;
-
-    /**
-     *
-     * @param id
-     * @return
-     * @throws TimeoutException if the action did not complete before a given timeout period.
-     */
-    Lottery getLottery(Object id) throws TimeoutException;
+    Lottery getLottery(Object id);
 
     /**
      * Get all lottery entities in the data service sorted by created date (descending).
-     * @return A collection of all the entities.
      * @throws TimeoutException if the action did not complete before a given timeout period.
      */
-    ArrayList<Lottery> getAllLotteries() throws TimeoutException;
+    void getAllLotteries();
 
     /**
      * Save a lottery in the data service, whether it's a new entity altogether or a modified one.

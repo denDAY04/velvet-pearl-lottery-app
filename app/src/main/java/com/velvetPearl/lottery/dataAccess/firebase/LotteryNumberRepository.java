@@ -8,7 +8,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.velvetPearl.lottery.IEntityUiUpdater;
 import com.velvetPearl.lottery.dataAccess.ILotteryNumberRepository;
 import com.velvetPearl.lottery.dataAccess.firebase.scheme.LotteryNumbersScheme;
 import com.velvetPearl.lottery.dataAccess.firebase.scheme.TicketsScheme;
@@ -112,5 +114,10 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
         verifyAsyncTask();
 
         return lotteryNumber;
+    }
+
+    @Override
+    protected ValueEventListener attachEntityListener(Query query, String entityId, IEntityUiUpdater uiUpdater) {
+        return null;
     }
 }

@@ -6,6 +6,9 @@ import android.util.Log;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.velvetPearl.lottery.IEntityUiUpdater;
 import com.velvetPearl.lottery.dataAccess.IPrizeRepository;
 import com.velvetPearl.lottery.dataAccess.firebase.scheme.PrizesScheme;
 import com.velvetPearl.lottery.dataAccess.models.Prize;
@@ -65,5 +68,10 @@ public class PrizeRepository extends FirebaseRepository implements IPrizeReposit
         verifyAsyncTask();
 
         return prize;
+    }
+
+    @Override
+    protected ValueEventListener attachEntityListener(Query query, String entityId, IEntityUiUpdater uiUpdater) {
+        return null;
     }
 }

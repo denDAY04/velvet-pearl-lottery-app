@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.velvetPearl.lottery.IEntityUiUpdater;
@@ -27,7 +28,7 @@ import java.util.Locale;
 import java.util.concurrent.TimeoutException;
 
 
-public class LotteryHome extends Fragment implements IEntityUiUpdater {
+public class LotteryHome extends Fragment implements IEntityUiUpdater, View.OnClickListener {
 
     private static final String LOG_TAG = "LotteryHome";
 
@@ -36,27 +37,36 @@ public class LotteryHome extends Fragment implements IEntityUiUpdater {
     private TextView lotteryNumRangeLab = null;
     private TextView pricePerNumLab = null;
     private TextView lotteryNumSoldCount = null;
+    private Button ticketsBtn = null;
+    private Button winnersBtn = null;
+    private Button prizesBtn = null;
+
 
     private ProgressDialog loadingDialog = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View fragView = inflater.inflate(R.layout.fragment_lottery_home, container, false);
+        View root = inflater.inflate(R.layout.fragment_lottery_home, container, false);
 
-        Bundle args = getArguments();
-        String lotteryId = args.getString("lotteryId");
-        Log.d(LOG_TAG, "loading ID " + lotteryId);
+        if (savedInstanceState == null && LotterySingleton.getActiveLottery() == null) {
+            Bundle args = getArguments();
+            String lotteryId = args.getString("lotteryId");
+            Log.d(LOG_TAG, "loading ID " + lotteryId);
 
-        initLoadingDialog();
-        initUi(fragView);
-        loadingDialog.show();
-        loadLotteryAsync(lotteryId);
+            initLoadingDialog();
+            initUi(root);
+            loadingDialog.show();
+            loadLotteryAsync(lotteryId);
+        } else {
+            initUi(root);
+            updateUi();
+        }
 
-        return fragView;
+        return root;
     }
 
     /**
-     * Initialize the UI references.
+     * Initialize the UI references and set basic handlers.
      * @param view The view on which to collect the UI references.
      */
     private void initUi(View view) {
@@ -64,6 +74,13 @@ public class LotteryHome extends Fragment implements IEntityUiUpdater {
         lotteryNumRangeLab = (TextView) view.findViewById(R.id.lotteryhome_num_range_var);
         pricePerNumLab = (TextView) view.findViewById(R.id.lotteryhome_price_per_number_var);
         lotteryNumSoldCount = (TextView) view.findViewById(R.id.lotteryhome_numbers_sold_var);
+        ticketsBtn = (Button) view.findViewById(R.id.lotteryhome_tickets_btn);
+        winnersBtn = (Button) view.findViewById(R.id.lotteryhome_winners_btn);
+        prizesBtn = (Button) view.findViewById(R.id.lotteryhome_prizes_btn);
+
+        ticketsBtn.setOnClickListener(this);
+        winnersBtn.setOnClickListener(this);
+        prizesBtn.setOnClickListener(this);
     }
 
     /**
@@ -88,7 +105,6 @@ public class LotteryHome extends Fragment implements IEntityUiUpdater {
     public void updateUi() {
         Log.d(LOG_TAG, "update ui!");
 
-        // TODO populate UI with
         Lottery lottery = LotterySingleton.getActiveLottery();
         Locale locale = Locale.getDefault();
         String timestamp = SimpleDateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(new Date(lottery.getCreated()));
@@ -145,7 +161,7 @@ public class LotteryHome extends Fragment implements IEntityUiUpdater {
                                     FragmentManager fragmentManager = getFragmentManager();
                                     FragmentManager.BackStackEntry first = fragmentManager.getBackStackEntryAt(0);
                                     fragmentManager.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                                    fragmentManager.beginTransaction().replace(R.id.main_fragment, new Welcome()).commit();
+                                    fragmentManager.beginTransaction().replace(R.id.main_fragment_container, new Welcome()).commit();
                                 }
                             });
                     loadingDialog.dismiss();
@@ -153,5 +169,16 @@ public class LotteryHome extends Fragment implements IEntityUiUpdater {
                 }
             }
         }.execute();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == ticketsBtn) {
+            getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Tickets()).addToBackStack(null).commit();
+        } else if (v == winnersBtn) {
+            Log.d(LOG_TAG, "NOT IMPLEMENTED");
+        } else if (v == prizesBtn) {
+            Log.d(LOG_TAG, "NOT IMPLEMENTED");
+        }
     }
 }

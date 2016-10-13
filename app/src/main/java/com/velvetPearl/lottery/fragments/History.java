@@ -4,7 +4,6 @@ package com.velvetPearl.lottery.fragments;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -57,7 +56,7 @@ public class History extends Fragment {
             public void onCancel(DialogInterface dialog) {
                 // Switch back to home on cancel.
                 Log.d(LOG_TAG, "progressDialog:onCancelListener canceling history data load");
-                getFragmentManager().beginTransaction().replace(R.id.main_fragment, new Welcome()).commit();
+                getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Welcome()).commit();
             }
         });
     }
@@ -93,7 +92,7 @@ public class History extends Fragment {
                                     FragmentManager fragmentManager = getFragmentManager();
                                     FragmentManager.BackStackEntry first = fragmentManager.getBackStackEntryAt(0);
                                     fragmentManager.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                                    fragmentManager.beginTransaction().replace(R.id.main_fragment, new Welcome()).commit();
+                                    fragmentManager.beginTransaction().replace(R.id.main_fragment_container, new Welcome()).commit();
                                 }
                             });
                     AlertDialog dlg = dlgBuilder.create();
@@ -121,7 +120,8 @@ public class History extends Fragment {
                                 args.putString("lotteryId", (String) item.getId());
                                 Fragment destination = new LotteryHome();
                                 destination.setArguments(args);
-                                getFragmentManager().beginTransaction().replace(R.id.main_fragment,destination).addToBackStack(null).commit();
+                                LotterySingleton.setActiveLottery(null);
+                                getFragmentManager().beginTransaction().replace(R.id.main_fragment_container,destination).addToBackStack(null).commit();
                             }
                         });
 

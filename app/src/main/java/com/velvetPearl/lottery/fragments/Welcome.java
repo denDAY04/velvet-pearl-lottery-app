@@ -28,7 +28,7 @@ public class Welcome extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(LOG_TAG, "onClick: history");
-                getFragmentManager().beginTransaction().replace(R.id.main_fragment, new History()).addToBackStack(null).commit();
+                getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new History()).addToBackStack(null).commit();
             }
         });
 

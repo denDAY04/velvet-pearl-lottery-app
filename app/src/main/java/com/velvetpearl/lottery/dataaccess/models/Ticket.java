@@ -15,6 +15,10 @@ public class Ticket {
     // Navigational member fields
     private Object lotteryId;
 
+    public Ticket() {
+        lotteryNumbers = new ArrayList<>();
+    }
+
     public String getOwner() {
         return owner;
     }
@@ -45,5 +49,19 @@ public class Ticket {
 
     public void setLotteryId(Object lotteryId) {
         this.lotteryId = lotteryId;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        Ticket other = (Ticket) obj;
+        if (other.id == null) {
+            return false;
+        }
+
+        return id.equals(other.id);
     }
 }

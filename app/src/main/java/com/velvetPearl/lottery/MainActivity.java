@@ -4,10 +4,11 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.velvetPearl.lottery.fragments.Welcome;
 
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().add(R.id.main_fragment, new Welcome()).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.main_fragment_container, new Welcome()).commit();
         }
     }
 
@@ -100,4 +101,26 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+//        super.onCreateOptionsMenu(menu);
+//        getMenuInflater().inflate(R.menu.game, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+//        if (item.getItemId() == R.id.menu_item_new_game) {
+//            Log.d(LOG_TAG, "starting new game from menu");
+//            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment, new Game()).commit();
+//        } else if (item.getItemId() == R.id.menu_item_close_game) {
+//            Log.d(LOG_TAG, "ending game from menu");
+//            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment, new Welcome()).commit();
+//        } else if(item.getItemId() == R.id.menu_item_view_words) {
+//            Log.d(LOG_TAG, "displaying list of possible words");
+//            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment, new ViewWords()).addToBackStack(null).commit();
+//        }
+        return true;
+    }
 }

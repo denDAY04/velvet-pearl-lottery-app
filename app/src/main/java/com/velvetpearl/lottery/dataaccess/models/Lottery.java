@@ -16,7 +16,11 @@ public class Lottery {
 
     private ArrayList<Prize> prizes;
     private ArrayList<Ticket> tickets;
-    private ArrayList<LotteryNumber> lotteryNumbers;
+    //private ArrayList<LotteryNumber> lotteryNumbers;
+
+    public Lottery() {
+        tickets = new ArrayList<>();
+    }
 
     public Object getId() {
         return id;
@@ -76,13 +80,13 @@ public class Lottery {
         this.tickets = tickets;
     }
 
-    public ArrayList<LotteryNumber> getLotteryNumbers() {
-        return lotteryNumbers;
-    }
-
-    public void setLotteryNumbers(ArrayList<LotteryNumber> lotteryNumbers) {
-        this.lotteryNumbers = lotteryNumbers;
-    }
+//    public ArrayList<LotteryNumber> getLotteryNumbers() {
+//        return lotteryNumbers;
+//    }
+//
+//    public void setLotteryNumbers(ArrayList<LotteryNumber> lotteryNumbers) {
+//        this.lotteryNumbers = lotteryNumbers;
+//    }
 
     @Override
     public String toString() {
@@ -91,9 +95,18 @@ public class Lottery {
         sb.append(String.format(", created %d", created));
         sb.append(String.format(", price pr. num %.2f", pricePerLotteryNum));
         sb.append(String.format(", num bounds {low, high} {%d, %d}", lotteryNumLowerBound, lotteryNumUpperBound));
+        if (tickets != null) {
+            sb.append(String.format(", #tickets %d", tickets.size()));
+            int lotteryNumberCount = 0;
+            for (Ticket ticket : tickets) {
+                lotteryNumberCount += ticket.getLotteryNumbers().size();
+            }
+            sb.append(String.format(", #lotteryNumbers %d" , lotteryNumberCount));
+        } else {
+            sb.append(", #tickets 0, #lotteryNumbers 0");
+        }
         sb.append(String.format(", #prizes %d", prizes != null ? prizes.size() : 0));
-        sb.append(String.format(", #tickets %d", tickets != null ? tickets.size() : 0));
-        sb.append(String.format(", #lotteryNumbers %d" , lotteryNumbers != null ? lotteryNumbers.size() : 0));
+
         return sb.toString();
     }
 }

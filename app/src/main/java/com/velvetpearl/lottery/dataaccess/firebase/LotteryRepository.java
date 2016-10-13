@@ -52,10 +52,14 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
                 unlockedByNotify = false;
                 lock.wait(LOCK_TIMEOUT_MS);
             } catch (InterruptedException e) {
-                Log.w(LOG_TAG, "getLottery data fetch sleep interrupted", e);
+                Log.w(LOG_TAG, "getLottery lottery fetch sleep interrupted", e);
             }
         }
         verifyAsyncTask();
+
+        // Fetch tickets into the lottery instance.
+        Log.d(LOG_TAG, "fetching tickets for lottery ID " + LotterySingleton.getActiveLottery().getId());
+        LotterySingleton.getTicketInstance().getTicketsForLottery(LotterySingleton.getActiveLottery().getId());
 
         return LotterySingleton.getActiveLottery();
     }

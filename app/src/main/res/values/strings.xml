@@ -24,4 +24,5 @@
     <string name="winners">Winners</string>
     <string name="home">Home</string>
     <string name="numbers_sold">Numbers sold</string>
+    <string name="tickets_list_item_owner">Owner</string>
 </resources>

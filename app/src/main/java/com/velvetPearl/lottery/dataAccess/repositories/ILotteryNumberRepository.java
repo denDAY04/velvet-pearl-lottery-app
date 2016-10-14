@@ -11,7 +11,7 @@ import java.util.concurrent.TimeoutException;
  */
 public interface ILotteryNumberRepository {
 
-    ArrayList<LotteryNumber> getLotteryNumbersForTicket(Object ticketId) throws TimeoutException;
+    void getLotteryNumbersForTicket(Object ticketId);
 
-    LotteryNumber saveLotteryNumber(LotteryNumber lotteryNumber) throws TimeoutException;
+    LotteryNumber saveLotteryNumber(LotteryNumber lotteryNumber);
 }

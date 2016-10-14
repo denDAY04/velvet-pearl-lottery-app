@@ -33,13 +33,12 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
 
 
     @Override
-    public ArrayList<LotteryNumber> getLotteryNumbersForTicket(Object ticketId) throws TimeoutException {
+    public void getLotteryNumbersForTicket(Object ticketId) {
         if (ticketId == null || ticketId.getClass() != String.class) {
-            return null;
+            return;
         }
 
         final ArrayList<LotteryNumber> result = new ArrayList<>();
-        //authenticate();
         dbContext.getReference(LotteryNumbersScheme.LABEL)
                 .equalTo((String) ticketId, LotteryNumbersScheme.Children.TICKET_ID)
                 .addValueEventListener(new ValueEventListener() {
@@ -62,17 +61,6 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
                         Log.w(LOG_TAG, "getLotteryNumbersForTicket:onCancelled canceled data fetch", databaseError.toException());
                     }
                 });
-
-        synchronized (lock) {
-            try {
-                lock.wait(LOCK_TIMEOUT_MS);
-            } catch (InterruptedException e) {
-                Log.w(LOG_TAG, "getLotteryNumbersForTicket wait on data fetch interrupted", e);
-            }
-        }
-        verifyAsyncTask();
-
-        return result;
     }
 
     @Override

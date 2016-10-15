@@ -66,8 +66,7 @@ public class TicketRepository extends FirebaseRepository implements ITicketRepos
                         tickets.add(ticket);
                     }
                 }
-                ApplicationDomain.getInstance().setModelChanged();
-                ApplicationDomain.getInstance().notifyObservers(DataAccessEvent.TICKET_LIST_UPDATED);
+                ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.TICKET_LIST_UPDATED);
             }
 
             @Override

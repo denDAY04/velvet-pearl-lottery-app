@@ -3,11 +3,8 @@ package com.velvetPearl.lottery.fragments;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.velvetPearl.lottery.IEntityUiUpdater;
 import com.velvetPearl.lottery.R;
 import com.velvetPearl.lottery.dataAccess.ApplicationDomain;
 import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
@@ -28,10 +24,9 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.concurrent.TimeoutException;
 
 
-public class LotteryHome extends Fragment implements IEntityUiUpdater, View.OnClickListener, Observer {
+public class LotteryHome extends Fragment implements View.OnClickListener, Observer {
 
     private static final String LOG_TAG = "LotteryHome";
 
@@ -44,8 +39,9 @@ public class LotteryHome extends Fragment implements IEntityUiUpdater, View.OnCl
     private Button winnersBtn = null;
     private Button prizesBtn = null;
 
-
     private ProgressDialog loadingDialog = null;
+    private boolean initialLoad = true;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,8 +57,10 @@ public class LotteryHome extends Fragment implements IEntityUiUpdater, View.OnCl
             initLoadingDialog();
             initUi(root);
             loadingDialog.show();
+
+            ApplicationDomain.getInstance().lotteryNumberRepository.clearState();
+
             loadLottery(lotteryId);
-            //loadLotteryAsync(lotteryId);
         } else {
             initUi(root);
             updateUi();
@@ -114,7 +112,6 @@ public class LotteryHome extends Fragment implements IEntityUiUpdater, View.OnCl
                 });
     }
 
-    @Override
     public void updateUi() {
         Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
         Locale locale = Locale.getDefault();
@@ -133,8 +130,7 @@ public class LotteryHome extends Fragment implements IEntityUiUpdater, View.OnCl
 
 
     private void loadLottery(String lotteryId) {
-        ApplicationDomain.getInstance().lotteryRepository.getLottery(lotteryId);
-        ApplicationDomain.getInstance().ticketRepository.getTicketsForLottery(lotteryId);
+        Lottery lottery = ApplicationDomain.getInstance().lotteryRepository.getLottery(lotteryId);
     }
 
 //    /**
@@ -205,13 +201,27 @@ public class LotteryHome extends Fragment implements IEntityUiUpdater, View.OnCl
 
     @Override
     public void update(Observable o, Object arg) {
-        if (arg.getClass() != DataAccessEvent.class || arg != DataAccessEvent.LOTTERY_UPDATED) {
-            return;
+        if (arg.getClass() == DataAccessEvent.class) {
+            if (arg == DataAccessEvent.LOTTERY_UPDATED) {
+                if (initialLoad) {
+                    ApplicationDomain.getInstance().ticketRepository.getTicketsForLottery(ApplicationDomain.getInstance().getActiveLottery().getId());
+                    return;
+                }
+            } else if (arg == DataAccessEvent.TICKET_LIST_UPDATED) {
+                if (initialLoad) {
+                    Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
+                    for (Ticket ticket : lottery.getTickets()) {
+                        ApplicationDomain.getInstance().lotteryNumberRepository.getLotteryNumbersForTicket(ticket.getId());
+                    }
+                    initialLoad = false;
+                }
+            }
+
+            updateUi();
+            if (loadingDialog.isShowing()) {
+                loadingDialog.dismiss();
+            }
         }
 
-        updateUi();
-        if (loadingDialog.isShowing()) {
-            loadingDialog.dismiss();
-        }
     }
 }

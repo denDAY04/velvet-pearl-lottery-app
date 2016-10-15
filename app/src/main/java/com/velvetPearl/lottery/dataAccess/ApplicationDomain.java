@@ -43,7 +43,6 @@ public class ApplicationDomain extends Observable {
     }
 
     private ApplicationDomain() {
-        //FirebaseAuth authToken = FirebaseAuth.getInstance();
         FirebaseDatabase dbContext = FirebaseDatabase.getInstance();
 
         lotteryRepository = new LotteryRepository(dbContext);
@@ -77,9 +76,11 @@ public class ApplicationDomain extends Observable {
     }
 
     /**
-     * Set the observable state of the model to changed, allowing observers to be notified.
+     * Set the observable state of the model to changed and notify all observers with the argument.
+     * @param arg The argument that will be passed to all observers.
      */
-    public void setModelChanged() {
+    public void broadcastChange(Object arg) {
         setChanged();
+        notifyObservers(arg);
     }
 }

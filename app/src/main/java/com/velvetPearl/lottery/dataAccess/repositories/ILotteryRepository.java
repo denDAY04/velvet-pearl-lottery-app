@@ -1,10 +1,7 @@
 package com.velvetPearl.lottery.dataAccess.repositories;
 
-import com.velvetPearl.lottery.IEntityUiUpdater;
 import com.velvetPearl.lottery.dataAccess.models.Lottery;
-import com.velvetPearl.lottery.fragments.LotteryHome;
 
-import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
 /**

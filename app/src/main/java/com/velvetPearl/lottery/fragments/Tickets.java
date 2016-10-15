@@ -64,26 +64,13 @@ public class Tickets extends Fragment implements Observer {
                 // List of the numbers on the ticket
                 StringBuilder sb = new StringBuilder("");
                 for (Integer number : viewModel.getLotteryNumbers()) {
-                    sb.append(String.format("%d "));
+                    sb.append(String.format("%d ", number));
                 }
                 subTitle.setText(sb.toString());
 
                 return itemView;
             }
         });
-
-
-//        ticketsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                TicketListViewModel item = (TicketListViewModel) ticketsListView.getItemAtPosition(i);
-//                Bundle args = new Bundle();
-//                args.putString("ticketId", (String) item.getId());
-//                android.support.v4.app.Fragment destination = new LotteryHome();
-//                destination.setArguments(args);
-//                getFragmentManager().beginTransaction().replace(R.id.main_fragment,destination).addToBackStack(null).commit();
-//            }
-//        });
     }
 
     private ArrayList<TicketListViewModel> convertToViewModels(ArrayList<Ticket> tickets) {
@@ -96,9 +83,8 @@ public class Tickets extends Fragment implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        if (arg.getClass() != DataAccessEvent.class || arg != DataAccessEvent.TICKET_LIST_UPDATED) {
-            return;
+        if (arg.getClass() == DataAccessEvent.class && arg == DataAccessEvent.TICKET_LIST_UPDATED) {
+            updateUi();
         }
-        updateUi();
     }
 }

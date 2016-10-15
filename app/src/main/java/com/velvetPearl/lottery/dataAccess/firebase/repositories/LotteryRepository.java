@@ -47,20 +47,6 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
         query = dbContext.getReference(LotteriesScheme.LABEL).orderByKey().equalTo(entityId);
         entityListener = attachEntityListener(query, entityId);
 
-//        synchronized (lock) {
-//            try {
-//                unlockedByNotify = false;
-//                lock.wait(LOCK_TIMEOUT_MS);
-//            } catch (InterruptedException e) {
-//                Log.w(LOG_TAG, "getLottery lottery fetch sleep interrupted", e);
-//            }
-        //}
-        //verifyAsyncTask();
-
-        // Fetch tickets into the lottery instance.
-//        Log.d(LOG_TAG, "fetching tickets for lottery ID " + ApplicationDomain.getActiveLottery().getId());
-//        ApplicationDomain.getTicketInstance().getTicketsForLottery(ApplicationDomain.getActiveLottery().getId());
-
         return ApplicationDomain.getInstance().getActiveLottery();
     }
 
@@ -77,6 +63,7 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
 
         // Clear active lottery such that a bad search leaves a null ref for the program to test on.
         ApplicationDomain.getInstance().setActiveLottery(null);
+
     }
 
     @Override
@@ -84,20 +71,15 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
         ValueEventListener listener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-//                synchronized (lock) {
-                    DataSnapshot data = dataSnapshot.child(entityId);
-                    if (data.getChildrenCount() != 0) {     // The query-result for ID is not empty
-                        Log.d(LOG_TAG, "reading lottery entity for ID " + data.getKey());
-                        Lottery result = data.getValue(Lottery.class);
-                        result.setId(data.getKey());
-                        ApplicationDomain.getInstance().setActiveLottery(result);
-                        ApplicationDomain.getInstance().setModelChanged();
-                        ApplicationDomain.getInstance().notifyObservers(DataAccessEvent.LOTTERY_UPDATED);
-                    }
+                DataSnapshot data = dataSnapshot.child(entityId);
+                if (data.getChildrenCount() != 0) {     // The query-result for ID is not empty
+                    Log.d(LOG_TAG, "reading lottery entity for ID " + data.getKey());
+                    Lottery result = data.getValue(Lottery.class);
+                    result.setId(data.getKey());
+                    ApplicationDomain.getInstance().setActiveLottery(result);
+                    ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_UPDATED);
+                }
 
-//                    unlockedByNotify = true;
-//                    lock.notifyAll();
-//                }
             }
 
             @Override
@@ -130,8 +112,7 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
                 });
 
                 ApplicationDomain.getInstance().setAllLotteries(lotteries);
-                ApplicationDomain.getInstance().setModelChanged();
-                ApplicationDomain.getInstance().notifyObservers(DataAccessEvent.LOTTERY_LIST_UPDATED);
+                ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_LIST_UPDATED);
                 Log.d(LOG_TAG, "getAllLotteries data fetch finished; observes notified.");
             }
 

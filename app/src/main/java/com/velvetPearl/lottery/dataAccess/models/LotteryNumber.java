@@ -45,4 +45,18 @@ public class LotteryNumber {
     public void setTicketId(Object ticketId) {
         this.ticketId = ticketId;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null ||  obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        LotteryNumber other = (LotteryNumber) obj;
+        if (id == null || other.id == null) {
+            return false;
+        }
+
+        return id == other.id;
+    }
 }

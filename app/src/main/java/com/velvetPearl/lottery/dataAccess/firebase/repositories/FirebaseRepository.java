@@ -3,8 +3,9 @@ package com.velvetPearl.lottery.dataAccess.firebase.repositories;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.velvetPearl.lottery.IEntityUiUpdater;
+import com.velvetPearl.lottery.dataAccess.firebase.QueryListenerPair;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -22,8 +23,11 @@ public abstract class FirebaseRepository {
     protected Query query = null;
     protected ValueEventListener entityListener = null;
 
+    protected HashMap<String, QueryListenerPair> dataAccessorsCollection;
+
     protected FirebaseRepository(FirebaseDatabase dbContext) {
         this.dbContext = dbContext;
+        dataAccessorsCollection = new HashMap<>();
     }
 
 
@@ -59,6 +63,46 @@ public abstract class FirebaseRepository {
     protected void detachEntityListener(Query query, ValueEventListener listener) {
         if (query != null && listener != null) {
             query.removeEventListener(entityListener);
+        }
+    }
+
+    /**
+     * Stop syncing Firebase changes denoted by the key and remove the stored query and
+     * listener pair.
+     * @param key Unique key denoting the pair to be removed.
+     */
+    protected void removeEntityListener(String key) {
+        QueryListenerPair dataAccessPair = dataAccessorsCollection.get(key);
+        if (dataAccessPair != null) {
+            dataAccessPair.getQuery().removeEventListener(dataAccessPair.getListener());
+            dataAccessorsCollection.remove(key);
+        }
+    }
+
+    /**
+     * Attach a value event listener to the query and store the pair by the unique key.
+     * @param key Unique identifier that will denote the pair.
+     * @param query The Firebase Query object the listener will be attached to.
+     * @param listener The value event listener that will be attached to the query.
+     */
+    public void attachAndStoreEntityListener(String key, Query query, ValueEventListener listener) {
+        if (key != null && query != null && listener != null) {
+            query.addValueEventListener(listener);
+            QueryListenerPair dataAccessPair = new QueryListenerPair(query, listener);
+            if (dataAccessorsCollection.containsKey(key)) {
+                throw new IllegalArgumentException(String.format("%s is already stored in the map", key));
+            } else {
+                dataAccessorsCollection.put(key, dataAccessPair);
+            }
+        }
+    }
+
+    /**
+     * Remove all stored query-listener pairs.
+     */
+    public void removeAllEntityListeners() {
+        for ( String key : dataAccessorsCollection.keySet()) {
+            removeEntityListener(key);
         }
     }
 }

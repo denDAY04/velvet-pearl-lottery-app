@@ -9,7 +9,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.velvetPearl.lottery.IEntityUiUpdater;
 import com.velvetPearl.lottery.dataAccess.repositories.IPrizeRepository;
 import com.velvetPearl.lottery.dataAccess.firebase.scheme.PrizesScheme;
 import com.velvetPearl.lottery.dataAccess.models.Prize;

@@ -25,4 +25,6 @@
     <string name="home">Home</string>
     <string name="numbers_sold">Numbers sold</string>
     <string name="tickets_list_item_owner">Owner</string>
+    <string name="attention">Attention</string>
+    <string name="lottery_was_deleted" >This lottery has been deleted.</string>
 </resources>

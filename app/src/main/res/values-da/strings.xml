@@ -24,4 +24,6 @@
     <string name="home">Hjem</string>
     <string name="numbers_sold">Nummre solgt</string>
     <string name="tickets_list_item_owner">Ejer</string>
+    <string name="attention">Bemærk</string>
+    <string name="lottery_was_deleted" >Dette lotteri er blevet slettet.</string>
 </resources>

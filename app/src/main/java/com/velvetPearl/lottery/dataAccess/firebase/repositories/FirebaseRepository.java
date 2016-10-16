@@ -6,6 +6,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.velvetPearl.lottery.dataAccess.firebase.QueryListenerPair;
 
 import java.util.HashMap;
+import java.util.Set;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -89,11 +90,7 @@ public abstract class FirebaseRepository {
         if (key != null && query != null && listener != null) {
             query.addValueEventListener(listener);
             QueryListenerPair dataAccessPair = new QueryListenerPair(query, listener);
-            if (dataAccessorsCollection.containsKey(key)) {
-                throw new IllegalArgumentException(String.format("%s is already stored in the map", key));
-            } else {
-                dataAccessorsCollection.put(key, dataAccessPair);
-            }
+            dataAccessorsCollection.put(key, dataAccessPair);
         }
     }
 
@@ -102,7 +99,9 @@ public abstract class FirebaseRepository {
      */
     public void removeAllEntityListeners() {
         for ( String key : dataAccessorsCollection.keySet()) {
-            removeEntityListener(key);
+            QueryListenerPair dataAccessPair = dataAccessorsCollection.get(key);
+            dataAccessPair.getQuery().removeEventListener(dataAccessPair.getListener());
         }
+        dataAccessorsCollection.clear();
     }
 }

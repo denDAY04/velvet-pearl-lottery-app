@@ -57,6 +57,6 @@ public class LotteryNumber {
             return false;
         }
 
-        return id == other.id;
+        return id.equals(other.id);
     }
 }

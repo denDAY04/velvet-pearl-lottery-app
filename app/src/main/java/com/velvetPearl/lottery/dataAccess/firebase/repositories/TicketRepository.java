@@ -65,6 +65,7 @@ public class TicketRepository extends FirebaseRepository implements ITicketRepos
                         Log.d(LOG_TAG, "adding ticket with ID " + ticket.getId());
                         tickets.add(ticket);
                     }
+                    ApplicationDomain.getInstance().lotteryNumberRepository.getLotteryNumbersForTicket(ticket.getId());
                 }
                 ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.TICKET_LIST_UPDATED);
             }

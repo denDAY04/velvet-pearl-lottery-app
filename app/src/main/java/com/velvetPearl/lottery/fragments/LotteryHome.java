@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,8 +61,8 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
             loadingDialog.show();
 
             ApplicationDomain.getInstance().lotteryNumberRepository.clearState();
+            ApplicationDomain.getInstance().lotteryRepository.getLottery(lotteryId);
 
-            loadLottery(lotteryId);
         } else {
             initUi(root);
             updateUi();
@@ -113,6 +115,8 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
     }
 
     public void updateUi() {
+        if (loadingDialog.isShowing())
+            loadingDialog.dismiss();
         Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
         Locale locale = Locale.getDefault();
         String timestamp = SimpleDateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(new Date(lottery.getCreated()));
@@ -129,65 +133,6 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
     }
 
 
-    private void loadLottery(String lotteryId) {
-        Lottery lottery = ApplicationDomain.getInstance().lotteryRepository.getLottery(lotteryId);
-    }
-
-//    /**
-//     * Load the full lottery for the specific lottery ID and update the UI when the data has been
-//     * loaded.
-//     * @param lotteryId ID of the lottery to load.
-//     */
-//    private void loadLotteryAsync(final String lotteryId) {
-//        new AsyncTask() {
-//            @Override
-//            protected Object doInBackground(Object[] objects) {
-//                try {
-//                    // TODO: load all children data of the lottery
-//                    Lottery lottery = ApplicationDomain.getInstance().lotteryRepository.getLottery(lotteryId, LotteryHome.this);
-//                    ApplicationDomain.getInstance().ticketRepository.getTicketsForLottery(lotteryId);
-//                    for (Ticket ticket : lottery.getTickets()) {
-//                        ApplicationDomain.getInstance().lotteryNumberRepository.getLotteryNumbersForTicket(ticket.getId());
-//                    }
-//                    return lottery;
-//                } catch (TimeoutException e) {
-//                    Log.w(LOG_TAG, "fetching lottery data failed", e);
-//                }
-//                return null;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(Object result) {
-//                loadingDialog.dismiss();
-//                if (result == null) {
-//                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-//                    builder
-//                            .setTitle(R.string.error)
-//                            .setMessage(R.string.lotteryhome_error_timeout)
-//                            .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialogInterface, int i) {
-//                                    loadingDialog.show();
-//                                    loadLotteryAsync(lotteryId);
-//                                }
-//                            })
-//                            .setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialogInterface, int i) {
-//                                    // Back to welcome - clearing the stack at the same time
-//                                    FragmentManager fragmentManager = getFragmentManager();
-//                                    FragmentManager.BackStackEntry first = fragmentManager.getBackStackEntryAt(0);
-//                                    fragmentManager.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-//                                    fragmentManager.beginTransaction().replace(R.id.main_fragment_container, new Welcome()).commit();
-//                                }
-//                            });
-//                    loadingDialog.dismiss();
-//                    builder.create().show();
-//                }
-//            }
-//        }.execute();
-//    }
-
     @Override
     public void onClick(View v) {
         if (v == ticketsBtn) {
@@ -202,12 +147,12 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
     @Override
     public void update(Observable o, Object arg) {
         if (arg.getClass() == DataAccessEvent.class) {
-            if (arg == DataAccessEvent.LOTTERY_UPDATED) {
-                if (initialLoad) {
-                    ApplicationDomain.getInstance().ticketRepository.getTicketsForLottery(ApplicationDomain.getInstance().getActiveLottery().getId());
-                    return;
-                }
-            } else if (arg == DataAccessEvent.TICKET_LIST_UPDATED) {
+            if (arg == DataAccessEvent.LOTTERY_LOADED) {
+                ApplicationDomain.getInstance().ticketRepository.getTicketsForLottery(ApplicationDomain.getInstance().getActiveLottery().getId());
+                return;
+            }
+
+            if (arg == DataAccessEvent.TICKET_LIST_UPDATED) {
                 if (initialLoad) {
                     Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
                     for (Ticket ticket : lottery.getTickets()) {
@@ -215,13 +160,22 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
                     }
                     initialLoad = false;
                 }
-            }
-
-            updateUi();
-            if (loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
+                updateUi();
+            } else if (arg == DataAccessEvent.LOTTERY_UPDATED) {
+                updateUi();
+            } else if (arg == DataAccessEvent.LOTTERY_REMOVED) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(getString(R.string.attention))
+                        .setMessage(getString(R.string.lottery_was_deleted))
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);  // Empty back stack
+                                getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Welcome()).commit();
+                            }
+                        });
+                 builder.create().show();
             }
         }
-
     }
 }

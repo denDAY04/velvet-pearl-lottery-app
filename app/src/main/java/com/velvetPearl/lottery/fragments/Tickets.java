@@ -64,9 +64,14 @@ public class Tickets extends Fragment implements Observer {
                 // List of the numbers on the ticket
                 StringBuilder sb = new StringBuilder("");
                 for (Integer number : viewModel.getLotteryNumbers()) {
-                    sb.append(String.format("%d ", number));
+                    sb.append(String.format("%d - ", number));
                 }
-                subTitle.setText(sb.toString());
+                String numberbListString = sb.toString();
+                // Remove trailing " - "
+                if (numberbListString.length() > 2) {
+                    numberbListString = numberbListString.substring(0, numberbListString.length() - 2);
+                }
+                subTitle.setText(numberbListString);
 
                 return itemView;
             }

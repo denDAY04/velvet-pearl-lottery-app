@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -17,6 +18,7 @@ import com.velvetPearl.lottery.dataAccess.repositories.ILotteryRepository;
 import com.velvetPearl.lottery.dataAccess.firebase.scheme.LotteriesScheme;
 import com.velvetPearl.lottery.dataAccess.models.Lottery;
 
+import java.security.DomainCombiner;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,6 +32,7 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
 
     private static final String LOG_TAG = "LotteryRepository";
 
+    private ChildEventListener childEventListener;
 
     public LotteryRepository(FirebaseDatabase dbContext) {
         super(dbContext);
@@ -44,8 +47,53 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
         resetState();
 
         Log.d(LOG_TAG, "getLottery querying for lottery ID " + entityId);
+
+
         query = dbContext.getReference(LotteriesScheme.LABEL).orderByKey().equalTo(entityId);
-        entityListener = attachEntityListener(query, entityId);
+        childEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+                Log.d(LOG_TAG, "getLottery onChildAdded ID " + dataSnapshot.getKey());
+                Lottery entity = dataSnapshot.getValue(Lottery.class);
+                entity.setId(dataSnapshot.getKey());
+                ApplicationDomain.getInstance().setActiveLottery(entity);
+                ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_LOADED);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
+                Log.d(LOG_TAG, "getLottery onChildChanged ID " + dataSnapshot.getKey());
+                Lottery currentLottery = ApplicationDomain.getInstance().getActiveLottery();
+                Lottery entity = dataSnapshot.getValue(Lottery.class);
+                entity.setId(dataSnapshot.getKey());
+                entity.setPrizes(currentLottery.getPrizes());
+                entity.setTickets(currentLottery.getTickets());
+                ApplicationDomain.getInstance().setActiveLottery(entity);
+                ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_UPDATED);
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Log.d(LOG_TAG, "getLottery onChildRemoved ID " + dataSnapshot.getKey());
+                ApplicationDomain.getInstance().setActiveLottery(null);
+                ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_REMOVED);
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
+                return;     // Do nothing
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(LOG_TAG, "getLottery onCancelled", databaseError.toException());
+            }
+        };
+
+        query.addChildEventListener(childEventListener);
+
+//        query = dbContext.getReference(LotteriesScheme.LABEL).orderByKey().equalTo(entityId);
+//        entityListener = attachEntityListener(query, entityId);
 
         return ApplicationDomain.getInstance().getActiveLottery();
     }
@@ -59,7 +107,9 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
     private void resetState() {
         // Decouple the listener for the last query (if any) so that it doesn't keep updating
         // on that previous data.
-        detachEntityListener(query, entityListener);
+        //detachEntityListener(query, entityListener);
+        if (query != null)
+            query.removeEventListener(childEventListener);
 
         // Clear active lottery such that a bad search leaves a null ref for the program to test on.
         ApplicationDomain.getInstance().setActiveLottery(null);

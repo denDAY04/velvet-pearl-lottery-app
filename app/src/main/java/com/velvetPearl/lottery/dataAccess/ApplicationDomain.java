@@ -20,8 +20,6 @@ import java.util.Observable;
 public class ApplicationDomain extends Observable {
 
     private static ApplicationDomain instance = null;
-//    private static FirebaseAuth authToken = null;
-//    private static FirebaseDatabase dbContext = null;
 
     public final ILotteryRepository lotteryRepository;
     public final ITicketRepository ticketRepository;
@@ -83,4 +81,5 @@ public class ApplicationDomain extends Observable {
         setChanged();
         notifyObservers(arg);
     }
+
 }

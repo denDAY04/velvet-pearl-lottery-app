@@ -75,8 +75,4 @@ public class PrizeRepository extends FirebaseRepository implements IPrizeReposit
         return prize;
     }
 
-    @Override
-    protected ValueEventListener attachEntityListener(Query query, String entityId) {
-        return null;
-    }
 }

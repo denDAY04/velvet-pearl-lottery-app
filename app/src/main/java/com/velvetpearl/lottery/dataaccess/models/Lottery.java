@@ -2,6 +2,8 @@ package com.velvetPearl.lottery.dataAccess.models;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
 
 
 /**
@@ -14,12 +16,14 @@ public class Lottery {
     private int lotteryNumLowerBound;
     private int lotteryNumUpperBound;
 
-    private ArrayList<Prize> prizes;
-    private ArrayList<Ticket> tickets;
+    private TreeMap<Object, Prize> prizes;
+    //private List<Ticket> tickets;
+    private TreeMap<Object, Ticket> tickets;
     //private ArrayList<LotteryNumber> lotteryNumbers;
 
     public Lottery() {
-        tickets = new ArrayList<>();
+        tickets = new TreeMap<>();
+        prizes = new TreeMap<>();
     }
 
     public Object getId() {
@@ -64,19 +68,19 @@ public class Lottery {
         this.lotteryNumUpperBound = lotteryNumUpperBound;
     }
 
-    public ArrayList<Prize> getPrizes() {
+    public TreeMap<Object, Prize> getPrizes() {
         return prizes;
     }
 
-    public void setPrizes(ArrayList<Prize> prizes) {
+    public void setPrizes(TreeMap<Object, Prize> prizes) {
         this.prizes = prizes;
     }
 
-    public ArrayList<Ticket> getTickets() {
+    public TreeMap<Object, Ticket> getTickets() {
         return tickets;
     }
 
-    public void setTickets(ArrayList<Ticket> tickets) {
+    public void setTickets(TreeMap<Object, Ticket> tickets) {
         this.tickets = tickets;
     }
 
@@ -98,7 +102,8 @@ public class Lottery {
         if (tickets != null) {
             sb.append(String.format(", #tickets %d", tickets.size()));
             int lotteryNumberCount = 0;
-            for (Ticket ticket : tickets) {
+            for (Object key : tickets.keySet()) {
+                Ticket ticket = tickets.get(key);
                 lotteryNumberCount += ticket.getLotteryNumbers().size();
             }
             sb.append(String.format(", #lotteryNumbers %d" , lotteryNumberCount));

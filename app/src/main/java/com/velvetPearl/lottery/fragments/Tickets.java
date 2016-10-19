@@ -20,6 +20,7 @@ import com.velvetPearl.lottery.viewModels.TicketListViewModel;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.TreeMap;
 
 public class Tickets extends Fragment implements Observer {
 
@@ -35,6 +36,7 @@ public class Tickets extends Fragment implements Observer {
         if (savedInstanceState == null) {
             updateUi();
         }
+        updateUi();
 
         return root;
     }
@@ -49,46 +51,61 @@ public class Tickets extends Fragment implements Observer {
     private void updateUi() {
         final ArrayList<TicketListViewModel> viewModels = convertToViewModels(ApplicationDomain.getInstance().getActiveLottery().getTickets());
 
-        ticketsListView.setAdapter(new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_2, android.R.id.text1, viewModels){
-            @NonNull
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View itemView = super.getView(position, convertView, parent);
-                TextView title = (TextView) itemView.findViewById(android.R.id.text1);
-                TextView subTitle = (TextView) itemView.findViewById(android.R.id.text2);
+        if (viewModels.size() > 0) {
+            ticketsListView.setAdapter(new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_2, android.R.id.text1, viewModels) {
+                @NonNull
+                @Override
+                public View getView(int position, View convertView, ViewGroup parent) {
+                    View itemView = super.getView(position, convertView, parent);
+                    TextView title = (TextView) itemView.findViewById(android.R.id.text1);
+                    TextView subTitle = (TextView) itemView.findViewById(android.R.id.text2);
 
-                // Name of the ticket owner
-                TicketListViewModel viewModel = viewModels.get(position);
-                title.setText(viewModel.toString());
+                    // Name of the ticket owner
+                    TicketListViewModel viewModel = viewModels.get(position);
+                    title.setText(viewModel.toString());
 
-                // List of the numbers on the ticket
-                StringBuilder sb = new StringBuilder("");
-                for (Integer number : viewModel.getLotteryNumbers()) {
-                    sb.append(String.format("%d - ", number));
+                    // List of the numbers on the ticket
+                    StringBuilder sb = new StringBuilder("");
+                    for (Integer number : viewModel.getLotteryNumbers()) {
+                        sb.append(String.format("%d - ", number));
+                    }
+                    String numberbListString = sb.toString();
+                    // Remove trailing " - "
+                    if (numberbListString.length() > 2) {
+                        numberbListString = numberbListString.substring(0, numberbListString.length() - 2);
+                    }
+                    subTitle.setText(numberbListString);
+                    return itemView;
                 }
-                String numberbListString = sb.toString();
-                // Remove trailing " - "
-                if (numberbListString.length() > 2) {
-                    numberbListString = numberbListString.substring(0, numberbListString.length() - 2);
-                }
-                subTitle.setText(numberbListString);
-
-                return itemView;
-            }
-        });
+            });
+        } else {
+            ArrayList<String> fillerList = new ArrayList<>();
+            fillerList.add("");
+            ticketsListView.setAdapter(new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_2, android.R.id.text1, fillerList) {
+                @NonNull
+                @Override
+                public View getView(int position, View convertView, ViewGroup parent) {
+                    View itemView = super.getView(position, convertView, parent);
+                    TextView title = (TextView) itemView.findViewById(android.R.id.text1);
+                    title.setText(R.string.none_found);
+                    return itemView;
+                };
+            });
+        }
     }
 
-    private ArrayList<TicketListViewModel> convertToViewModels(ArrayList<Ticket> tickets) {
+    private ArrayList<TicketListViewModel> convertToViewModels(TreeMap<Object, Ticket> tickets) {
         ArrayList<TicketListViewModel> viewModels = new ArrayList<>(tickets.size());
-        for(Ticket ticket : tickets) {
-            viewModels.add(new TicketListViewModel(ticket));
+        for(Object key : tickets.keySet()) {
+            viewModels.add(new TicketListViewModel(tickets.get(key)));
         }
         return viewModels;
     }
 
     @Override
     public void update(Observable o, Object arg) {
-        if (arg.getClass() == DataAccessEvent.class && arg == DataAccessEvent.TICKET_LIST_UPDATED) {
+        if (arg.getClass() == DataAccessEvent.class
+                && (arg == DataAccessEvent.TICKET_LIST_UPDATE || arg == DataAccessEvent.LOTTERY_NUMBER_UPDATE)) {
             updateUi();
         }
     }

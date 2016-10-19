@@ -26,4 +26,5 @@
     <string name="tickets_list_item_owner">Ejer</string>
     <string name="attention">Bemærk</string>
     <string name="lottery_was_deleted" >Dette lotteri er blevet slettet.</string>
+    <string name="none_found">Ingen fundet</string>
 </resources>

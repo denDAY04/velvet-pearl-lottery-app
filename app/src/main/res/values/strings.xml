@@ -27,4 +27,5 @@
     <string name="tickets_list_item_owner">Owner</string>
     <string name="attention">Attention</string>
     <string name="lottery_was_deleted" >This lottery has been deleted.</string>
+    <string name="none_found">None found</string>
 </resources>

@@ -2,6 +2,7 @@ package com.velvetPearl.lottery.dataAccess.firebase.repositories;
 
 import android.util.Log;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -9,13 +10,13 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.velvetPearl.lottery.dataAccess.ApplicationDomain;
 import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
+import com.velvetPearl.lottery.dataAccess.firebase.FirebaseQueryObject;
 import com.velvetPearl.lottery.dataAccess.models.Lottery;
 import com.velvetPearl.lottery.dataAccess.models.Ticket;
 import com.velvetPearl.lottery.dataAccess.repositories.ILotteryNumberRepository;
 import com.velvetPearl.lottery.dataAccess.firebase.scheme.LotteryNumbersScheme;
 import com.velvetPearl.lottery.dataAccess.models.LotteryNumber;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -36,47 +37,62 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
             return;
         }
 
-        Query query = dbContext.getReference(LotteryNumbersScheme.LABEL).orderByChild(LotteryNumbersScheme.Children.TICKET_ID).equalTo((String)ticketId);
-        ValueEventListener listener = new ValueEventListener() {
+        FirebaseQueryObject qObj = new FirebaseQueryObject();
+        qObj.query = dbContext.getReference(LotteryNumbersScheme.LABEL).orderByChild(LotteryNumbersScheme.Children.TICKET_ID).equalTo((String)ticketId);
+        qObj.listener = new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                LotteryNumber lotteryNum = dataSnapshot.getValue(LotteryNumber.class);
+                lotteryNum.setId(dataSnapshot.getKey());
+
                 Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
-                if (lottery == null || lottery.getTickets() == null || lottery.getTickets().isEmpty()) {
-                    Log.e(LOG_TAG, String.format("getLotteryNumbersForTicket data sync error: [lottery == null]->%b [tickets == null]->%b [tickets isEmpty]->&b", lottery == null, lottery.getTickets() == null, lottery.getTickets() == null ? true : lottery.getTickets().isEmpty()));
-                    return;
+                if (lottery != null && lottery.getTickets() != null) {
+                    Log.d(LOG_TAG, String.format("LotteryNumber (ID %s) added.", lotteryNum.getId()));
+                    Ticket ticket = lottery.getTickets().get(lotteryNum.getTicketId());
+                    ticket.getLotteryNumbers().put(lotteryNum.getId(), lotteryNum);
+                    ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_NUMBER_UPDATE);
                 }
+            }
 
-                ArrayList<Ticket> tickets = lottery.getTickets();
-                for (DataSnapshot entity : dataSnapshot.getChildren()) {
-                    LotteryNumber number = entity.getValue(LotteryNumber.class);
-                    number.setId(entity.getKey());
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                LotteryNumber lotteryNum = dataSnapshot.getValue(LotteryNumber.class);
+                lotteryNum.setId(dataSnapshot.getKey());
 
-                    for (int i = 0; i < tickets.size(); ++i) {
-                        if (tickets.get(i).getId().equals(ticketId)) {
-                            Ticket ticket = tickets.get(i);
-                            int existingIndex = ticket.getLotteryNumbers().indexOf(number);
-                            if (existingIndex != -1) {
-                                Log.d(LOG_TAG, "updating existing lottery number ID " + number.getId());
-                                ticket.getLotteryNumbers().set(existingIndex, number);
-                            } else {
-                                Log.d(LOG_TAG, "adding new lottery number ID " + number.getId());
-                                ticket.getLotteryNumbers().add(number);
-                            }
-                            break;
-                        }
-                    }
+                Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
+                if (lottery != null && lottery.getTickets() != null) {
+                    Log.d(LOG_TAG, String.format("LotteryNumber (ID %s) changed.", lotteryNum.getId()));
+                    Ticket ticket = lottery.getTickets().get(lotteryNum.getTicketId());
+                    ticket.getLotteryNumbers().put(lotteryNum.getId(), lotteryNum);
+                    ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_NUMBER_UPDATE);
                 }
-                ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.TICKET_LIST_UPDATED);
+            }
 
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                LotteryNumber lotteryNum = dataSnapshot.getValue(LotteryNumber.class);
+                lotteryNum.setId(dataSnapshot.getKey());
+
+                Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
+                if (lottery != null && lottery.getTickets() != null) {
+                    Log.d(LOG_TAG, String.format("LotteryNumber (ID %s) removed.", lotteryNum.getId()));
+                    Ticket ticket = lottery.getTickets().get(lotteryNum.getTicketId());
+                    ticket.getLotteryNumbers().remove(lotteryNum.getId());
+                    ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_NUMBER_UPDATE);
+                }
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                return; // ignore
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d(LOG_TAG, "getLotteryNumbersForTicket data sync canceled");
+                Log.w(LOG_TAG, "getLotteryNumbersForTicket cancelled", databaseError.toException());
             }
         };
-
-        attachAndStoreEntityListener((String)ticketId, query, listener);
+        attachAndStoreQueryObject((String)ticketId, qObj);
     }
 
     @Override
@@ -125,14 +141,9 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
         return null;
     }
 
-    @Override
-    protected ValueEventListener attachEntityListener(Query query, String entityId) {
-
-        return null;
-    }
 
     @Override
     public void clearState() {
-        removeAllEntityListeners();
+        detachAndRemoveAllQueryObjects();
     }
 }

@@ -19,7 +19,9 @@ public class TicketListViewModel {
         id = entityModel.getId();
         owner = entityModel.getOwner();
         lotteryNumbers = new ArrayList<>();
-        for (LotteryNumber number : entityModel.getLotteryNumbers()) {
+
+        for (Object key : entityModel.getLotteryNumbers().keySet()) {
+            LotteryNumber number = entityModel.getLotteryNumbers().get(key);
             lotteryNumbers.add(number.getLotteryNumber());
         }
     }

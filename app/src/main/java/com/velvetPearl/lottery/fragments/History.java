@@ -1,13 +1,10 @@
 package com.velvetPearl.lottery.fragments;
 
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +22,6 @@ import com.velvetPearl.lottery.viewModels.LotteryListViewModel;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.concurrent.TimeoutException;
 
 /**
  * Fragment containing a list view of the lottery history.
@@ -75,7 +71,7 @@ public class History extends Fragment implements Observer {
      *
      */
     private void loadHistory() {
-        ApplicationDomain.getInstance().lotteryRepository.getAllLotteries();
+        ApplicationDomain.getInstance().lotteryRepository.loadAllLotteries();
     }
 
     @Override

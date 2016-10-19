@@ -16,14 +16,14 @@ public interface ITicketRepository {
      * @return
      * @throws TimeoutException if the action did not complete before a given timeout period.
      */
-    void getTicket(Object id);
+    void loadTicket(Object id);
 
     /**
      *
      * @param lotteryId
      * @throws TimeoutException if the action did not complete before a given timeout period.
      */
-    void getTicketsForLottery(Object lotteryId);
+    void loadTicketsForLottery(Object lotteryId);
 
     /**
      *

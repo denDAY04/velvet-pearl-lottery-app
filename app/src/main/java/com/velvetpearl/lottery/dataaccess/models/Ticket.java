@@ -1,6 +1,7 @@
 package com.velvetPearl.lottery.dataAccess.models;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 
 /**
@@ -10,14 +11,15 @@ public class Ticket {
     // Entity member fields
     private Object id;
     private String owner;
-    private ArrayList<LotteryNumber> lotteryNumbers;
+    private TreeMap<Object, LotteryNumber> lotteryNumbers;
 
     // Navigational member fields
     private Object lotteryId;
 
     public Ticket() {
-        lotteryNumbers = new ArrayList<>();
+        lotteryNumbers = new TreeMap<>();
     }
+
 
     public String getOwner() {
         return owner;
@@ -27,11 +29,11 @@ public class Ticket {
         this.owner = owner;
     }
 
-    public ArrayList<LotteryNumber> getLotteryNumbers() {
+    public TreeMap<Object, LotteryNumber> getLotteryNumbers() {
         return lotteryNumbers;
     }
 
-    public void setLotteryNumbers(ArrayList<LotteryNumber> lotteryNumbers) {
+    public void setLotteryNumbers(TreeMap<Object, LotteryNumber> lotteryNumbers) {
         this.lotteryNumbers = lotteryNumbers;
     }
 

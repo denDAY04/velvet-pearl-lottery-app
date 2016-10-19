@@ -42,7 +42,6 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
     private Button prizesBtn = null;
 
     private ProgressDialog loadingDialog = null;
-    private boolean initialLoad = true;
 
 
     @Override
@@ -61,9 +60,10 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
             loadingDialog.show();
 
             ApplicationDomain.getInstance().lotteryNumberRepository.clearState();
-            ApplicationDomain.getInstance().lotteryRepository.getLottery(lotteryId);
+            ApplicationDomain.getInstance().lotteryRepository.loadLottery(lotteryId);
 
         } else {
+            initLoadingDialog();
             initUi(root);
             updateUi();
         }
@@ -108,8 +108,9 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
                 new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialogInterface) {
-                        loadingDialog.dismiss();
                         Log.d(LOG_TAG, "canceling lottery fetch");
+                        getFragmentManager().popBackStack();
+                        loadingDialog.dismiss();
                     }
                 });
     }
@@ -125,7 +126,8 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
         pricePerNumLab.setText(String.format(locale, "%.2f", lottery.getPricePerLotteryNum()));
         int count = 0;
         if (lottery.getTickets() != null) {
-            for (Ticket ticket : lottery.getTickets()) {
+            for (Object key : lottery.getTickets().keySet()) {
+                Ticket ticket = lottery.getTickets().get(key);
                 count += ticket.getLotteryNumbers().size();
             }
         }
@@ -148,20 +150,19 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
     public void update(Observable o, Object arg) {
         if (arg.getClass() == DataAccessEvent.class) {
             if (arg == DataAccessEvent.LOTTERY_LOADED) {
-                ApplicationDomain.getInstance().ticketRepository.getTicketsForLottery(ApplicationDomain.getInstance().getActiveLottery().getId());
+                ApplicationDomain.getInstance().ticketRepository.loadTicketsForLottery(ApplicationDomain.getInstance().getActiveLottery().getId());
+                updateUi();
                 return;
             }
 
-            if (arg == DataAccessEvent.TICKET_LIST_UPDATED) {
-                if (initialLoad) {
-                    Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
-                    for (Ticket ticket : lottery.getTickets()) {
-                        ApplicationDomain.getInstance().lotteryNumberRepository.getLotteryNumbersForTicket(ticket.getId());
-                    }
-                    initialLoad = false;
+            if (arg == DataAccessEvent.TICKET_LIST_UPDATE) {
+                Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
+                for (Object key : lottery.getTickets().keySet()) {
+                    Ticket ticket = lottery.getTickets().get(key);
+                    ApplicationDomain.getInstance().lotteryNumberRepository.getLotteryNumbersForTicket(ticket.getId());
                 }
                 updateUi();
-            } else if (arg == DataAccessEvent.LOTTERY_UPDATED) {
+            } else if (arg == DataAccessEvent.LOTTERY_UPDATED || arg == DataAccessEvent.LOTTERY_NUMBER_UPDATE) {
                 updateUi();
             } else if (arg == DataAccessEvent.LOTTERY_REMOVED) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

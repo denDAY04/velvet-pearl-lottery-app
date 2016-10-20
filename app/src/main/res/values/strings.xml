@@ -28,4 +28,16 @@
     <string name="attention">Attention</string>
     <string name="lottery_was_deleted" >This lottery has been deleted.</string>
     <string name="none_found">None found</string>
+    <string name="ticket">Ticket</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="delete_ticket_confirm" >Are you sure you want to delete this ticket?</string>
+    <string name="confirm">Confirm</string>
+    <string name="owner">Owner</string>
+    <string name="price">Price</string>
+    <string name="lottery_numbers">Lottery numbers</string>
+    <string name="ticket_edit_owner_hint">Name the ticket owner</string>
+    <string name="save">Save</string>
+    <string name="lottery_number">Lottery number</string>
+    <string name="delete_lottery_number_confirm">Are you sure you want to delete this lottery number?</string>
 </resources>

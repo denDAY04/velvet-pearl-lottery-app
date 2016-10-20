@@ -27,4 +27,16 @@
     <string name="attention">Bemærk</string>
     <string name="lottery_was_deleted" >Dette lotteri er blevet slettet.</string>
     <string name="none_found">Ingen fundet</string>
+    <string name="ticket">Billet</string>
+    <string name="edit">Rediger</string>
+    <string name="delete">Slet</string>
+    <string name="delete_ticket_confirm" >Er du sikker på du vil slette denne billet?</string>
+    <string name="confirm">Bekræft</string>
+    <string name="owner">Ejer</string>
+    <string name="price">Pris</string>
+    <string name="lottery_numbers">Lotteri numre</string>
+    <string name="ticket_edit_owner_hint">Navngiv billetens ejer</string>
+    <string name="save">Gem</string>
+    <string name="lottery_number">Lotteri nummer</string>
+    <string name="delete_lottery_number_confirm" >Er du sikker på du vil slette dette lotteri nummer?</string>
 </resources>

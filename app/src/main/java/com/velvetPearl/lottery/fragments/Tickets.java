@@ -1,12 +1,18 @@
 package com.velvetPearl.lottery.fragments;
 
+import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -76,6 +82,54 @@ public class Tickets extends Fragment implements Observer {
                     }
                     subTitle.setText(numberbListString);
                     return itemView;
+                }
+            });
+
+            // Add context menu to the tickets
+            ticketsListView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+                // By inspiration of https://www.mikeplate.com/2010/01/21/show-a-context-menu-for-long-clicks-in-an-android-listview/
+
+                @Override
+                public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                    final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+                    menu.setHeaderTitle(String.format("%s - %s", getString(R.string.ticket), viewModels.get(info.position).getOwner()));
+
+                    // Edit option
+                    menu.add(Menu.NONE, 0, 0, R.string.edit).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            Bundle args = new Bundle();
+                            args.putString("ticketId", (String) viewModels.get(info.position).getId());
+                            Fragment ticketEditFrag = new TicketEdit();
+                            ticketEditFrag.setArguments(args);
+                            getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, ticketEditFrag).addToBackStack(null).commit();
+                            return true;
+                        }
+                    });
+                    // Delete option
+                    menu.add(Menu.NONE, 1, 1, R.string.delete).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(getContext());
+                            dlgBuilder
+                                    .setTitle(R.string.attention)
+                                    .setMessage(R.string.delete_ticket_confirm)
+                                    .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ApplicationDomain.getInstance().ticketRepository.deleteTicket(viewModels.get(info.position).getId());
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            return; // don't do anything
+                                        }
+                                    });
+                            dlgBuilder.create().show();
+                            return true;
+                        }
+                    });
                 }
             });
         } else {

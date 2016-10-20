@@ -32,4 +32,6 @@ public interface ITicketRepository {
      * @throws TimeoutException if the action did not complete before a given timeout period.
      */
     Ticket saveTicket(Ticket ticket) throws TimeoutException;
+
+    void deleteTicket(Object id);
 }

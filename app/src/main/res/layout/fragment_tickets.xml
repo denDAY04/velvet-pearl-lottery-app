@@ -16,7 +16,8 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
-            android:layout_marginStart="10dp"/>
+            android:layout_marginStart="5dp"
+            android:textStyle="normal|bold" />
         <ImageButton
             android:src="@android:drawable/ic_input_add"
             android:layout_width="0dp"

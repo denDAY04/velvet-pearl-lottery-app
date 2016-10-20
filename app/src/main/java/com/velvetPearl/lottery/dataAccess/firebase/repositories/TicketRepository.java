@@ -102,4 +102,9 @@ public class TicketRepository extends FirebaseRepository implements ITicketRepos
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
+    public void deleteTicket(Object id) {
+        // TODO Delete ticket and all lottery numbers (and prizes?) associated with it
+    }
+
 }

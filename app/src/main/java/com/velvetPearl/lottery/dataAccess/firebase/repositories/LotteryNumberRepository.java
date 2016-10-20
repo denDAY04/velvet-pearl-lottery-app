@@ -32,7 +32,7 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
 
 
     @Override
-    public void getLotteryNumbersForTicket(final Object ticketId) {
+    public void fetchLotteryNumbersForTicket(final Object ticketId) {
         if (ticketId == null || ticketId.getClass() != String.class) {
             return;
         }
@@ -89,10 +89,15 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w(LOG_TAG, "getLotteryNumbersForTicket cancelled", databaseError.toException());
+                Log.w(LOG_TAG, "fetchLotteryNumbersForTicket cancelled", databaseError.toException());
             }
         };
         attachAndStoreQueryObject((String)ticketId, qObj);
+    }
+
+    @Override
+    public void deleteLotteryNumber(Object lotteryNumberId) {
+        // TODO Delete in firebase and fire event
     }
 
     @Override

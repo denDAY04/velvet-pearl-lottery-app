@@ -159,7 +159,7 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
                 Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
                 for (Object key : lottery.getTickets().keySet()) {
                     Ticket ticket = lottery.getTickets().get(key);
-                    ApplicationDomain.getInstance().lotteryNumberRepository.getLotteryNumbersForTicket(ticket.getId());
+                    ApplicationDomain.getInstance().lotteryNumberRepository.fetchLotteryNumbersForTicket(ticket.getId());
                 }
                 updateUi();
             } else if (arg == DataAccessEvent.LOTTERY_UPDATED || arg == DataAccessEvent.LOTTERY_NUMBER_UPDATE) {

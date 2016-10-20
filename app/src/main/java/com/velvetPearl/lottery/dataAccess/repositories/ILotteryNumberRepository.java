@@ -11,7 +11,9 @@ import java.util.concurrent.TimeoutException;
  */
 public interface ILotteryNumberRepository extends IFirebaseRepository {
 
-    void getLotteryNumbersForTicket(Object ticketId);
+    void fetchLotteryNumbersForTicket(Object ticketId);
+
+    void deleteLotteryNumber(Object lotteryNumberId);
 
     LotteryNumber saveLotteryNumber(LotteryNumber lotteryNumber);
 }

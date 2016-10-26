@@ -75,4 +75,13 @@ public class PrizeRepository extends FirebaseRepository implements IPrizeReposit
         return prize;
     }
 
+    @Override
+    public void deletePrize(Prize entity) {
+        if (entity == null ||  entity.getId() == null) {
+            return;
+        }
+
+        dbContext.getReference(PrizesScheme.LABEL).child((String) entity.getId()).removeValue();
+    }
+
 }

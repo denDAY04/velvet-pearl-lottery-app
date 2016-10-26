@@ -13,7 +13,7 @@ public interface ILotteryNumberRepository extends IFirebaseRepository {
 
     void fetchLotteryNumbersForTicket(Object ticketId);
 
-    void deleteLotteryNumber(Object lotteryNumberId);
+    void deleteLotteryNumber(LotteryNumber lotteryNumber);
 
     LotteryNumber saveLotteryNumber(LotteryNumber lotteryNumber);
 }

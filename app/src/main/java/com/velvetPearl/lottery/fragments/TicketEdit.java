@@ -124,7 +124,7 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
                                     .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            ApplicationDomain.getInstance().lotteryNumberRepository.deleteLotteryNumber(viewModels.get(info.position).getId());
+                                            ApplicationDomain.getInstance().lotteryNumberRepository.deleteLotteryNumber(viewModels.get(info.position).getEntityModel());
                                         }
                                     })
                                     .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

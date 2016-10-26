@@ -12,11 +12,13 @@ import com.velvetPearl.lottery.dataAccess.ApplicationDomain;
 import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
 import com.velvetPearl.lottery.dataAccess.firebase.FirebaseQueryObject;
 import com.velvetPearl.lottery.dataAccess.models.Lottery;
+import com.velvetPearl.lottery.dataAccess.models.LotteryNumber;
 import com.velvetPearl.lottery.dataAccess.repositories.ITicketRepository;
 import com.velvetPearl.lottery.dataAccess.firebase.scheme.TicketsScheme;
 import com.velvetPearl.lottery.dataAccess.models.Ticket;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.TimeoutException;
 
@@ -103,8 +105,20 @@ public class TicketRepository extends FirebaseRepository implements ITicketRepos
     }
 
     @Override
-    public void deleteTicket(Object id) {
-        // TODO Delete ticket and all lottery numbers (and prizes?) associated with it
+    public void deleteTicket(Ticket entity) {
+        if (entity == null || entity.getId() == null) {
+            return;
+        }
+
+        // Remove all of the lottery numbers associated with the ticket
+        TreeMap<Object, LotteryNumber> lotteryNumbers = entity.getLotteryNumbers();
+        if (lotteryNumbers != null) {
+            for (Object lotteryNumId : lotteryNumbers.keySet()) {
+                ApplicationDomain.getInstance().lotteryNumberRepository.deleteLotteryNumber(lotteryNumbers.get(lotteryNumId));
+            }
+        }
+
+        dbContext.getReference(TicketsScheme.LABEL).child((String) entity.getId()).removeValue();
     }
 
 }

@@ -117,7 +117,7 @@ public class Tickets extends Fragment implements Observer {
                                     .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            ApplicationDomain.getInstance().ticketRepository.deleteTicket(viewModels.get(info.position).getId());
+                                            ApplicationDomain.getInstance().ticketRepository.deleteTicket(viewModels.get(info.position).getEntityModel());
                                         }
                                     })
                                     .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

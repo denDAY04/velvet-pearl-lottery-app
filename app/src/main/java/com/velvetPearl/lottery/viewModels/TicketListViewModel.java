@@ -4,6 +4,7 @@ import com.velvetPearl.lottery.dataAccess.models.LotteryNumber;
 import com.velvetPearl.lottery.dataAccess.models.Ticket;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 
 /**
@@ -11,35 +12,33 @@ import java.util.ArrayList;
  */
 
 public class TicketListViewModel {
-    private Object id;
-    private String owner;
-    private ArrayList<Integer> lotteryNumbers;
+    private Ticket entityModel;
 
     public TicketListViewModel(Ticket entityModel) {
-        id = entityModel.getId();
-        owner = entityModel.getOwner();
-        lotteryNumbers = new ArrayList<>();
-
-        for (Object key : entityModel.getLotteryNumbers().keySet()) {
-            LotteryNumber number = entityModel.getLotteryNumbers().get(key);
-            lotteryNumbers.add(number.getLotteryNumber());
-        }
+        this.entityModel = entityModel;
     }
 
     public Object getId() {
-        return id;
+        return entityModel.getId();
     }
 
     public String getOwner() {
-        return owner;
+        return entityModel.getOwner();
     }
 
     public ArrayList<Integer> getLotteryNumbers() {
-        return lotteryNumbers;
+        ArrayList<Integer> result = new ArrayList<>();
+        TreeMap<Object, LotteryNumber> lotteryNumbers = entityModel.getLotteryNumbers();
+        for (Object key : lotteryNumbers.keySet()) {
+            result.add(lotteryNumbers.get(key).getLotteryNumber());
+        }
+        return result;
     }
+
+    public Ticket getEntityModel() { return entityModel; }
 
     @Override
     public String toString() {
-        return owner;
+        return entityModel.getOwner();
     }
 }

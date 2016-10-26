@@ -7,22 +7,23 @@ import com.velvetPearl.lottery.dataAccess.models.LotteryNumber;
  */
 
 public class LotteryNumberListViewModel {
-    private int lotteryNumber;
-    private Object id;
+    private LotteryNumber entityModel;
+
 
     public LotteryNumberListViewModel(LotteryNumber lotteryNumber) {
-        this.lotteryNumber = lotteryNumber.getLotteryNumber();
-        this.id = lotteryNumber.getId();
+        this.entityModel = lotteryNumber;
     }
 
     @Override
     public String toString() {
-        return Integer.toString(lotteryNumber);
+        return Integer.toString(entityModel.getLotteryNumber());
     }
 
-    public int getLotteryNumber() {return lotteryNumber;}
+    public int getLotteryNumber() {return entityModel.getLotteryNumber();}
+
+    public LotteryNumber getEntityModel() { return entityModel; }
 
     public Object getId() {
-        return id;
+        return entityModel.getId();
     }
 }

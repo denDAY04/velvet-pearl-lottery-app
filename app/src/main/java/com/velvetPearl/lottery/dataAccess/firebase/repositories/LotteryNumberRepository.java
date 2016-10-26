@@ -11,6 +11,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.velvetPearl.lottery.dataAccess.ApplicationDomain;
 import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
 import com.velvetPearl.lottery.dataAccess.firebase.FirebaseQueryObject;
+import com.velvetPearl.lottery.dataAccess.firebase.scheme.PrizesScheme;
 import com.velvetPearl.lottery.dataAccess.models.Lottery;
 import com.velvetPearl.lottery.dataAccess.models.Ticket;
 import com.velvetPearl.lottery.dataAccess.repositories.ILotteryNumberRepository;
@@ -96,8 +97,17 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
     }
 
     @Override
-    public void deleteLotteryNumber(Object lotteryNumberId) {
-        // TODO Delete in firebase and fire event
+    public void deleteLotteryNumber(LotteryNumber entity) {
+        if (entity == null || entity.getId() == null) {
+            return;
+        }
+
+        // Remove the prize associated with the lottery number
+        if (entity.getWinningPrize() != null) {
+            ApplicationDomain.getInstance().prizeRepository.deletePrize(entity.getWinningPrize());
+        }
+
+        dbContext.getReference(LotteryNumbersScheme.LABEL).child((String) entity.getId()).removeValue();
     }
 
     @Override

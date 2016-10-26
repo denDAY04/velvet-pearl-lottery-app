@@ -13,4 +13,5 @@ public interface IPrizeRepository {
 
     Prize savePrize(Prize prize) throws TimeoutException;
 
+    void deletePrize(Prize entity);
 }

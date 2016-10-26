@@ -33,5 +33,5 @@ public interface ITicketRepository {
      */
     Ticket saveTicket(Ticket ticket) throws TimeoutException;
 
-    void deleteTicket(Object id);
+    void deleteTicket(Ticket entity);
 }

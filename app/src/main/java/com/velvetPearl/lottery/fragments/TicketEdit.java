@@ -50,6 +50,7 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
     private ImageButton newLotteryNumberBtn = null;
 
     private String ticketId = null;
+    private Ticket model;
 
     @Nullable
     @Override
@@ -60,7 +61,12 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
 
         if (savedInstanceState == null) {
             Bundle args = getArguments();
-            ticketId = args.getString("ticketId");
+            if (args != null) {
+                ticketId = args.getString("ticketId");
+                model = ApplicationDomain.getInstance().getActiveLottery().getTickets().get(ticketId);
+            } else {
+                model = new Ticket();
+            }
         }
 
         initUi(root);
@@ -86,26 +92,30 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
     }
 
     private void updateUi() {
-        if (ticketId == null) {
-            return;
-        }
-
+//        if (ticketId == null) {
+//            return;
+//        }
+//
         Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
         if (lottery == null) {
             return;
         }
+//
+//        Ticket ticket = lottery.getTickets().get(ticketId);
+//        if (ticket == null) {
+//            return;
+//        }
+//
+//        ownerInput.setText(ticket.getOwner());
+//        double totalPrice = ticket.getLotteryNumbers().size() * lottery.getPricePerLotteryNum();
+//        priceLabel.setText(String.format("%.2f credits", totalPrice));
 
-        Ticket ticket = lottery.getTickets().get(ticketId);
-        if (ticket == null) {
-            return;
-        }
-
-        ownerInput.setText(ticket.getOwner());
-        double totalPrice = ticket.getLotteryNumbers().size() * lottery.getPricePerLotteryNum();
+        ownerInput.setText(model.getOwner());
+        double totalPrice = model.getLotteryNumbers().size() * lottery.getPricePerLotteryNum();
         priceLabel.setText(String.format("%.2f credits", totalPrice));
 
         // Set list of lottery numbers
-        final ArrayList<LotteryNumberListViewModel> viewModels = convertToViewModels(ticket.getLotteryNumbers());
+        final ArrayList<LotteryNumberListViewModel> viewModels = convertToViewModels(model.getLotteryNumbers());
         if (viewModels.size() > 0) {
             numberList.setAdapter(new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, viewModels));
             numberList.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
@@ -177,6 +187,9 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
     public void onClick(View v) {
         if (v == saveBtn) {
             // TODO save the changes to the repo
+            Ticket ticket = new Ticket();
+
+            ApplicationDomain.getInstance().ticketRepository.saveTicket(ticket);
         } else if (v == newLotteryNumberBtn) {
             // TODO Change view (possible as a popup) for choosing number of have random assigned
         }

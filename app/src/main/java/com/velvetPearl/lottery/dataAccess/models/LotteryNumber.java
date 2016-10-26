@@ -10,6 +10,7 @@ public class LotteryNumber {
     private Object id;
     private int lotteryNumber;
     private Prize winningPrize;
+    private double price;
 
     // Navigational member fields
     private Object ticketId;
@@ -58,5 +59,13 @@ public class LotteryNumber {
         }
 
         return id.equals(other.id);
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 }

@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -28,16 +30,21 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.TreeMap;
 
-public class Tickets extends Fragment implements Observer {
+public class Tickets extends Fragment implements Observer, View.OnClickListener {
 
     private static final String LOG_TAG = "TicketsFragment";
+
     private ListView ticketsListView = null;
+    private ImageButton newTicketBtn = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_tickets, container, false);
+
         ApplicationDomain.getInstance().addObserver(this);
         ticketsListView = (ListView) root.findViewById(R.id.tickets_list_container);
+        newTicketBtn = (ImageButton) root.findViewById(R.id.tickets_new_button);
+        newTicketBtn.setOnClickListener(this);
 
         if (savedInstanceState == null) {
             updateUi();
@@ -161,6 +168,13 @@ public class Tickets extends Fragment implements Observer {
         if (arg.getClass() == DataAccessEvent.class
                 && (arg == DataAccessEvent.TICKET_LIST_UPDATE || arg == DataAccessEvent.LOTTERY_NUMBER_UPDATE)) {
             updateUi();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == newTicketBtn) {
+            getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new TicketEdit()).addToBackStack(null).commit();
         }
     }
 }

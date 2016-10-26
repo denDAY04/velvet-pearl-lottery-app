@@ -34,11 +34,6 @@ public class TicketRepository extends FirebaseRepository implements ITicketRepos
     }
 
     @Override
-    public void loadTicket(Object id) {
-        throw new UnsupportedOperationException("Not implemented");
-    }
-
-    @Override
     public void loadTicketsForLottery(Object lotteryId) {
         if (lotteryId == null || lotteryId.getClass() != String.class) {
             return ;
@@ -100,7 +95,7 @@ public class TicketRepository extends FirebaseRepository implements ITicketRepos
     }
 
     @Override
-    public Ticket saveTicket(Ticket ticket) throws TimeoutException {
+    public Ticket saveTicket(Ticket ticket) {
         throw new UnsupportedOperationException("Not implemented");
     }
 

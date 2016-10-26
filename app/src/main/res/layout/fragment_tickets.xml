@@ -20,6 +20,7 @@
             android:textStyle="normal|bold" />
         <ImageButton
             android:src="@android:drawable/ic_input_add"
+            android:id="@+id/tickets_new_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

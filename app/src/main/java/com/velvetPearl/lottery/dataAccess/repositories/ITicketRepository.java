@@ -23,7 +23,7 @@ public interface ITicketRepository {
      * @return
      * @throws TimeoutException if the action did not complete before a given timeout period.
      */
-    Ticket saveTicket(Ticket ticket) throws TimeoutException;
+    Ticket saveTicket(Ticket ticket);
 
     void deleteTicket(Ticket entity);
 }

@@ -31,6 +31,11 @@ public class PrizeRepository extends FirebaseRepository implements IPrizeReposit
     }
 
     @Override
+    public void getPrizesForLottery(Object lotteryId) {
+
+    }
+
+    @Override
     public Prize savePrize(Prize prize) throws TimeoutException {
         if (prize == null) {
             return null;

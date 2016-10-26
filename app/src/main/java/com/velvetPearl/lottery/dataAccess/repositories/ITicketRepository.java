@@ -12,14 +12,6 @@ public interface ITicketRepository {
 
     /**
      *
-     * @param id
-     * @return
-     * @throws TimeoutException if the action did not complete before a given timeout period.
-     */
-    void loadTicket(Object id);
-
-    /**
-     *
      * @param lotteryId
      * @throws TimeoutException if the action did not complete before a given timeout period.
      */

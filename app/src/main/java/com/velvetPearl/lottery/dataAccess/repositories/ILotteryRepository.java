@@ -29,4 +29,6 @@ public interface ILotteryRepository {
      * @throws TimeoutException if the action did not complete before a given timeout period.
      */
     Lottery saveLottery(Lottery lottery) throws TimeoutException;
+
+    void deleteLottery(Lottery entity);
 }

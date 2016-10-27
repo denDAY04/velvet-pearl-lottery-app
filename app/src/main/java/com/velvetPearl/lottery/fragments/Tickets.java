@@ -46,9 +46,6 @@ public class Tickets extends Fragment implements Observer, View.OnClickListener 
         newTicketBtn = (ImageButton) root.findViewById(R.id.tickets_new_button);
         newTicketBtn.setOnClickListener(this);
 
-        if (savedInstanceState == null) {
-            updateUi();
-        }
         updateUi();
 
         return root;
@@ -78,16 +75,18 @@ public class Tickets extends Fragment implements Observer, View.OnClickListener 
                     title.setText(viewModel.toString());
 
                     // List of the numbers on the ticket
-                    StringBuilder sb = new StringBuilder("");
-                    for (Integer number : viewModel.getLotteryNumbers()) {
-                        sb.append(String.format("%d - ", number));
+                    StringBuilder sb = new StringBuilder();
+                    ArrayList<Integer> numbers =  viewModel.getLotteryNumbers();
+                    if (numbers != null && !numbers.isEmpty()) {
+                        for (Integer number : viewModel.getLotteryNumbers()) {
+                            sb.append(String.format("%d - ", number));
+                        }
+                        sb.delete(sb.length() - 3, sb.length());    // Remove trailing " - "
+                    } else {
+                        sb.append(getString(R.string.none_found));
                     }
-                    String numberbListString = sb.toString();
-                    // Remove trailing " - "
-                    if (numberbListString.length() > 2) {
-                        numberbListString = numberbListString.substring(0, numberbListString.length() - 2);
-                    }
-                    subTitle.setText(numberbListString);
+
+                    subTitle.setText(sb.toString());
                     return itemView;
                 }
             });

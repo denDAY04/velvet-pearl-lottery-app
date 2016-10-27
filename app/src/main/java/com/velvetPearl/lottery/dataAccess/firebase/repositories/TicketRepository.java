@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -18,6 +19,8 @@ import com.velvetPearl.lottery.dataAccess.firebase.scheme.TicketsScheme;
 import com.velvetPearl.lottery.dataAccess.models.Ticket;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.TimeoutException;
@@ -96,7 +99,38 @@ public class TicketRepository extends FirebaseRepository implements ITicketRepos
 
     @Override
     public Ticket saveTicket(Ticket ticket) {
-        throw new UnsupportedOperationException("Not implemented");
+        if (ticket == null) {
+            return null;
+        }
+
+        DatabaseReference dbTicketRef;
+        if (ticket.getId() != null && !((String) ticket.getId()).isEmpty()) {
+            Log.d(LOG_TAG, String.format("Saving existing ticket (ID %s)", (String) ticket.getId()));
+            dbTicketRef = dbContext.getReference(TicketsScheme.LABEL).child((String) ticket.getId());
+        } else {
+            Log.d(LOG_TAG, "Saving new ticket.");
+            dbTicketRef = dbContext.getReference(TicketsScheme.LABEL).push();
+            ticket.setId(dbTicketRef.getKey());
+        }
+
+        for (Object key : ticket.getLotteryNumbers().keySet()) {
+            LotteryNumber number = ticket.getLotteryNumbers().get(key);
+            number.setTicketId(ticket.getId());
+            ApplicationDomain.getInstance().lotteryNumberRepository.saveLotteryNumber(number);
+        }
+
+        for (LotteryNumber unsavedNumber : ticket.getUnsavedLotteryNumbers()) {
+            ApplicationDomain.getInstance().lotteryNumberRepository.saveLotteryNumber(unsavedNumber);
+        }
+        ticket.getUnsavedLotteryNumbers().clear();
+
+        HashMap<String, Object> fieldValues = new HashMap<>();
+        fieldValues.put(TicketsScheme.Children.OWNER, ticket.getOwner());
+        fieldValues.put(TicketsScheme.Children.LOTTERY_ID, ticket.getLotteryId());
+
+        dbTicketRef.setValue(fieldValues);
+
+        return ticket;
     }
 
     @Override

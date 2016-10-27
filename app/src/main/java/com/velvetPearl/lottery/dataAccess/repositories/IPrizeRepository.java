@@ -13,7 +13,7 @@ public interface IPrizeRepository {
 
     void getPrizesForLottery(Object lotteryId);
 
-    Prize savePrize(Prize prize) throws TimeoutException;
+    Prize savePrize(Prize prize);
 
     void deletePrize(Prize entity);
 }

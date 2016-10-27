@@ -4,6 +4,7 @@ import com.velvetPearl.lottery.dataAccess.models.LotteryNumber;
 import com.velvetPearl.lottery.dataAccess.models.Ticket;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.TreeMap;
 
 
@@ -39,6 +40,11 @@ public class TicketListViewModel {
 
     @Override
     public String toString() {
-        return entityModel.getOwner();
+        double totalPrice = 0.0;
+        TreeMap<Object, LotteryNumber> lotteryNumbers = entityModel.getLotteryNumbers();
+        for (Object key : lotteryNumbers.keySet()) {
+            totalPrice += lotteryNumbers.get(key).getPrice();
+        }
+        return String.format("%s - %.2f credits",entityModel.getOwner(), totalPrice);
     }
 }

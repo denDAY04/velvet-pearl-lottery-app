@@ -4,7 +4,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -30,6 +32,7 @@ import com.velvetPearl.lottery.dataAccess.models.Ticket;
 import com.velvetPearl.lottery.viewModels.LotteryNumberListViewModel;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.TreeMap;
@@ -66,6 +69,7 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
                 model = ApplicationDomain.getInstance().getActiveLottery().getTickets().get(ticketId);
             } else {
                 model = new Ticket();
+                model.setLotteryId(ApplicationDomain.getInstance().getActiveLottery().getId());
             }
         }
 
@@ -76,6 +80,7 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
     @Override
     public void onDestroyView() {
         ApplicationDomain.getInstance().deleteObserver(this);
+        model.getUnsavedLotteryNumbers().clear();   // Don't let unsaved lottery numbers carry over
         super.onDestroyView();
     }
 
@@ -92,30 +97,20 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
     }
 
     private void updateUi() {
-//        if (ticketId == null) {
-//            return;
-//        }
-//
-        Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
-        if (lottery == null) {
-            return;
-        }
-//
-//        Ticket ticket = lottery.getTickets().get(ticketId);
-//        if (ticket == null) {
-//            return;
-//        }
-//
-//        ownerInput.setText(ticket.getOwner());
-//        double totalPrice = ticket.getLotteryNumbers().size() * lottery.getPricePerLotteryNum();
-//        priceLabel.setText(String.format("%.2f credits", totalPrice));
-
         ownerInput.setText(model.getOwner());
-        double totalPrice = model.getLotteryNumbers().size() * lottery.getPricePerLotteryNum();
+
+        double totalPrice = 0.0;
+        TreeMap<Object, LotteryNumber> lotteryNumbers = model.getLotteryNumbers();
+        for (Object key : lotteryNumbers.keySet()) {
+            totalPrice += lotteryNumbers.get(key).getPrice();
+        }
+        for (LotteryNumber unsavedNumber : model.getUnsavedLotteryNumbers()) {
+            totalPrice += unsavedNumber.getPrice();
+        }
         priceLabel.setText(String.format("%.2f credits", totalPrice));
 
         // Set list of lottery numbers
-        final ArrayList<LotteryNumberListViewModel> viewModels = convertToViewModels(model.getLotteryNumbers());
+        final ArrayList<LotteryNumberListViewModel> viewModels = convertToViewModels(model.getLotteryNumbers(), model.getUnsavedLotteryNumbers());
         if (viewModels.size() > 0) {
             numberList.setAdapter(new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, viewModels));
             numberList.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
@@ -134,7 +129,18 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
                                     .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            ApplicationDomain.getInstance().lotteryNumberRepository.deleteLotteryNumber(viewModels.get(info.position).getEntityModel());
+                                            LotteryNumberListViewModel viewModel = viewModels.get(info.position);
+                                            if (viewModel.getId() == null) {
+                                                LinkedList<LotteryNumber> unsavedNumbers = model.getUnsavedLotteryNumbers();
+                                                for (int i = 0; i < unsavedNumbers.size(); ++i) {
+                                                    if (unsavedNumbers.get(i).getLotteryNumber() == viewModel.getLotteryNumber()) {
+                                                        unsavedNumbers.remove(i);
+                                                        ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_NUMBER_UPDATE);
+                                                    }
+                                                }
+                                            } else {
+                                                ApplicationDomain.getInstance().lotteryNumberRepository.deleteLotteryNumber(viewModel.getEntityModel());
+                                            }
                                         }
                                     })
                                     .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -165,11 +171,16 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
         }
     }
 
-    private ArrayList<LotteryNumberListViewModel> convertToViewModels(TreeMap<Object, LotteryNumber> lotteryNumbers) {
+    private ArrayList<LotteryNumberListViewModel> convertToViewModels(TreeMap<Object, LotteryNumber> lotteryNumbers, LinkedList<LotteryNumber> unsavedNumbers) {
         ArrayList<LotteryNumberListViewModel> viewModels = new ArrayList<>();
         for (Object key : lotteryNumbers.keySet()) {
             viewModels.add(new LotteryNumberListViewModel(lotteryNumbers.get(key)));
         }
+
+        for (LotteryNumber unsavedNumber : unsavedNumbers) {
+            viewModels.add(new LotteryNumberListViewModel(unsavedNumber));
+        }
+
         return viewModels;
     }
 
@@ -186,12 +197,38 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
     @Override
     public void onClick(View v) {
         if (v == saveBtn) {
-            // TODO save the changes to the repo
-            Ticket ticket = new Ticket();
+            // Don't create ticket without an owner
+            String ownerName = ownerInput.getText().toString();
+            if (ownerName == null ||  ownerName.isEmpty()) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(R.string.save_failed)
+                        .setMessage(R.string.ticket_edit_owner_required);
+                        //.setPositiveButton(R.string.ok, );
+                builder.create().show();
+                return;
+            }
 
-            ApplicationDomain.getInstance().ticketRepository.saveTicket(ticket);
+            model.setOwner(ownerName);
+            model = ApplicationDomain.getInstance().ticketRepository.saveTicket(model);
+
+            // Go back
+            getFragmentManager().popBackStack();
+
         } else if (v == newLotteryNumberBtn) {
-            // TODO Change view (possible as a popup) for choosing number of have random assigned
+            // Open dialog to enter new lottery number
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+            if (prev != null) {
+                ft.remove(prev);
+            }
+            ft.addToBackStack(null);
+
+            // Create and show the dialog.
+            Bundle args = new Bundle();
+            args.putString("ticketId", (String) model.getId());
+            DialogFragment newLotteryNumDlg = new NewLotteryNumDlg();
+            newLotteryNumDlg.setArguments(args);
+            newLotteryNumDlg.show(ft, "dialog");
         }
     }
 }

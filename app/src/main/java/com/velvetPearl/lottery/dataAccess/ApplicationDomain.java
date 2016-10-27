@@ -6,6 +6,7 @@ import com.velvetPearl.lottery.dataAccess.firebase.repositories.LotteryRepositor
 import com.velvetPearl.lottery.dataAccess.firebase.repositories.PrizeRepository;
 import com.velvetPearl.lottery.dataAccess.firebase.repositories.TicketRepository;
 import com.velvetPearl.lottery.dataAccess.models.Lottery;
+import com.velvetPearl.lottery.dataAccess.models.LotteryNumber;
 import com.velvetPearl.lottery.dataAccess.repositories.ILotteryNumberRepository;
 import com.velvetPearl.lottery.dataAccess.repositories.ILotteryRepository;
 import com.velvetPearl.lottery.dataAccess.repositories.IPrizeRepository;

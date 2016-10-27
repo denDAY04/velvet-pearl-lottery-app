@@ -9,5 +9,6 @@ public abstract class LotteryNumbersScheme {
     public static class Children {
         public static final String LOTTERY_NUMBER = "lotteryNumber";
         public static final String TICKET_ID = "ticketId";
+        public static final String PRICE = "price";
     }
 }

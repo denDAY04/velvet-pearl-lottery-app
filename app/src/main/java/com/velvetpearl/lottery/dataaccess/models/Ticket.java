@@ -1,6 +1,7 @@
 package com.velvetPearl.lottery.dataAccess.models;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.TreeMap;
 
 
@@ -16,8 +17,12 @@ public class Ticket {
     // Navigational member fields
     private Object lotteryId;
 
+    // List for new lottery numbers not yet saved to the database.
+    private LinkedList<LotteryNumber> unsavedLotteryNumbers;
+
     public Ticket() {
         lotteryNumbers = new TreeMap<>();
+        unsavedLotteryNumbers = new LinkedList<>();
     }
 
 
@@ -65,5 +70,9 @@ public class Ticket {
         }
 
         return id.equals(other.id);
+    }
+
+    public LinkedList<LotteryNumber> getUnsavedLotteryNumbers() {
+        return unsavedLotteryNumbers;
     }
 }

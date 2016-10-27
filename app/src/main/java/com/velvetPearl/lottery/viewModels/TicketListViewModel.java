@@ -38,13 +38,17 @@ public class TicketListViewModel {
 
     public Ticket getEntityModel() { return entityModel; }
 
-    @Override
-    public String toString() {
+    public double getTotalTicketPrice() {
         double totalPrice = 0.0;
         TreeMap<Object, LotteryNumber> lotteryNumbers = entityModel.getLotteryNumbers();
         for (Object key : lotteryNumbers.keySet()) {
             totalPrice += lotteryNumbers.get(key).getPrice();
         }
-        return String.format("%s - %.2f credits",entityModel.getOwner(), totalPrice);
+        return totalPrice;
+    }
+
+    @Override
+    public String toString() {
+        return entityModel.getOwner();
     }
 }

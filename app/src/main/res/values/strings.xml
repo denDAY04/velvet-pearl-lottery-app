@@ -50,4 +50,6 @@
     <string name="lottery_num_error_range">Out of range %1$d - %2$d.</string>
     <string name="lottery_num_instructions" >Type a specific lottery number or have a random one chosen.</string>
     <string name="lottery_num_error_format">Only integers.</string>
+    <string name="list_item_ticket_number_count" >%1$d lottery number(s)</string>
+    <string name="list_item_ticket_credits" translatable="false">%1$.2f credits</string>
 </resources>

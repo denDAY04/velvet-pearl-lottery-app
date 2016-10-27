@@ -1,6 +1,7 @@
 package com.velvetPearl.lottery.fragments;
 
 import android.content.DialogInterface;
+import android.graphics.Paint;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -62,33 +63,29 @@ public class Tickets extends Fragment implements Observer, View.OnClickListener 
         final ArrayList<TicketListViewModel> viewModels = convertToViewModels(ApplicationDomain.getInstance().getActiveLottery().getTickets());
 
         if (viewModels.size() > 0) {
-            ticketsListView.setAdapter(new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_2, android.R.id.text1, viewModels) {
+            ticketsListView.setAdapter(new ArrayAdapter(getActivity(), R.layout.listitem_ticket, R.id.list_item_ticket_owner, viewModels) {
                 @NonNull
                 @Override
                 public View getView(int position, View convertView, ViewGroup parent) {
                     View itemView = super.getView(position, convertView, parent);
-                    TextView title = (TextView) itemView.findViewById(android.R.id.text1);
-                    TextView subTitle = (TextView) itemView.findViewById(android.R.id.text2);
+                    TextView ownerLabel = (TextView) itemView.findViewById(R.id.list_item_ticket_owner);
+                    TextView numberCntLabel = (TextView) itemView.findViewById(R.id.list_item_ticket_numbers);
+                    TextView priceLabel = (TextView) itemView.findViewById(R.id.list_item_ticket_price);
 
                     // Name of the ticket owner
                     TicketListViewModel viewModel = viewModels.get(position);
-                    title.setText(viewModel.toString());
+                    ownerLabel.setText(viewModel.getOwner());
 
-                    // List of the numbers on the ticket
-                    StringBuilder sb = new StringBuilder();
-                    ArrayList<Integer> numbers =  viewModel.getLotteryNumbers();
-                    if (numbers != null && !numbers.isEmpty()) {
-                        for (Integer number : viewModel.getLotteryNumbers()) {
-                            sb.append(String.format("%d - ", number));
-                        }
-                        sb.delete(sb.length() - 3, sb.length());    // Remove trailing " - "
-                    } else {
-                        sb.append(getString(R.string.none_found));
-                    }
+                    // Number of lottery numbers
+                    int numberCount = viewModel.getLotteryNumbers().size();
+                    numberCntLabel.setText(String.format(getString(R.string.list_item_ticket_number_count), numberCount));
 
-                    subTitle.setText(sb.toString());
+                    // Price of the ticket
+                    priceLabel.setText(String.format(getString(R.string.list_item_ticket_credits), viewModel.getTotalTicketPrice()));
+
                     return itemView;
                 }
+
             });
 
             // Add context menu to the tickets
@@ -100,20 +97,8 @@ public class Tickets extends Fragment implements Observer, View.OnClickListener 
                     final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
                     menu.setHeaderTitle(String.format("%s - %s", getString(R.string.ticket), viewModels.get(info.position).getOwner()));
 
-                    // Edit option
-                    menu.add(Menu.NONE, 0, 0, R.string.edit).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            Bundle args = new Bundle();
-                            args.putString("ticketId", (String) viewModels.get(info.position).getId());
-                            Fragment ticketEditFrag = new TicketEdit();
-                            ticketEditFrag.setArguments(args);
-                            getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, ticketEditFrag).addToBackStack(null).commit();
-                            return true;
-                        }
-                    });
                     // Delete option
-                    menu.add(Menu.NONE, 1, 1, R.string.delete).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    menu.add(Menu.NONE, 0, 0, R.string.delete).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
                             AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(getContext());
@@ -136,6 +121,16 @@ public class Tickets extends Fragment implements Observer, View.OnClickListener 
                             return true;
                         }
                     });
+                }
+            });
+            ticketsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Bundle args = new Bundle();
+                    args.putString("ticketId", (String) viewModels.get(position).getId());
+                    Fragment ticketEditFrag = new TicketEdit();
+                    ticketEditFrag.setArguments(args);
+                    getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, ticketEditFrag).addToBackStack(null).commit();
                 }
             });
         } else {

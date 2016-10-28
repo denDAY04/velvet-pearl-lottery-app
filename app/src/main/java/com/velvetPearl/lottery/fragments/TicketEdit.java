@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.velvetPearl.lottery.R;
 import com.velvetPearl.lottery.dataAccess.ApplicationDomain;
@@ -194,6 +195,39 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
         }
     }
 
+    private LinkedList<Integer> getUsedLotteryNumbers() {
+        LinkedList<Integer> usedNumbers = new LinkedList<>();
+
+        Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
+        if (lottery != null) {
+            TreeMap<Object, Ticket> tickets = lottery.getTickets();
+            for (Object ticketKey : tickets.keySet()) {
+                Ticket ticket = tickets.get(ticketKey);
+                TreeMap<Object, LotteryNumber> numbers =  ticket.getLotteryNumbers();
+                for (Object numberKey : numbers.keySet()) {
+                    usedNumbers.add(numbers.get(numberKey).getLotteryNumber());
+                }
+            }
+        }
+
+        if (ticketId != null) {
+            Ticket thisTicket = lottery.getTickets().get(ticketId);
+            for (LotteryNumber unsavedNumber : thisTicket.getUnsavedLotteryNumbers()) {
+                usedNumbers.add(unsavedNumber.getLotteryNumber());
+            }
+        }
+
+        return usedNumbers;
+    }
+
+    private boolean allLotteryNumbersTaken() {
+        LinkedList<Integer>  takenNumbers = getUsedLotteryNumbers();
+        Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
+        int rangeCount = lottery.getLotteryNumUpperBound() - lottery.getLotteryNumLowerBound() + 1;     // Both bounds inclusive
+
+        return takenNumbers.size() >= rangeCount;
+    }
+
     @Override
     public void onClick(View v) {
         if (v == saveBtn) {
@@ -215,6 +249,12 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
             getFragmentManager().popBackStack();
 
         } else if (v == newLotteryNumberBtn) {
+
+            if (allLotteryNumbersTaken()) {
+                Toast.makeText(getContext(), R.string.no_lottery_numbers_left, Toast.LENGTH_LONG);
+                return;
+            }
+
             // Open dialog to enter new lottery number
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             Fragment prev = getFragmentManager().findFragmentByTag("dialog");

@@ -49,5 +49,6 @@
     <string name="lottery_num_error_range">Ikke i rækken %1$d - %2$d.</string>
     <string name="lottery_num_instructions" >"Indtask et specifikt lottri nummer, eller få et tilfældigt valgt. "</string>
     <string name="lottery_num_error_format">Kun heltal.</string>
-    <string name="list_item_ticket_number_count" >%1$d lotteri numre</string>
+    <string name="list_item_ticket_number_count" >%1$d lotteri nummre</string>
+    <string name="no_lottery_numbers_left">Ingen frie lotteri nummre.</string>
 </resources>

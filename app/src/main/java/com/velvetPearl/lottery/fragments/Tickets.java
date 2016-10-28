@@ -168,6 +168,7 @@ public class Tickets extends Fragment implements Observer, View.OnClickListener 
     @Override
     public void onClick(View v) {
         if (v == newTicketBtn) {
+
             getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new TicketEdit()).addToBackStack(null).commit();
         }
     }

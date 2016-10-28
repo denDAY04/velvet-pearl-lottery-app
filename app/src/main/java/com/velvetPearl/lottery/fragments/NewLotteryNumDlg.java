@@ -75,16 +75,40 @@ public class NewLotteryNumDlg extends DialogFragment implements View.OnClickList
             }
         }
 
+        if (ticketId != null) {
+            Ticket thisTicket = lottery.getTickets().get(ticketId);
+            for (LotteryNumber unsavedNumber : thisTicket.getUnsavedLotteryNumbers()) {
+                usedNumbers.add(unsavedNumber.getLotteryNumber());
+            }
+        }
+
         return usedNumbers;
+    }
+
+    private void displayNoFreeNumbersMessage() {
+
     }
 
     @Override
     public void onClick(View v) {
         if (v == randomBtn) {
 
-            // TODO Pick random number
+            int upperBound = ApplicationDomain.getInstance().getActiveLottery().getLotteryNumUpperBound();
+            int lowerBound = ApplicationDomain.getInstance().getActiveLottery().getLotteryNumLowerBound();
+            LinkedList<Integer> usedNumbers = getUsedLotteryNumbers();
+            int randomNumber;
+
+            do {
+                randomNumber = (int) (Math.random() * upperBound);
+                if (randomNumber < lowerBound) {
+                    continue;
+                }
+            } while (usedNumbers.contains(randomNumber));
+
+            storeLotteryNumberAndCloseDialog(randomNumber);
 
         } else if (v == specificNumBtn) {
+
             String input = numberInput.getText().toString();
             int userNumber;
             try {

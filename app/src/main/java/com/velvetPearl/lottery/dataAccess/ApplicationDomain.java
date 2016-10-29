@@ -15,7 +15,9 @@ import com.velvetPearl.lottery.dataAccess.repositories.ITicketRepository;
 import com.velvetPearl.lottery.viewModels.TicketInputModel;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Observable;
+import java.util.TreeMap;
 
 /**
  * Singleton class for application-wide access to the data entity manager objects.
@@ -101,5 +103,26 @@ public class ApplicationDomain extends Observable {
         }
 
         editingTicket = new TicketInputModel(getActiveLottery().getTickets().get(ticketId));
+    }
+
+    public LinkedList<Integer> getUsedLotteryNumbers() {
+        LinkedList<Integer> usedNumbers = new LinkedList<>();
+
+        Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
+        if (lottery != null) {
+            TreeMap<Object, Ticket> tickets = lottery.getTickets();
+            for (Object ticketKey : tickets.keySet()) {
+                Ticket ticket = tickets.get(ticketKey);
+                for (LotteryNumber number : ticket.getLotteryNumbers()) {
+                    usedNumbers.add(number.getLotteryNumber());
+                }
+            }
+        }
+
+        for (LotteryNumber number : editingTicket.getUnsavedNumbers()) {
+            usedNumbers.add(number.getLotteryNumber());
+        }
+
+        return usedNumbers;
     }
 }

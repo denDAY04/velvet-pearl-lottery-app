@@ -22,6 +22,7 @@ import com.velvetPearl.lottery.dataAccess.models.LotteryNumber;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * Created by Stensig on 30-Sep-16.
@@ -53,7 +54,7 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
                 if (lottery != null && lottery.getTickets() != null) {
                     Log.d(LOG_TAG, String.format("LotteryNumber (ID %s) added.", lotteryNum.getId()));
                     Ticket ticket = lottery.getTickets().get(lotteryNum.getTicketId());
-                    ticket.getLotteryNumbers().put(lotteryNum.getId(), lotteryNum);
+                    ticket.addLotteryNumber(lotteryNum);
                     ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_NUMBER_UPDATE);
                 }
             }
@@ -67,7 +68,7 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
                 if (lottery != null && lottery.getTickets() != null) {
                     Log.d(LOG_TAG, String.format("LotteryNumber (ID %s) changed.", lotteryNum.getId()));
                     Ticket ticket = lottery.getTickets().get(lotteryNum.getTicketId());
-                    ticket.getLotteryNumbers().put(lotteryNum.getId(), lotteryNum);
+                    ticket.addLotteryNumber(lotteryNum);
                     ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_NUMBER_UPDATE);
                 }
             }
@@ -81,7 +82,7 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
                 if (lottery != null && lottery.getTickets() != null) {
                     Log.d(LOG_TAG, String.format("LotteryNumber (ID %s) removed.", lotteryNum.getId()));
                     Ticket ticket = lottery.getTickets().get(lotteryNum.getTicketId());
-                    ticket.getLotteryNumbers().remove(lotteryNum.getId());
+                    ticket.removeLotteryNumber(lotteryNum);
                     ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_NUMBER_UPDATE);
                 }
             }

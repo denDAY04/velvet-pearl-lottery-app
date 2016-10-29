@@ -53,7 +53,7 @@ public class TicketRepository extends FirebaseRepository implements ITicketRepos
                 Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
                 if (lottery != null) {
                     Log.d(LOG_TAG, String.format("Ticket (ID %s) added.", ticket.getId()));
-                    lottery.getTickets().put(ticket.getId(), ticket);
+                    lottery.addTicket(ticket);
                     ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.TICKET_LIST_UPDATE);
                 }
             }
@@ -113,16 +113,10 @@ public class TicketRepository extends FirebaseRepository implements ITicketRepos
             ticket.setId(dbTicketRef.getKey());
         }
 
-        for (Object key : ticket.getLotteryNumbers().keySet()) {
-            LotteryNumber number = ticket.getLotteryNumbers().get(key);
+        for (LotteryNumber number : ticket.getLotteryNumbers()) {
             number.setTicketId(ticket.getId());
             ApplicationDomain.getInstance().lotteryNumberRepository.saveLotteryNumber(number);
         }
-
-        for (LotteryNumber unsavedNumber : ticket.getUnsavedLotteryNumbers()) {
-            ApplicationDomain.getInstance().lotteryNumberRepository.saveLotteryNumber(unsavedNumber);
-        }
-        ticket.getUnsavedLotteryNumbers().clear();
 
         HashMap<String, Object> fieldValues = new HashMap<>();
         fieldValues.put(TicketsScheme.Children.OWNER, ticket.getOwner());
@@ -140,11 +134,8 @@ public class TicketRepository extends FirebaseRepository implements ITicketRepos
         }
 
         // Remove all of the lottery numbers associated with the ticket
-        TreeMap<Object, LotteryNumber> lotteryNumbers = entity.getLotteryNumbers();
-        if (lotteryNumbers != null) {
-            for (Object lotteryNumId : lotteryNumbers.keySet()) {
-                ApplicationDomain.getInstance().lotteryNumberRepository.deleteLotteryNumber(lotteryNumbers.get(lotteryNumId));
-            }
+        for (LotteryNumber number : entity.getLotteryNumbers()) {
+            ApplicationDomain.getInstance().lotteryNumberRepository.deleteLotteryNumber(number);
         }
 
         dbContext.getReference(TicketsScheme.LABEL).child((String) entity.getId()).removeValue();

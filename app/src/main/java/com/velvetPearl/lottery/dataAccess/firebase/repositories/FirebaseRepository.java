@@ -58,7 +58,7 @@ public abstract class FirebaseRepository {
      * @param queryObject Object encapsulating the Firebase query and child event listener.
      */
     public void attachAndStoreQueryObject(String key, FirebaseQueryObject queryObject) {
-        if (key != null && queryObject.query != null && queryObject.listener != null) {
+        if (key != null && queryObject.query != null && queryObject.listener != null && !dataAccessorsCollection.containsKey(key)) {
             queryObject.query.addChildEventListener(queryObject.listener);
             dataAccessorsCollection.put(key, queryObject);
         }

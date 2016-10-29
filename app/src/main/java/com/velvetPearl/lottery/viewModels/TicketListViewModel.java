@@ -29,10 +29,13 @@ public class TicketListViewModel {
 
     public ArrayList<Integer> getLotteryNumbers() {
         ArrayList<Integer> result = new ArrayList<>();
-        TreeMap<Object, LotteryNumber> lotteryNumbers = entityModel.getLotteryNumbers();
-        for (Object key : lotteryNumbers.keySet()) {
-            result.add(lotteryNumbers.get(key).getLotteryNumber());
+        for (LotteryNumber number : entityModel.getLotteryNumbers()) {
+            result.add(number.getLotteryNumber());
         }
+//        TreeMap<Object, LotteryNumber> lotteryNumbers = entityModel.getLotteryNumbers();
+//        for (Object key : lotteryNumbers.keySet()) {
+//            result.add(lotteryNumbers.get(key).getLotteryNumber());
+//        }
         return result;
     }
 
@@ -40,10 +43,13 @@ public class TicketListViewModel {
 
     public double getTotalTicketPrice() {
         double totalPrice = 0.0;
-        TreeMap<Object, LotteryNumber> lotteryNumbers = entityModel.getLotteryNumbers();
-        for (Object key : lotteryNumbers.keySet()) {
-            totalPrice += lotteryNumbers.get(key).getPrice();
+        for (LotteryNumber number : entityModel.getLotteryNumbers()) {
+            totalPrice += number.getPrice();
         }
+//        TreeMap<Object, LotteryNumber> lotteryNumbers = entityModel.getLotteryNumbers();
+//        for (Object key : lotteryNumbers.keySet()) {
+//            totalPrice += lotteryNumbers.get(key).getPrice();
+//        }
         return totalPrice;
     }
 

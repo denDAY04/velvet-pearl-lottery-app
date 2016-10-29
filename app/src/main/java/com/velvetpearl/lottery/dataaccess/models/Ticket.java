@@ -1,6 +1,7 @@
 package com.velvetPearl.lottery.dataAccess.models;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TreeMap;
 
@@ -13,6 +14,7 @@ public class Ticket {
     private Object id;
     private String owner;
     private TreeMap<Object, LotteryNumber> lotteryNumbers;
+    //private LinkedList<LotteryNumber> lotteryNumbers;
 
     // Navigational member fields
     private Object lotteryId;
@@ -21,6 +23,7 @@ public class Ticket {
     //private LinkedList<LotteryNumber> unsavedLotteryNumbers;
 
     public Ticket() {
+        //lotteryNumbers = new LinkedList<>();
         lotteryNumbers = new TreeMap<>();
         //unsavedLotteryNumbers = new LinkedList<>();
     }
@@ -34,13 +37,42 @@ public class Ticket {
         this.owner = owner;
     }
 
-    public TreeMap<Object, LotteryNumber> getLotteryNumbers() {
-        return lotteryNumbers;
+    public final ArrayList<LotteryNumber> getLotteryNumbers() {
+        ArrayList<LotteryNumber> list = new ArrayList<>(lotteryNumbers.size());
+        for (Object key : lotteryNumbers.keySet()) {
+            list.add(lotteryNumbers.get(key));
+        }
+        return list;
     }
 
-    public void setLotteryNumbers(TreeMap<Object, LotteryNumber> lotteryNumbers) {
-        this.lotteryNumbers = lotteryNumbers;
+    public void removeLotteryNumber(LotteryNumber number){
+        if (number == null) {
+            return;
+        }
+
+        if (number.getId() == null) {
+            throw new IllegalArgumentException("Lottery number does not have an ID.");
+        }
+
+        lotteryNumbers.remove(number.getId());
     }
+
+    public void addLotteryNumber(LotteryNumber number) {
+        if (number == null) {
+            return;
+        }
+
+        if (number.getId() == null) {
+            throw new IllegalArgumentException("Lottery number does not have an ID.");
+        }
+
+        lotteryNumbers.put(number.getId(), number);
+    }
+
+
+//    public void setLotteryNumbers(TreeMap<Object, LotteryNumber> lotteryNumbers) {
+//        this.lotteryNumbers = lotteryNumbers;
+//    }
 
     public Object getId() {
         return id;

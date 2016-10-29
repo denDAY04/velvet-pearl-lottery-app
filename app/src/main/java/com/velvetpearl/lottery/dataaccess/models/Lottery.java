@@ -84,13 +84,17 @@ public class Lottery {
         this.tickets = tickets;
     }
 
-//    public ArrayList<LotteryNumber> getLotteryNumbers() {
-//        return lotteryNumbers;
-//    }
-//
-//    public void setLotteryNumbers(ArrayList<LotteryNumber> lotteryNumbers) {
-//        this.lotteryNumbers = lotteryNumbers;
-//    }
+    public void addTicket(Ticket ticket) {
+        if (ticket == null) {
+            return;
+        }
+
+        if (ticket.getId() == null) {
+            throw new IllegalArgumentException("Ticket ID is null.");
+        }
+
+        tickets.put(ticket.getId(), ticket);
+    }
 
     @Override
     public String toString() {

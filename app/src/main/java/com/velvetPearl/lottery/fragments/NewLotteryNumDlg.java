@@ -40,10 +40,10 @@ public class NewLotteryNumDlg extends DialogFragment implements View.OnClickList
         View root = inflater.inflate(R.layout.fragment_new_lottery_num_dlg, container, false);
 
         initUi(root);
-        if (savedInstanceState == null) {
-            Bundle args = getArguments();
-            ticketId = args.getString("ticketId");
-        }
+//        if (savedInstanceState == null) {
+//            Bundle args = getArguments();
+//            ticketId = args.getString("ticketId");
+//        }
 
         return root;
     }
@@ -60,30 +60,33 @@ public class NewLotteryNumDlg extends DialogFragment implements View.OnClickList
         errorLabel.setText(null);
     }
 
-    private LinkedList<Integer> getUsedLotteryNumbers() {
-        LinkedList<Integer> usedNumbers = new LinkedList<>();
-
-        Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
-        if (lottery != null) {
-            TreeMap<Object, Ticket> tickets = lottery.getTickets();
-            for (Object ticketKey : tickets.keySet()) {
-                Ticket ticket = tickets.get(ticketKey);
-                TreeMap<Object, LotteryNumber> numbers =  ticket.getLotteryNumbers();
-                for (Object numberKey : numbers.keySet()) {
-                    usedNumbers.add(numbers.get(numberKey).getLotteryNumber());
-                }
-            }
-        }
-
-        if (ticketId != null) {
-            Ticket thisTicket = lottery.getTickets().get(ticketId);
-            for (LotteryNumber unsavedNumber : thisTicket.getUnsavedLotteryNumbers()) {
-                usedNumbers.add(unsavedNumber.getLotteryNumber());
-            }
-        }
-
-        return usedNumbers;
-    }
+//    private LinkedList<Integer> getUsedLotteryNumbers() {
+//        LinkedList<Integer> usedNumbers = new LinkedList<>();
+//
+//        Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
+//        if (lottery != null) {
+//            TreeMap<Object, Ticket> tickets = lottery.getTickets();
+//            for (Object ticketKey : tickets.keySet()) {
+//                Ticket ticket = tickets.get(ticketKey);
+//                for (LotteryNumber number : ticket.getLotteryNumbers()) {
+//                    usedNumbers.add(number.getLotteryNumber());
+//                }
+////                TreeMap<Object, LotteryNumber> numbers =  ticket.getLotteryNumbers();
+////                for (Object numberKey : numbers.keySet()) {
+////                    usedNumbers.add(numbers.get(numberKey).getLotteryNumber());
+////                }
+//            }
+//        }
+//
+//        if (ticketId != null) {
+//            Ticket thisTicket = lottery.getTickets().get(ticketId);
+//            for (LotteryNumber unsavedNumber : thisTicket.getUnsavedLotteryNumbers()) {
+//                usedNumbers.add(unsavedNumber.getLotteryNumber());
+//            }
+//        }
+//
+//        return usedNumbers;
+//    }
 
     @Override
     public void onClick(View v) {
@@ -91,7 +94,7 @@ public class NewLotteryNumDlg extends DialogFragment implements View.OnClickList
 
             int upperBound = ApplicationDomain.getInstance().getActiveLottery().getLotteryNumUpperBound();
             int lowerBound = ApplicationDomain.getInstance().getActiveLottery().getLotteryNumLowerBound();
-            LinkedList<Integer> usedNumbers = getUsedLotteryNumbers();
+            LinkedList<Integer> usedNumbers = ApplicationDomain.getInstance().getUsedLotteryNumbers();
             int randomNumber;
 
             do {
@@ -120,7 +123,7 @@ public class NewLotteryNumDlg extends DialogFragment implements View.OnClickList
                 return;
             }
 
-            if (getUsedLotteryNumbers().contains(userNumber)){
+            if (ApplicationDomain.getInstance().getUsedLotteryNumbers().contains(userNumber)){
                 errorLabel.setText(R.string.lottery_num_error_unavailable);
                 return;
             }
@@ -137,6 +140,7 @@ public class NewLotteryNumDlg extends DialogFragment implements View.OnClickList
         lotteryNumber.setLotteryNumber(number);
         lotteryNumber.setPrice(lottery.getPricePerLotteryNum());
 
-        ApplicationDomain.getInstance().getEditingTicket().getLotteryNumbers().add(lotteryNumber);
+        ApplicationDomain.getInstance().getEditingTicket().getUnsavedNumbers().add(lotteryNumber);
+        ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_NUMBER_UPDATE);
     }
 }

@@ -85,10 +85,6 @@ public class NewLotteryNumDlg extends DialogFragment implements View.OnClickList
         return usedNumbers;
     }
 
-    private void displayNoFreeNumbersMessage() {
-
-    }
-
     @Override
     public void onClick(View v) {
         if (v == randomBtn) {
@@ -105,8 +101,8 @@ public class NewLotteryNumDlg extends DialogFragment implements View.OnClickList
                 }
             } while (usedNumbers.contains(randomNumber));
 
-            storeLotteryNumberAndCloseDialog(randomNumber);
-
+            storeLotteryNumber(randomNumber);
+            getFragmentManager().popBackStack();
         } else if (v == specificNumBtn) {
 
             String input = numberInput.getText().toString();
@@ -129,20 +125,18 @@ public class NewLotteryNumDlg extends DialogFragment implements View.OnClickList
                 return;
             }
 
-            storeLotteryNumberAndCloseDialog(userNumber);
+            storeLotteryNumber(userNumber);
+            getFragmentManager().popBackStack();
         }
     }
 
-    private void storeLotteryNumberAndCloseDialog(int number) {
+    private void storeLotteryNumber(int number) {
         Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
         LotteryNumber lotteryNumber = new LotteryNumber();
         lotteryNumber.setTicketId(ticketId);
         lotteryNumber.setLotteryNumber(number);
         lotteryNumber.setPrice(lottery.getPricePerLotteryNum());
 
-        lottery.getTickets().get(ticketId).getUnsavedLotteryNumbers().add(lotteryNumber);
-        ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_NUMBER_UPDATE);
-
-        getFragmentManager().popBackStack();
+        ApplicationDomain.getInstance().getEditingTicket().getLotteryNumbers().add(lotteryNumber);
     }
 }

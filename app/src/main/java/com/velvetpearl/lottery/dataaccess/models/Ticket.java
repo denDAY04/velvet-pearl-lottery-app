@@ -18,11 +18,11 @@ public class Ticket {
     private Object lotteryId;
 
     // List for new lottery numbers not yet saved to the database.
-    private LinkedList<LotteryNumber> unsavedLotteryNumbers;
+    //private LinkedList<LotteryNumber> unsavedLotteryNumbers;
 
     public Ticket() {
         lotteryNumbers = new TreeMap<>();
-        unsavedLotteryNumbers = new LinkedList<>();
+        //unsavedLotteryNumbers = new LinkedList<>();
     }
 
 
@@ -72,7 +72,7 @@ public class Ticket {
         return id.equals(other.id);
     }
 
-    public LinkedList<LotteryNumber> getUnsavedLotteryNumbers() {
-        return unsavedLotteryNumbers;
-    }
+//    public LinkedList<LotteryNumber> getUnsavedLotteryNumbers() {
+//        return unsavedLotteryNumbers;
+//    }
 }

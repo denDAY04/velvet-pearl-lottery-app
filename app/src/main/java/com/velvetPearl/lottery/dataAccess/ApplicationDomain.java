@@ -7,10 +7,12 @@ import com.velvetPearl.lottery.dataAccess.firebase.repositories.PrizeRepository;
 import com.velvetPearl.lottery.dataAccess.firebase.repositories.TicketRepository;
 import com.velvetPearl.lottery.dataAccess.models.Lottery;
 import com.velvetPearl.lottery.dataAccess.models.LotteryNumber;
+import com.velvetPearl.lottery.dataAccess.models.Ticket;
 import com.velvetPearl.lottery.dataAccess.repositories.ILotteryNumberRepository;
 import com.velvetPearl.lottery.dataAccess.repositories.ILotteryRepository;
 import com.velvetPearl.lottery.dataAccess.repositories.IPrizeRepository;
 import com.velvetPearl.lottery.dataAccess.repositories.ITicketRepository;
+import com.velvetPearl.lottery.viewModels.TicketInputModel;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -28,6 +30,8 @@ public class ApplicationDomain extends Observable {
     public final IPrizeRepository prizeRepository;
     private Lottery activeLottery = null;
     private ArrayList<Lottery> allLotteries = null;
+
+    private TicketInputModel editingTicket = null;
 
 
     /**
@@ -83,4 +87,19 @@ public class ApplicationDomain extends Observable {
         notifyObservers(arg);
     }
 
+    public TicketInputModel getEditingTicket() {
+        return editingTicket;
+    }
+
+    public void resetEditingTicket() {
+        editingTicket = new TicketInputModel();
+    }
+
+    public void setEditingTicketFromLottery(String ticketId) {
+        if (ticketId == null || ticketId.isEmpty()) {
+            return;
+        }
+
+        editingTicket = new TicketInputModel(getActiveLottery().getTickets().get(ticketId));
+    }
 }

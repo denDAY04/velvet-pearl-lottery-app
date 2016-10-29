@@ -24,6 +24,7 @@ import com.velvetPearl.lottery.R;
 import com.velvetPearl.lottery.dataAccess.ApplicationDomain;
 import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
 import com.velvetPearl.lottery.dataAccess.models.Ticket;
+import com.velvetPearl.lottery.viewModels.TicketInputModel;
 import com.velvetPearl.lottery.viewModels.TicketListViewModel;
 
 import java.util.ArrayList;
@@ -123,6 +124,8 @@ public class Tickets extends Fragment implements Observer, View.OnClickListener 
                     });
                 }
             });
+
+            // Open ticket for edit on click
             ticketsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -130,6 +133,7 @@ public class Tickets extends Fragment implements Observer, View.OnClickListener 
                     args.putString("ticketId", (String) viewModels.get(position).getId());
                     Fragment ticketEditFrag = new TicketEdit();
                     ticketEditFrag.setArguments(args);
+                    ApplicationDomain.getInstance().setEditingTicketFromLottery((String) viewModels.get(position).getId());
                     getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, ticketEditFrag).addToBackStack(null).commit();
                 }
             });
@@ -168,7 +172,7 @@ public class Tickets extends Fragment implements Observer, View.OnClickListener 
     @Override
     public void onClick(View v) {
         if (v == newTicketBtn) {
-
+            ApplicationDomain.getInstance().resetEditingTicket();
             getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new TicketEdit()).addToBackStack(null).commit();
         }
     }

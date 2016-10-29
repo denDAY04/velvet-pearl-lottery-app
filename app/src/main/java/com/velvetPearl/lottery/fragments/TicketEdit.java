@@ -31,6 +31,7 @@ import com.velvetPearl.lottery.dataAccess.models.Lottery;
 import com.velvetPearl.lottery.dataAccess.models.LotteryNumber;
 import com.velvetPearl.lottery.dataAccess.models.Ticket;
 import com.velvetPearl.lottery.viewModels.LotteryNumberListViewModel;
+import com.velvetPearl.lottery.viewModels.TicketInputModel;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -54,7 +55,7 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
     private ImageButton newLotteryNumberBtn = null;
 
     private String ticketId = null;
-    private Ticket model;
+    private TicketInputModel model;
 
     @Nullable
     @Override
@@ -64,14 +65,15 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
         ApplicationDomain.getInstance().addObserver(this);
 
         if (savedInstanceState == null) {
-            Bundle args = getArguments();
-            if (args != null) {
-                ticketId = args.getString("ticketId");
-                model = ApplicationDomain.getInstance().getActiveLottery().getTickets().get(ticketId);
-            } else {
-                model = new Ticket();
-                model.setLotteryId(ApplicationDomain.getInstance().getActiveLottery().getId());
-            }
+            model = ApplicationDomain.getInstance().getEditingTicket();
+//            Bundle args = getArguments();
+//            if (args != null) {
+//                ticketId = args.getString("ticketId");
+//                model = ApplicationDomain.getInstance().getActiveLottery().getTickets().get(ticketId);
+//            } else {
+//                model = new Ticket();
+//                model.setLotteryId(ApplicationDomain.getInstance().getActiveLottery().getId());
+//            }
         }
 
         initUi(root);
@@ -98,10 +100,10 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
     }
 
     private void updateUi() {
-        ownerInput.setText(model.getOwner());
+        ownerInput.setText(model.getTicket().getOwner());
 
         double totalPrice = 0.0;
-        TreeMap<Object, LotteryNumber> lotteryNumbers = model.getLotteryNumbers();
+        TreeMap<Object, LotteryNumber> lotteryNumbers = model.getTicket().getLotteryNumbers();
         for (Object key : lotteryNumbers.keySet()) {
             totalPrice += lotteryNumbers.get(key).getPrice();
         }
@@ -210,11 +212,14 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
             }
         }
 
-        if (ticketId != null) {
-            Ticket thisTicket = lottery.getTickets().get(ticketId);
-            for (LotteryNumber unsavedNumber : thisTicket.getUnsavedLotteryNumbers()) {
-                usedNumbers.add(unsavedNumber.getLotteryNumber());
-            }
+//        if (ticketId != null) {
+//            Ticket thisTicket = lottery.getTickets().get(ticketId);
+//            for (LotteryNumber unsavedNumber : thisTicket.getUnsavedLotteryNumbers()) {
+//                usedNumbers.add(unsavedNumber.getLotteryNumber());
+//            }
+//        }
+        for (LotteryNumber number : model.getLotteryNumbers()) {
+            usedNumbers.add(number.getLotteryNumber());
         }
 
         return usedNumbers;
@@ -243,7 +248,7 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
             }
 
             model.setOwner(ownerName);
-            model = ApplicationDomain.getInstance().ticketRepository.saveTicket(model);
+            //model = ApplicationDomain.getInstance().ticketRepository.saveTicket(model);
 
             // Go back
             getFragmentManager().popBackStack();
@@ -264,10 +269,10 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
             ft.addToBackStack(null);
 
             // Create and show the dialog.
-            Bundle args = new Bundle();
-            args.putString("ticketId", (String) model.getId());
+            //Bundle args = new Bundle();
+            //args.putString("ticketId", (String) model.getId());
             DialogFragment newLotteryNumDlg = new NewLotteryNumDlg();
-            newLotteryNumDlg.setArguments(args);
+            //newLotteryNumDlg.setArguments(args);
             newLotteryNumDlg.show(ft, "dialog");
         }
     }

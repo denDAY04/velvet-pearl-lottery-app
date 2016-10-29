@@ -11,7 +11,7 @@ public interface IPrizeRepository {
 
     Prize getPrizeForNumber(Object numberId);
 
-    void getPrizesForLottery(Object lotteryId);
+    void loadPrizesForLottery(Object lotteryId);
 
     Prize savePrize(Prize prize);
 

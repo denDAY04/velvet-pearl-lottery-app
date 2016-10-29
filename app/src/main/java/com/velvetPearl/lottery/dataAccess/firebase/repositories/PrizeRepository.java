@@ -33,7 +33,7 @@ public class PrizeRepository extends FirebaseRepository implements IPrizeReposit
     }
 
     @Override
-    public void getPrizesForLottery(Object lotteryId) {
+    public void loadPrizesForLottery(Object lotteryId) {
 
     }
 

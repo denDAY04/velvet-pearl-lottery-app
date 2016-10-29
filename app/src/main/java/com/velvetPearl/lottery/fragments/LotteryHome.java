@@ -149,22 +149,7 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
     @Override
     public void update(Observable o, Object arg) {
         if (arg.getClass() == DataAccessEvent.class) {
-            if (arg == DataAccessEvent.LOTTERY_LOADED) {
-                ApplicationDomain.getInstance().ticketRepository.loadTicketsForLottery(ApplicationDomain.getInstance().getActiveLottery().getId());
-                updateUi();
-                return;
-            }
-
-            if (arg == DataAccessEvent.TICKET_LIST_UPDATE) {
-                Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
-                for (Object key : lottery.getTickets().keySet()) {
-                    Ticket ticket = lottery.getTickets().get(key);
-                    ApplicationDomain.getInstance().lotteryNumberRepository.fetchLotteryNumbersForTicket(ticket.getId());
-                }
-                updateUi();
-            } else if (arg == DataAccessEvent.LOTTERY_UPDATED || arg == DataAccessEvent.LOTTERY_NUMBER_UPDATE) {
-                updateUi();
-            } else if (arg == DataAccessEvent.LOTTERY_REMOVED) {
+            if (arg == DataAccessEvent.LOTTERY_REMOVED) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle(getString(R.string.attention))
                         .setMessage(getString(R.string.lottery_was_deleted))
@@ -175,7 +160,9 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
                                 getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Welcome()).commit();
                             }
                         });
-                 builder.create().show();
+                builder.create().show();
+            } else {
+                updateUi();
             }
         }
     }

@@ -10,7 +10,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.velvetPearl.lottery.dataAccess.ApplicationDomain;
 import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
@@ -65,6 +64,8 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
                 Lottery entity = dataSnapshot.getValue(Lottery.class);
                 entity.setId(dataSnapshot.getKey());
                 ApplicationDomain.getInstance().setActiveLottery(entity);
+                ApplicationDomain.getInstance().ticketRepository.loadTicketsForLottery(entity.getId());
+                ApplicationDomain.getInstance().prizeRepository.loadPrizesForLottery(entity.getId());
                 ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_LOADED);
             }
 

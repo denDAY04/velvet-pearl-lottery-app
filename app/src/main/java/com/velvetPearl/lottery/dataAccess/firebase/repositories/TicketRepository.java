@@ -54,6 +54,7 @@ public class TicketRepository extends FirebaseRepository implements ITicketRepos
                 if (lottery != null) {
                     Log.d(LOG_TAG, String.format("Ticket (ID %s) added.", ticket.getId()));
                     lottery.addTicket(ticket);
+                    ApplicationDomain.getInstance().lotteryNumberRepository.fetchLotteryNumbersForTicket(ticket.getId());
                     ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.TICKET_LIST_UPDATE);
                 }
             }
@@ -67,6 +68,7 @@ public class TicketRepository extends FirebaseRepository implements ITicketRepos
                 if (lottery != null) {
                     Log.d(LOG_TAG, String.format("Ticket (ID %s) changed.", ticket.getId()));
                     lottery.getTickets().put(ticket.getId(), ticket);
+                    ApplicationDomain.getInstance().lotteryNumberRepository.fetchLotteryNumbersForTicket(ticket.getId());
                     ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.TICKET_LIST_UPDATE);
                 }
             }

@@ -28,7 +28,7 @@ public class PrizeRepository extends FirebaseRepository implements IPrizeReposit
     }
 
     @Override
-    public Prize getPrizeForNumber(Object numberId) throws TimeoutException {
+    public Prize getPrizeForNumber(Object numberId) {
         return null;
     }
 

@@ -9,7 +9,7 @@ import java.util.concurrent.TimeoutException;
  */
 public interface IPrizeRepository {
 
-    Prize getPrizeForNumber(Object numberId) throws TimeoutException;
+    Prize getPrizeForNumber(Object numberId);
 
     void getPrizesForLottery(Object lotteryId);
 

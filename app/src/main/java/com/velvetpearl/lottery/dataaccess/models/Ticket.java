@@ -14,18 +14,12 @@ public class Ticket {
     private Object id;
     private String owner;
     private TreeMap<Object, LotteryNumber> lotteryNumbers;
-    //private LinkedList<LotteryNumber> lotteryNumbers;
 
     // Navigational member fields
     private Object lotteryId;
 
-    // List for new lottery numbers not yet saved to the database.
-    //private LinkedList<LotteryNumber> unsavedLotteryNumbers;
-
     public Ticket() {
-        //lotteryNumbers = new LinkedList<>();
         lotteryNumbers = new TreeMap<>();
-        //unsavedLotteryNumbers = new LinkedList<>();
     }
 
 
@@ -69,11 +63,6 @@ public class Ticket {
         lotteryNumbers.put(number.getId(), number);
     }
 
-
-//    public void setLotteryNumbers(TreeMap<Object, LotteryNumber> lotteryNumbers) {
-//        this.lotteryNumbers = lotteryNumbers;
-//    }
-
     public Object getId() {
         return id;
     }
@@ -103,8 +92,4 @@ public class Ticket {
 
         return id.equals(other.id);
     }
-
-//    public LinkedList<LotteryNumber> getUnsavedLotteryNumbers() {
-//        return unsavedLotteryNumbers;
-//    }
 }

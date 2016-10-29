@@ -60,33 +60,6 @@ public class NewLotteryNumDlg extends DialogFragment implements View.OnClickList
         errorLabel.setText(null);
     }
 
-//    private LinkedList<Integer> getUsedLotteryNumbers() {
-//        LinkedList<Integer> usedNumbers = new LinkedList<>();
-//
-//        Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
-//        if (lottery != null) {
-//            TreeMap<Object, Ticket> tickets = lottery.getTickets();
-//            for (Object ticketKey : tickets.keySet()) {
-//                Ticket ticket = tickets.get(ticketKey);
-//                for (LotteryNumber number : ticket.getLotteryNumbers()) {
-//                    usedNumbers.add(number.getLotteryNumber());
-//                }
-////                TreeMap<Object, LotteryNumber> numbers =  ticket.getLotteryNumbers();
-////                for (Object numberKey : numbers.keySet()) {
-////                    usedNumbers.add(numbers.get(numberKey).getLotteryNumber());
-////                }
-//            }
-//        }
-//
-//        if (ticketId != null) {
-//            Ticket thisTicket = lottery.getTickets().get(ticketId);
-//            for (LotteryNumber unsavedNumber : thisTicket.getUnsavedLotteryNumbers()) {
-//                usedNumbers.add(unsavedNumber.getLotteryNumber());
-//            }
-//        }
-//
-//        return usedNumbers;
-//    }
 
     @Override
     public void onClick(View v) {
@@ -98,11 +71,8 @@ public class NewLotteryNumDlg extends DialogFragment implements View.OnClickList
             int randomNumber;
 
             do {
-                randomNumber = (int) (Math.random() * upperBound);
-                if (randomNumber < lowerBound) {
-                    continue;
-                }
-            } while (usedNumbers.contains(randomNumber));
+                randomNumber = (int) (Math.random() * (upperBound + 1));
+            } while (randomNumber < lowerBound || usedNumbers.contains(randomNumber));
 
             storeLotteryNumber(randomNumber);
             getFragmentManager().popBackStack();

@@ -36,6 +36,7 @@ import com.velvetPearl.lottery.dataAccess.models.Ticket;
 import com.velvetPearl.lottery.viewModels.LotteryNumberListViewModel;
 import com.velvetPearl.lottery.viewModels.TicketInputModel;
 
+import java.security.DomainCombiner;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Observable;
@@ -208,13 +209,13 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
         }
     }
 
-    private boolean allLotteryNumbersTaken() {
-        LinkedList<Integer>  takenNumbers = ApplicationDomain.getInstance().getUsedLotteryNumbers();
-        Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
-        int rangeCount = lottery.getLotteryNumUpperBound() - lottery.getLotteryNumLowerBound() + 1;     // Both bounds inclusive
-
-        return takenNumbers.size() >= rangeCount;
-    }
+//    private boolean allLotteryNumbersTaken() {
+//        LinkedList<Integer>  takenNumbers = ApplicationDomain.getInstance().getUsedLotteryNumbers();
+//        Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
+//        int rangeCount = lottery.getLotteryNumUpperBound() - lottery.getLotteryNumLowerBound() + 1;     // Both bounds inclusive
+//
+//        return takenNumbers.size() >= rangeCount;
+//    }
 
     @Override
     public void onClick(View v) {
@@ -244,8 +245,8 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
 
         } else if (v == newLotteryNumberBtn) {
 
-            if (allLotteryNumbersTaken()) {
-                Toast.makeText(getContext(), R.string.no_lottery_numbers_left, Toast.LENGTH_LONG);
+            if (ApplicationDomain.getInstance().allLotteryNumbersTaken()) {
+                Toast.makeText(getContext(), R.string.no_lottery_numbers_left, Toast.LENGTH_LONG).show();
                 return;
             }
 

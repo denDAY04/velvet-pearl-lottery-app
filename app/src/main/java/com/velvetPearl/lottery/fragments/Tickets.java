@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.velvetPearl.lottery.R;
 import com.velvetPearl.lottery.dataAccess.ApplicationDomain;
@@ -173,6 +174,12 @@ public class Tickets extends Fragment implements Observer, View.OnClickListener 
     public void onClick(View v) {
         if (v == newTicketBtn) {
             ApplicationDomain.getInstance().resetEditingTicket();
+
+            if (ApplicationDomain.getInstance().allLotteryNumbersTaken()) {
+                Toast.makeText(getContext(), R.string.no_lottery_numbers_left, Toast.LENGTH_LONG).show();
+                return;
+            }
+
             getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new TicketEdit()).addToBackStack(null).commit();
         }
     }

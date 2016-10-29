@@ -54,6 +54,7 @@ public class ApplicationDomain extends Observable {
         ticketRepository = new TicketRepository(dbContext);
         lotteryNumberRepository = new LotteryNumberRepository(dbContext);
         prizeRepository = new PrizeRepository(dbContext);
+        editingTicket = null;
     }
 
     /**
@@ -124,5 +125,13 @@ public class ApplicationDomain extends Observable {
         }
 
         return usedNumbers;
+    }
+
+    public  boolean allLotteryNumbersTaken() {
+        LinkedList<Integer>  takenNumbers = ApplicationDomain.getInstance().getUsedLotteryNumbers();
+        Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
+        int rangeCount = lottery.getLotteryNumUpperBound() - lottery.getLotteryNumLowerBound() + 1;     // Both bounds inclusive
+
+        return takenNumbers.size() >= rangeCount;
     }
 }

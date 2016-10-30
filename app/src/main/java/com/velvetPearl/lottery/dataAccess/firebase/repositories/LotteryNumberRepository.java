@@ -7,12 +7,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.velvetPearl.lottery.dataAccess.ApplicationDomain;
 import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
 import com.velvetPearl.lottery.dataAccess.firebase.FirebaseQueryObject;
-import com.velvetPearl.lottery.dataAccess.firebase.scheme.PrizesScheme;
 import com.velvetPearl.lottery.dataAccess.models.Lottery;
 import com.velvetPearl.lottery.dataAccess.models.Prize;
 import com.velvetPearl.lottery.dataAccess.models.Ticket;
@@ -20,9 +17,7 @@ import com.velvetPearl.lottery.dataAccess.repositories.ILotteryNumberRepository;
 import com.velvetPearl.lottery.dataAccess.firebase.scheme.LotteryNumbersScheme;
 import com.velvetPearl.lottery.dataAccess.models.LotteryNumber;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 /**
  * Created by Stensig on 30-Sep-16.
@@ -136,7 +131,7 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
         // Save the number's prize
         Prize prize = lotteryNumber.getWinningPrize();
         if (prize != null) {
-            prize.setLotteryNumberId(lotteryNumber.getId());
+            prize.setNumberId(lotteryNumber.getId());
             ApplicationDomain.getInstance().prizeRepository.savePrize(prize);
         }
 

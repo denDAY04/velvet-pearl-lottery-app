@@ -10,7 +10,7 @@ public class Prize {
     private String name;
 
     // Navigational member fields
-    private Object lotteryNumberId;
+    private Object numberId;
     private Object lotteryId;
 
     public String getName() {
@@ -29,12 +29,12 @@ public class Prize {
         this.id = id;
     }
 
-    public Object getLotteryNumberId() {
-        return lotteryNumberId;
+    public Object getNumberId() {
+        return numberId;
     }
 
-    public void setLotteryNumberId(Object numberId) {
-        this.lotteryNumberId = numberId;
+    public void setNumberId(Object numberId) {
+        this.numberId = numberId;
     }
 
     public Object getLotteryId() {

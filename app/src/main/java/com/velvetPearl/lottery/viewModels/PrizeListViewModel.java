@@ -18,12 +18,12 @@ public class PrizeListViewModel {
 
     public PrizeListViewModel(Prize prize) {
         this.prize = prize;
-        if (prize.getLotteryNumberId() != null) {
+        if (prize.getNumberId() != null) {
             TreeMap<Object, Ticket> tickets = ApplicationDomain.getInstance().getActiveLottery().getTickets();
             for (Object ticketId : tickets.keySet()) {
                 Ticket activeTicket = tickets.get(ticketId);
                 for (LotteryNumber number : activeTicket.getLotteryNumbers()) {
-                    if (number.getId().equals(prize.getLotteryNumberId())) {
+                    if (number.getId().equals(prize.getNumberId())) {
                         this.ticket = activeTicket;
                     }
                 }

@@ -5,7 +5,7 @@ package com.velvetPearl.lottery.dataAccess;
  */
 
 public enum DataAccessEvent {
-    LOTTERY_LIST_UPDATED,       /** A lottery was updated in the list of all lotteries or the list was read. */
-    LOTTERY_UPDATED,            /** The lottery entity in the {@Link ApplicationDomain} class was updated. */
-    TICKET_LIST_UPDATE, LOTTERY_LOADED, LOTTERY_REMOVED, LOTTERY_NUMBER_UPDATE, PRIZE_LIST_UPDATE, PRIZE_ADDED, PRIZE_UPDATE;        /** An ticket for the current lottery was updated or the list was read. */
+    LOTTERY_LIST_UPDATED,
+    LOTTERY_UPDATED,
+    TICKET_LIST_UPDATE, LOTTERY_LOADED, LOTTERY_REMOVED, LOTTERY_NUMBER_UPDATE, PRIZE_UPDATE, WINNER_UPDATE
 }

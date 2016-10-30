@@ -1,12 +1,10 @@
 package com.velvetPearl.lottery.fragments;
 
 import android.content.DialogInterface;
-import android.graphics.Paint;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -25,7 +22,6 @@ import com.velvetPearl.lottery.R;
 import com.velvetPearl.lottery.dataAccess.ApplicationDomain;
 import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
 import com.velvetPearl.lottery.dataAccess.models.Ticket;
-import com.velvetPearl.lottery.viewModels.TicketInputModel;
 import com.velvetPearl.lottery.viewModels.TicketListViewModel;
 
 import java.util.ArrayList;
@@ -37,17 +33,22 @@ public class Tickets extends Fragment implements Observer, View.OnClickListener 
 
     private static final String LOG_TAG = "TicketsFragment";
 
+    // UI fields
     private ListView ticketsListView = null;
     private ImageButton newTicketBtn = null;
+    private TextView title = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_tickets, container, false);
+        View root = inflater.inflate(R.layout.fragment_list, container, false);
 
         ApplicationDomain.getInstance().addObserver(this);
-        ticketsListView = (ListView) root.findViewById(R.id.tickets_list_container);
-        newTicketBtn = (ImageButton) root.findViewById(R.id.tickets_new_button);
+        title = (TextView) root.findViewById(R.id.list_title);
+        title.setText(R.string.tickets);
+        ticketsListView = (ListView) root.findViewById(R.id.list_container);
+        newTicketBtn = (ImageButton) root.findViewById(R.id.list_new_button);
         newTicketBtn.setOnClickListener(this);
+
 
         updateUi();
 
@@ -56,7 +57,9 @@ public class Tickets extends Fragment implements Observer, View.OnClickListener 
 
     @Override
     public void onDestroyView() {
-        Log.d(LOG_TAG, "unsubscribing from model updates");
+        ticketsListView = null;
+        newTicketBtn = null;
+        title = null;
         ApplicationDomain.getInstance().deleteObserver(this);
         super.onDestroyView();
     }
@@ -139,18 +142,8 @@ public class Tickets extends Fragment implements Observer, View.OnClickListener 
                 }
             });
         } else {
-            ArrayList<String> fillerList = new ArrayList<>();
-            fillerList.add("");
-            ticketsListView.setAdapter(new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_2, android.R.id.text1, fillerList) {
-                @NonNull
-                @Override
-                public View getView(int position, View convertView, ViewGroup parent) {
-                    View itemView = super.getView(position, convertView, parent);
-                    TextView title = (TextView) itemView.findViewById(android.R.id.text1);
-                    title.setText(R.string.none_found);
-                    return itemView;
-                };
-            });
+            String[] tempList = new String[] {getString(R.string.none_found)};
+            ticketsListView.setAdapter(new ArrayAdapter(getActivity(), R.layout.listitem_prize, R.id.list_item_prize_name, tempList));
         }
     }
 

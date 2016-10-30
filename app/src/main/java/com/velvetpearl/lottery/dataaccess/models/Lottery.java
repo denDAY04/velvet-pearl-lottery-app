@@ -92,6 +92,7 @@ public class Lottery {
         return tickets;
     }
 
+
     public void setTickets(TreeMap<Object, Ticket> tickets) {
         this.tickets = tickets;
     }

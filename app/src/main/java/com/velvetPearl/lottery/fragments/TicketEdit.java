@@ -209,14 +209,6 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
         }
     }
 
-//    private boolean allLotteryNumbersTaken() {
-//        LinkedList<Integer>  takenNumbers = ApplicationDomain.getInstance().getUsedLotteryNumbers();
-//        Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
-//        int rangeCount = lottery.getLotteryNumUpperBound() - lottery.getLotteryNumLowerBound() + 1;     // Both bounds inclusive
-//
-//        return takenNumbers.size() >= rangeCount;
-//    }
-
     @Override
     public void onClick(View v) {
         if (v == saveBtn) {

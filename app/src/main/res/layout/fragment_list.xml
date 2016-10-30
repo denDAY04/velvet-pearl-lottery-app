@@ -9,6 +9,7 @@
         android:layout_height="0dp"
         android:orientation="horizontal">
         <TextView
+            android:id="@+id/list_title"
             android:text="@string/tickets"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -20,7 +21,7 @@
             android:textStyle="normal|bold" />
         <ImageButton
             android:src="@android:drawable/ic_input_add"
-            android:id="@+id/tickets_new_button"
+            android:id="@+id/list_new_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -28,7 +29,7 @@
     </LinearLayout>
 
     <ListView
-        android:id="@+id/tickets_list_container"
+        android:id="@+id/list_container"
         android:layout_weight="9"
         android:layout_width="match_parent"
         android:layout_height="0dp">

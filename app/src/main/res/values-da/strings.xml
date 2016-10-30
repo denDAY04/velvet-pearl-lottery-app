@@ -57,4 +57,5 @@
     <string name="new_prize">Ny gevinst</string>
     <string name="delete_prize">Slet gevinst</string>
     <string name="delete_prize_confirm">Er du sikker på du vil slette denne gevinst?</string>
+    <string name="draw_winner">Udtræk vinder</string>
 </resources>

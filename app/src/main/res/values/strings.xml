@@ -59,4 +59,5 @@
     <string name="new_prize">New prize</string>
     <string name="delete_prize">Delete prize</string>
     <string name="delete_prize_confirm" >Are you sure you want to delete this prize?</string>
+    <string name="draw_winner">Draw winner</string>
 </resources>

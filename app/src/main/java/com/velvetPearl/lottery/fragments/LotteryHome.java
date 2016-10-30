@@ -140,7 +140,7 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
         if (v == ticketsBtn) {
             getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Tickets()).addToBackStack(null).commit();
         } else if (v == winnersBtn) {
-            Log.d(LOG_TAG, "NOT IMPLEMENTED");
+            getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Winners()).addToBackStack(null).commit();
         } else if (v == prizesBtn) {
             getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Prizes()).addToBackStack(null).commit();
         }

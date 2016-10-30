@@ -40,10 +40,6 @@ public class NewLotteryNumDlg extends DialogFragment implements View.OnClickList
         View root = inflater.inflate(R.layout.fragment_new_lottery_num_dlg, container, false);
 
         initUi(root);
-//        if (savedInstanceState == null) {
-//            Bundle args = getArguments();
-//            ticketId = args.getString("ticketId");
-//        }
 
         return root;
     }

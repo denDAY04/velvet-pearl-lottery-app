@@ -53,4 +53,10 @@
     <string name="list_item_ticket_number_count" >%1$d lottery number(s)</string>
     <string name="list_item_ticket_credits" translatable="false">%1$.2f credits</string>
     <string name="no_lottery_numbers_left">No free lottery numbers left.</string>
+    <string name="prize_error_name_required">Name of the prize is required.</string>
+    <string name="prize_name_hint">Prize name</string>
+    <string name="edit_ptize">Edit prize</string>
+    <string name="new_prize">New prize</string>
+    <string name="delete_prize">Delete prize</string>
+    <string name="delete_prize_confirm" >Are you sure you want to delete this prize?</string>
 </resources>

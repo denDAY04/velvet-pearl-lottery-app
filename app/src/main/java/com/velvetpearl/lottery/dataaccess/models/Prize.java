@@ -11,6 +11,7 @@ public class Prize {
 
     // Navigational member fields
     private Object lotteryNumberId;
+    private Object lotteryId;
 
     public String getName() {
         return name;
@@ -34,5 +35,13 @@ public class Prize {
 
     public void setLotteryNumberId(Object numberId) {
         this.lotteryNumberId = numberId;
+    }
+
+    public Object getLotteryId() {
+        return lotteryId;
+    }
+
+    public void setLotteryId(Object lotteryId) {
+        this.lotteryId = lotteryId;
     }
 }

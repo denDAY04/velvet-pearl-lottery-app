@@ -1,12 +1,20 @@
 package com.velvetPearl.lottery.fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -90,28 +98,57 @@ public class Prizes extends Fragment implements Observer, View.OnClickListener {
                 }
 
             });
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    ApplicationDomain.getInstance().setEditingPrize(prizes.get(position));
+                    showPrizeInputDialog();
+                }
+            });
+
+            listView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+                @Override
+                public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                    final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+                    menu.setHeaderTitle(String.format("Prize - %s", prizes.get(info.position).getName()));
+
+                    // Delete option
+                    menu.add(Menu.NONE, 0, 0, R.string.delete).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(getContext());
+                            dlgBuilder
+                                    .setTitle(R.string.attention)
+                                    .setMessage(R.string.delete_prize_confirm)
+                                    .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ApplicationDomain.getInstance().prizeRepository.deletePrize(prizes.get(info.position));
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            return; // don't do anything
+                                        }
+                                    });
+                            dlgBuilder.create().show();
+                            return true;
+                        }
+                    });
+                }
+            });
         } else {
             String[] tempList = new String[] {getString(R.string.none_found)};
             listView.setAdapter(new ArrayAdapter(getActivity(), R.layout.listitem_prize, R.id.list_item_prize_name, tempList));
         }
     }
 
-    private ArrayList<PrizeListViewModel> parseToViewModels(TreeMap<Object, Prize> prizes) {
-        ArrayList<PrizeListViewModel> viewModels = new ArrayList<>();
-
-        if (prizes != null) {
-            for (Object prizeId : prizes.keySet()) {
-                viewModels.add(new PrizeListViewModel(prizes.get(prizeId)));
-            }
-        }
-
-        return viewModels;
-    }
-
     @Override
     public void update(Observable o, Object arg) {
         if (arg != null && arg.getClass() == DataAccessEvent.class) {
-            if (arg == DataAccessEvent.PRIZE_LIST_UPDATE) {
+            if (arg == DataAccessEvent.PRIZE_UPDATE) {
                 updateUi();
             }
         }
@@ -120,7 +157,23 @@ public class Prizes extends Fragment implements Observer, View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v == newButton) {
-            // TODO switch view to new prize
+            ApplicationDomain.getInstance().resetEditingPrize();
+
+            showPrizeInputDialog();
         }
+    }
+
+    private void showPrizeInputDialog() {
+        // Open dialog to enter new prize
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        DialogFragment prizeInputDlg = new PrizeInputDlg();
+        prizeInputDlg.show(ft, "dialog");
     }
 }

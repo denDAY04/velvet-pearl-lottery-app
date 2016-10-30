@@ -7,6 +7,7 @@ import com.velvetPearl.lottery.dataAccess.firebase.repositories.PrizeRepository;
 import com.velvetPearl.lottery.dataAccess.firebase.repositories.TicketRepository;
 import com.velvetPearl.lottery.dataAccess.models.Lottery;
 import com.velvetPearl.lottery.dataAccess.models.LotteryNumber;
+import com.velvetPearl.lottery.dataAccess.models.Prize;
 import com.velvetPearl.lottery.dataAccess.models.Ticket;
 import com.velvetPearl.lottery.dataAccess.repositories.ILotteryNumberRepository;
 import com.velvetPearl.lottery.dataAccess.repositories.ILotteryRepository;
@@ -30,11 +31,12 @@ public class ApplicationDomain extends Observable {
     public final ITicketRepository ticketRepository;
     public final ILotteryNumberRepository lotteryNumberRepository;
     public final IPrizeRepository prizeRepository;
-    private Lottery activeLottery = null;
-    private ArrayList<Lottery> allLotteries = null;
 
-    private TicketInputModel editingTicket = null;
+    private Lottery activeLottery;
+    private ArrayList<Lottery> allLotteries;
 
+    private TicketInputModel editingTicket;
+    private Prize editingPrize;
 
     /**
      * Get reference to the singleton object instance.
@@ -54,7 +56,12 @@ public class ApplicationDomain extends Observable {
         ticketRepository = new TicketRepository(dbContext);
         lotteryNumberRepository = new LotteryNumberRepository(dbContext);
         prizeRepository = new PrizeRepository(dbContext);
+
+        activeLottery = null;
+        allLotteries = null;
+
         editingTicket = null;
+        editingPrize = null;
     }
 
     /**
@@ -133,5 +140,14 @@ public class ApplicationDomain extends Observable {
         int rangeCount = lottery.getLotteryNumUpperBound() - lottery.getLotteryNumLowerBound() + 1;     // Both bounds inclusive
 
         return takenNumbers.size() >= rangeCount;
+    }
+
+    public Prize getEditingPrize() {return editingPrize;}
+
+    public void setEditingPrize(Prize prize) {editingPrize = prize;}
+
+    public void resetEditingPrize() {
+        editingPrize = new Prize();
+        editingPrize.setLotteryId(ApplicationDomain.getInstance().getActiveLottery().getId());
     }
 }

@@ -88,6 +88,12 @@ public class Lottery {
         prizes.put(prize.getId(), prize);
     }
 
+    public void removePrize(Object prizeId) {
+        if (prizeId != null) {
+            prizes.remove(prizeId);
+        }
+    }
+
     public TreeMap<Object, Ticket> getTickets() {
         return tickets;
     }

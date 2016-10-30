@@ -33,7 +33,7 @@
     <string name="delete_ticket_confirm" >Er du sikker på du vil slette denne billet?</string>
     <string name="confirm">Bekræft</string>
     <string name="owner">Ejer</string>
-    <string name="price">Pris</string>
+    <string name="price">Gevinst</string>
     <string name="lottery_numbers">Lotteri numre</string>
     <string name="ticket_edit_owner_hint">Navngiv billetens ejer</string>
     <string name="save">Gem</string>
@@ -51,4 +51,10 @@
     <string name="lottery_num_error_format">Kun heltal.</string>
     <string name="list_item_ticket_number_count" >%1$d lotteri nummre</string>
     <string name="no_lottery_numbers_left">Ingen frie lotteri nummre.</string>
+    <string name="prize_error_name_required">Gevinstens navn er påkrævet.</string>
+    <string name="prize_name_hint">Gevinstens navn</string>
+    <string name="edit_ptize">Rediger gevinst</string>
+    <string name="new_prize">Ny gevinst</string>
+    <string name="delete_prize">Slet gevinst</string>
+    <string name="delete_prize_confirm">Er du sikker på du vil slette denne gevinst?</string>
 </resources>

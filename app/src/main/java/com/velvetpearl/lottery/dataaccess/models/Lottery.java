@@ -76,6 +76,18 @@ public class Lottery {
         this.prizes = prizes;
     }
 
+    public void addPrize(Prize prize) {
+        if (prize == null) {
+            return;
+        }
+
+        if (prize.getId() == null) {
+            throw new IllegalArgumentException("Prize ID is null.");
+        }
+
+        prizes.put(prize.getId(), prize);
+    }
+
     public TreeMap<Object, Ticket> getTickets() {
         return tickets;
     }

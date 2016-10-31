@@ -13,6 +13,7 @@ import java.util.TreeMap;
 
 public class WinnerListViewModel {
     private Prize prize;
+    private Object ticketId;
     private String ticketOwner;
     private int lotteryNumber;
 
@@ -27,6 +28,7 @@ public class WinnerListViewModel {
                     if (number.getId().equals(prize.getNumberId())) {
                         ticketOwner = ticket.getOwner();
                         lotteryNumber = number.getLotteryNumber();
+                        this.ticketId = ticket.getId();
                         return;
                     }
                 }
@@ -44,5 +46,9 @@ public class WinnerListViewModel {
 
     public int getLotteryNumber() {
         return lotteryNumber;
+    }
+
+    public Object getTicketId() {
+        return ticketId;
     }
 }

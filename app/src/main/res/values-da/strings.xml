@@ -58,4 +58,9 @@
     <string name="delete_prize">Slet gevinst</string>
     <string name="delete_prize_confirm">Er du sikker på du vil slette denne gevinst?</string>
     <string name="draw_winner">Udtræk vinder</string>
+    <string name="prize">Gevinst</string>
+    <string name="winner">Vinder</string>
+    <string name="delete_winner_confirm" >Er du sikker på du vil slette denne gevist?\nHverken billet eller gevinst vil blive slettet.</string>
+    <string name="no_prizes_left">Ingen gevinster tilbage.</string>
+    <string name="no_winless_numbers">Ingen lotteri nummre tilbage uden gevinst.</string>
 </resources>

@@ -4,9 +4,10 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,16 +22,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.velvetPearl.lottery.R;
-import com.velvetPearl.lottery.dataAccess.ApplicationDomain;
+import com.velvetPearl.lottery.ApplicationDomain;
 import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
 import com.velvetPearl.lottery.dataAccess.models.LotteryNumber;
 import com.velvetPearl.lottery.dataAccess.models.Prize;
 import com.velvetPearl.lottery.dataAccess.models.Ticket;
-import com.velvetPearl.lottery.viewModels.LotteryNumberListViewModel;
 import com.velvetPearl.lottery.viewModels.WinnerListViewModel;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.TreeMap;
@@ -154,45 +153,35 @@ public class Winners extends Fragment implements View.OnClickListener, Observer 
     @Override
     public void onClick(View v) {
         if (v == drawWinnerBtn) {
-            // Get next prize with unassigned lottery number
-            Prize nextPrize = null;
+
+            // Check that there are prizes yet to be won
+            boolean eligiblePrizes = false;
             TreeMap<Object, Prize> prizes = ApplicationDomain.getInstance().getActiveLottery().getPrizes();
             for (Object prizeId : prizes.keySet()) {
                 Prize prize = prizes.get(prizeId);
                 if (prize.getNumberId() == null) {
-                    nextPrize = prize;
+                    eligiblePrizes = true;
                     break;
                 }
             }
 
             // Check for all prizes having been assigned
-            if (nextPrize == null) {
+            if (!eligiblePrizes) {
                 Toast.makeText(getContext(), R.string.no_prizes_left, Toast.LENGTH_LONG).show();
                 return;
             }
 
-            // Get all lottery numbers without a prize
-            ArrayList<LotteryNumber> numbersEligibleForWin = new ArrayList<>();
-            TreeMap<Object, Ticket> tickets = ApplicationDomain.getInstance().getActiveLottery().getTickets();
-            for (Object ticketId : tickets.keySet()) {
-                Ticket ticket = tickets.get(ticketId);
-                for (LotteryNumber number : ticket.getLotteryNumbers()) {
-                    if (number.getWinningPrize() == null) {
-                        numbersEligibleForWin.add(number);
-                    }
-                }
+            // Open dialog to enter new lottery number
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+            if (prev != null) {
+                ft.remove(prev);
             }
+            ft.addToBackStack(null);
 
-            // Check for all numbers having won
-            if (numbersEligibleForWin.isEmpty()) {
-                Toast.makeText(getContext(), R.string.no_winless_numbers, Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            // Draw random number and save the ID in the prize
-            int numberSelector = (int) (Math.random() * numbersEligibleForWin.size());
-            nextPrize.setNumberId(numbersEligibleForWin.get(numberSelector).getId());
-            ApplicationDomain.getInstance().prizeRepository.savePrize(nextPrize);
+            // Create and show the dialog.
+            DialogFragment prizeSelectDlg = new PrizeSelectListDlg();
+            prizeSelectDlg.show(ft, "dialog");
         }
     }
 

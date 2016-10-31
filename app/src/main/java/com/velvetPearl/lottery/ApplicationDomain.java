@@ -1,4 +1,4 @@
-package com.velvetPearl.lottery.dataAccess;
+package com.velvetPearl.lottery;
 
 import com.google.firebase.database.FirebaseDatabase;
 import com.velvetPearl.lottery.dataAccess.firebase.repositories.LotteryNumberRepository;
@@ -37,6 +37,7 @@ public class ApplicationDomain extends Observable {
 
     private TicketInputModel editingTicket;
     private Prize editingPrize;
+    private Prize prizeToBeWon;
 
     /**
      * Get reference to the singleton object instance.
@@ -142,12 +143,20 @@ public class ApplicationDomain extends Observable {
         return takenNumbers.size() >= rangeCount;
     }
 
-    public Prize getEditingPrize() {return editingPrize;}
+    public Prize getEditingPrize() { return editingPrize; }
 
-    public void setEditingPrize(Prize prize) {editingPrize = prize;}
+    public void setEditingPrize(Prize prize) { editingPrize = prize; }
 
     public void resetEditingPrize() {
         editingPrize = new Prize();
         editingPrize.setLotteryId(ApplicationDomain.getInstance().getActiveLottery().getId());
+    }
+
+    public Prize getPrizeToBeWon() {
+        return prizeToBeWon;
+    }
+
+    public void setPrizeToBeWon(Prize prizeToBeWon) {
+        this.prizeToBeWon = prizeToBeWon;
     }
 }

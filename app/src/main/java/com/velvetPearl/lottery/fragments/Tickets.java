@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.velvetPearl.lottery.R;
-import com.velvetPearl.lottery.dataAccess.ApplicationDomain;
+import com.velvetPearl.lottery.ApplicationDomain;
 import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
 import com.velvetPearl.lottery.dataAccess.models.Ticket;
 import com.velvetPearl.lottery.viewModels.TicketListViewModel;

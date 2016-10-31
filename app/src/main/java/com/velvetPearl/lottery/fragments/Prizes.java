@@ -21,14 +21,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.velvetPearl.lottery.R;
-import com.velvetPearl.lottery.dataAccess.ApplicationDomain;
+import com.velvetPearl.lottery.ApplicationDomain;
 import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
 import com.velvetPearl.lottery.dataAccess.models.Prize;
-import com.velvetPearl.lottery.viewModels.PrizeListViewModel;
-import com.velvetPearl.lottery.viewModels.TicketListViewModel;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.TreeMap;

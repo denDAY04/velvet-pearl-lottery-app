@@ -63,4 +63,6 @@
     <string name="delete_winner_confirm" >Er du sikker på du vil slette denne gevist?\nHverken billet eller gevinst vil blive slettet.</string>
     <string name="no_prizes_left">Ingen gevinster tilbage.</string>
     <string name="no_winless_numbers">Ingen lotteri nummre tilbage uden gevinst.</string>
+    <string name="select_prize_to_win">Vælg gevinst der vindes</string>
+    <string name="prize_selection_confirmation" >Udtrækker vinder for gevist:\n%1$s</string>
 </resources>

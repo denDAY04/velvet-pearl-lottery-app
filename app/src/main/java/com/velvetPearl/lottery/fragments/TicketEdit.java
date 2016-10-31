@@ -10,9 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.ContextMenu;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,20 +26,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.velvetPearl.lottery.R;
-import com.velvetPearl.lottery.dataAccess.ApplicationDomain;
+import com.velvetPearl.lottery.ApplicationDomain;
 import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
-import com.velvetPearl.lottery.dataAccess.models.Lottery;
 import com.velvetPearl.lottery.dataAccess.models.LotteryNumber;
 import com.velvetPearl.lottery.dataAccess.models.Ticket;
 import com.velvetPearl.lottery.viewModels.LotteryNumberListViewModel;
 import com.velvetPearl.lottery.viewModels.TicketInputModel;
 
-import java.security.DomainCombiner;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.TreeMap;
 
 /**
  * Created by Stensig on 19-Oct-16.

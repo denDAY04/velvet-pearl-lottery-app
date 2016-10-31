@@ -11,14 +11,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.velvetPearl.lottery.R;
-import com.velvetPearl.lottery.dataAccess.ApplicationDomain;
+import com.velvetPearl.lottery.ApplicationDomain;
 import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
 import com.velvetPearl.lottery.dataAccess.models.Lottery;
 import com.velvetPearl.lottery.dataAccess.models.LotteryNumber;
-import com.velvetPearl.lottery.dataAccess.models.Ticket;
 
 import java.util.LinkedList;
-import java.util.TreeMap;
 
 /**
  * Created by Stensig on 27-Oct-16.

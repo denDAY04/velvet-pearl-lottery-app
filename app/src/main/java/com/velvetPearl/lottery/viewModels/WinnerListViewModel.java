@@ -1,6 +1,6 @@
 package com.velvetPearl.lottery.viewModels;
 
-import com.velvetPearl.lottery.dataAccess.ApplicationDomain;
+import com.velvetPearl.lottery.ApplicationDomain;
 import com.velvetPearl.lottery.dataAccess.models.LotteryNumber;
 import com.velvetPearl.lottery.dataAccess.models.Prize;
 import com.velvetPearl.lottery.dataAccess.models.Ticket;

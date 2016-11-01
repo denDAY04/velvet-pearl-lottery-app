@@ -4,123 +4,96 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.velvetPearl.lottery.fragments.Welcome;
 
 import java.io.IOException;
 import java.net.InetAddress;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     private static final String LOG_TAG = "MainActivity";
 
-    private ProgressDialog bootDialog;
-    private AlertDialog bootDialogError;
+    private ListView menuList;
+    private String[] menuTitles;
+    private DrawerLayout menuLayout;
+    private CharSequence menuTitle;
+    private CharSequence title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initUi();
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().add(R.id.main_fragment_container, new Welcome()).commit();
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        //initializeConstraints();
+    private void initUi() {
+        menuTitles = new String[] {
+                getString(R.string.welcome_new_lottery),
+                getString(R.string.welcome_lottery_history),
+                getString(R.string.tickets),
+                getString(R.string.winners),
+                getString(R.string.prizes),
+                getString(R.string.about),
+        };
+        menuList = (ListView) findViewById(R.id.left_menu);
+
+        menuList.setAdapter(new ArrayAdapter(this, R.layout.listitem_prize, R.id.list_item_prize_name ,menuTitles));
+        menuList.setOnItemClickListener(this);
+
+        title = menuTitle = getTitle();
+        menuLayout = (DrawerLayout) findViewById(R.id.menu_layout);
+        menuLayout.addDrawerListener(new ActionBarDrawerToggle(this, menuLayout, R.string.menu_open, R.string.menu_close));
     }
 
-    /**
-     * Initialize the constraints of the application and the running device.
-     */
-    private void initializeConstraints() {
-        bootDialog = ProgressDialog.show(this, null, getString(R.string.initializing_app), true);
-        bootDialog.show();
-
-        new AsyncTask() {
-            @Override
-            public void onPostExecute(Object result) {
-                bootDialog.dismiss();
-
-                boolean bootSuccess = (boolean) result;
-                if (!bootSuccess) {
-                    AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(MainActivity.this);
-                    dlgBuilder
-                            .setTitle(R.string.error)
-                            .setMessage(R.string.error_network_required)
-                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    bootDialogError.dismiss();
-                                    finish();       // close app
-                                }
-                            });
-                    bootDialogError = dlgBuilder.create();
-                    bootDialogError.show();
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        switch (position) {
+            case 2:
+                if (ApplicationDomain.getInstance().getActiveLottery() == null) {
+                    showNoActiveLotteryError();
+                    return;
                 }
-            }
 
+                break;
 
-            @Override
-            protected Object doInBackground(Object[] params) {
-                boolean bootSuccess;
-                bootSuccess = isConnectedToNetwork();
-                // Add more as needed ...
-                return bootSuccess;
-            }
-        }.execute();
+            case 3:
+                if (ApplicationDomain.getInstance().getActiveLottery() == null) {
+                    showNoActiveLotteryError();
+                    return;
+                }
 
-    }
+                break;
 
-    /**
-     * Test if the device has an active internet connection.
-     * <p>
-     * This method blocks the calling thread.
-     * @return True if the device has an internet connection. False otherwise.
-     */
-    private boolean isConnectedToNetwork() {
-        final int timeout = 3 * 1000;
-        final String host = "firebase.com";
+            case 4:
+                if (ApplicationDomain.getInstance().getActiveLottery() == null) {
+                    showNoActiveLotteryError();
+                    return;
+                }
 
-        try {
-            if (!InetAddress.getByName(host).isReachable(timeout)) {
-                Log.d(LOG_TAG, "isConnectedToNetwork: network connection good.");
-                return true;
-            }
-        } catch (IOException e) {
-            // Do nothing.
+                break;
         }
-        return false;
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-//        super.onCreateOptionsMenu(menu);
-//        getMenuInflater().inflate(R.menu.game, menu);
-        return true;
+    private void showNoActiveLotteryError() {
+        Toast.makeText(this, R.string.no_active_lottery, Toast.LENGTH_LONG).show();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-//        if (item.getItemId() == R.id.menu_item_new_game) {
-//            Log.d(LOG_TAG, "starting new game from menu");
-//            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment, new Game()).commit();
-//        } else if (item.getItemId() == R.id.menu_item_close_game) {
-//            Log.d(LOG_TAG, "ending game from menu");
-//            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment, new Welcome()).commit();
-//        } else if(item.getItemId() == R.id.menu_item_view_words) {
-//            Log.d(LOG_TAG, "displaying list of possible words");
-//            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment, new ViewWords()).addToBackStack(null).commit();
-//        }
-        return true;
-    }
 }

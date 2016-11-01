@@ -43,6 +43,7 @@ public class Tickets extends Fragment implements Observer, View.OnClickListener 
         View root = inflater.inflate(R.layout.fragment_list, container, false);
 
         ApplicationDomain.getInstance().addObserver(this);
+        getActivity().setTitle(R.string.tickets);
         title = (TextView) root.findViewById(R.id.list_title);
         title.setText(R.string.tickets);
         ticketsListView = (ListView) root.findViewById(R.id.list_container);

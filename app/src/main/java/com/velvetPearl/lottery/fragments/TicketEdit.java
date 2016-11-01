@@ -77,6 +77,8 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
     }
 
     private void initUi(View fragmentView) {
+        getActivity().setTitle(R.string.ticket);
+
         ownerInput = (EditText) fragmentView.findViewById(R.id.ticket_edit_owner_input);
         priceLabel = (TextView) fragmentView.findViewById(R.id.ticket_edit_price_var);
         numberList = (ListView) fragmentView.findViewById(R.id.ticket_edit_numbers_list);

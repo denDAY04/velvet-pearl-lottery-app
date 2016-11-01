@@ -65,6 +65,8 @@ public class Prizes extends Fragment implements Observer, View.OnClickListener {
     }
 
     private void initUi(View root) {
+        getActivity().setTitle(R.string.prizes);
+
         title = (TextView) root.findViewById(R.id.list_title);
         title.setText(R.string.prizes);
 

@@ -83,6 +83,8 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
      * @param view The view on which to collect the UI references.
      */
     private void initUi(View view) {
+        getActivity().setTitle(R.string.lottery);
+
         timestampLab = (TextView) view.findViewById(R.id.lotteryhome_timestamp);
         lotteryNumRangeLab = (TextView) view.findViewById(R.id.lotteryhome_num_range_var);
         pricePerNumLab = (TextView) view.findViewById(R.id.lotteryhome_price_per_number_var);

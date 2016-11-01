@@ -65,6 +65,8 @@ public class Winners extends Fragment implements View.OnClickListener, Observer 
     }
 
     private void initUi(View root) {
+        getActivity().setTitle(R.string.winners);
+
         drawWinnerBtn = (ImageButton) root.findViewById(R.id.list_new_button);
         titleLabel = (TextView) root.findViewById(R.id.list_title);
         winnersListView = (ListView) root.findViewById(R.id.list_container);

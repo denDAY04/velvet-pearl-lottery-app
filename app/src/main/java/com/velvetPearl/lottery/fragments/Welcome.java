@@ -17,6 +17,8 @@ public class Welcome extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragView = inflater.inflate(R.layout.fragment_welcome, container, false);
 
+        getActivity().setTitle(R.string.velvet_pearl_lottery);
+
         fragView.findViewById(R.id.home_btn_new_lottery).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

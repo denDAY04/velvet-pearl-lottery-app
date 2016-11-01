@@ -67,4 +67,9 @@
     <string name="no_winless_numbers">No winless lottery numbers left.</string>
     <string name="select_prize_to_win">Select prize to win</string>
     <string name="prize_selection_confirmation" >Drawing winner for prize:\n%1$s</string>
+    <string name="no_active_lottery">No active lottery selected.</string>
+    <string name="menu_open">Open menu</string>
+    <string name="menu_close">Close menu</string>
+    <string name="velvet_pearl_lottery">Velvet Pearl Lottery</string>
+    <string name="about">About</string>
 </resources>

@@ -29,7 +29,6 @@ public class Welcome extends Fragment {
         fragView.findViewById(R.id.home_btn_history).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(LOG_TAG, "onClick: history");
                 getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new History()).addToBackStack(null).commit();
             }
         });

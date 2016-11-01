@@ -4,11 +4,15 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,20 +22,21 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.velvetPearl.lottery.fragments.History;
+import com.velvetPearl.lottery.fragments.Prizes;
+import com.velvetPearl.lottery.fragments.Tickets;
 import com.velvetPearl.lottery.fragments.Welcome;
+import com.velvetPearl.lottery.fragments.Winners;
 
 import java.io.IOException;
 import java.net.InetAddress;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String LOG_TAG = "MainActivity";
 
-    private ListView menuList;
-    private String[] menuTitles;
+    private NavigationView navigationMenu;
     private DrawerLayout menuLayout;
-    private CharSequence menuTitle;
-    private CharSequence title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,55 +50,60 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void initUi() {
-        menuTitles = new String[] {
-                getString(R.string.welcome_new_lottery),
-                getString(R.string.welcome_lottery_history),
-                getString(R.string.tickets),
-                getString(R.string.winners),
-                getString(R.string.prizes),
-                getString(R.string.about),
-        };
-        menuList = (ListView) findViewById(R.id.left_menu);
-
-        menuList.setAdapter(new ArrayAdapter(this, R.layout.listitem_prize, R.id.list_item_prize_name ,menuTitles));
-        menuList.setOnItemClickListener(this);
-
-        title = menuTitle = getTitle();
         menuLayout = (DrawerLayout) findViewById(R.id.menu_layout);
-        menuLayout.addDrawerListener(new ActionBarDrawerToggle(this, menuLayout, R.string.menu_open, R.string.menu_close));
-    }
+        navigationMenu = (NavigationView) findViewById(R.id.navigation_menu);
+        navigationMenu.setNavigationItemSelectedListener(this);
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        switch (position) {
-            case 2:
-                if (ApplicationDomain.getInstance().getActiveLottery() == null) {
-                    showNoActiveLotteryError();
-                    return;
-                }
-
-                break;
-
-            case 3:
-                if (ApplicationDomain.getInstance().getActiveLottery() == null) {
-                    showNoActiveLotteryError();
-                    return;
-                }
-
-                break;
-
-            case 4:
-                if (ApplicationDomain.getInstance().getActiveLottery() == null) {
-                    showNoActiveLotteryError();
-                    return;
-                }
-
-                break;
-        }
     }
 
     private void showNoActiveLotteryError() {
         Toast.makeText(this, R.string.no_active_lottery, Toast.LENGTH_LONG).show();
     }
 
+    private void closeMenu() {
+        menuLayout.closeDrawer(GravityCompat.START, true);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int pressedId = item.getItemId();
+
+        if (pressedId == R.id.menu_new_lottery) {
+            closeMenu();
+            // TODO switch to new lottery view
+
+        } else if (pressedId == R.id.menu_history) {
+            closeMenu();
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new History()).addToBackStack(null).commit();
+        } else if (pressedId == R.id.menu_tickets) {
+            if (ApplicationDomain.getInstance().getActiveLottery() == null) {
+                showNoActiveLotteryError();
+                return false;
+            }
+            closeMenu();
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Tickets()).addToBackStack(null).commit();
+
+        } else if (pressedId == R.id.menu_winners) {
+            if (ApplicationDomain.getInstance().getActiveLottery() == null) {
+                showNoActiveLotteryError();
+                return false;
+            }
+            closeMenu();
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Winners()).addToBackStack(null).commit();
+
+        } else if (pressedId == R.id.menu_prizes) {
+            if (ApplicationDomain.getInstance().getActiveLottery() == null) {
+                showNoActiveLotteryError();
+                return false;
+            }
+            closeMenu();
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Prizes()).addToBackStack(null).commit();
+
+        } else if (pressedId == R.id.menu_about) {
+            closeMenu();
+            // TODO switch to about page
+        }
+
+        return false;
+    }
 }

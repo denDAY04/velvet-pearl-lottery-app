@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Velvet Pearl Lotteriet</string>
-    <string name="welcome_new_lottery">Nyt Lotteri</string>
-    <string name="welcome_lottery_history">Lotteri Historik</string>
+    <string name="new_lottery">Nyt Lotteri</string>
+    <string name="lottery_history">Lotteri Historik</string>
     <string name="history_loading_history">Henter historik</string>
     <string name="history_no_lotteries">Ingen lotterier</string>
     <string name="history_error_loading_history">Kunne ikke hente historikken. \nHar du internet adgang?</string>
@@ -70,4 +70,7 @@
     <string name="menu_close">Luk menu</string>
     <string name="velvet_pearl_lottery">Velvet Pearl Lotteri</string>
     <string name="about">Om appen</string>
+    <string name="general">Generelt</string>
+    <string name="active_lottery">Aktivt Lotteri</string>
+    <string name="misc">Andet</string>
 </resources>

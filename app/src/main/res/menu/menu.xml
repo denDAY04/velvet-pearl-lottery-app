@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_subdiv_general"
+        android:title="@string/general">
+        <menu>
+            <item
+                android:id="@+id/menu_new_lottery"
+                android:title="@string/new_lottery" />
+            <item
+                android:id="@+id/menu_history"
+                android:title="@string/lottery_history" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/menu_subdiv_active_lottery"
+        android:title="@string/active_lottery">
+        <menu>
+            <item
+                android:id="@+id/menu_tickets"
+                android:title="@string/tickets" />
+            <item
+                android:id="@+id/menu_winners"
+                android:title="@string/winners" />
+            <item
+                android:id="@+id/menu_prizes"
+                android:title="@string/prizes" />
+        </menu>
+    </item>
+
+
+    <item
+        android:id="@+id/menu_subdiv_misc"
+        android:title="@string/misc">
+        <menu>
+            <item
+                android:id="@+id/menu_about"
+                android:title="@string/about" />
+        </menu>
+    </item>
+</menu>

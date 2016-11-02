@@ -36,11 +36,15 @@ public class History extends Fragment implements Observer {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragView = inflater.inflate(R.layout.fragment_history, container, false);
         ApplicationDomain.getInstance().addObserver(this);
+
         historyListView = (ListView) fragView.findViewById(R.id.history_lottery_listview);
         getActivity().setTitle(R.string.lottery_history);
+
         initLoadingDialog();
         loadingDlg.show();
         loadHistory();
+
+        ApplicationDomain.getInstance().setActiveLottery(null);
 
         return fragView;
     }

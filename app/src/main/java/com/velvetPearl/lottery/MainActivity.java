@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private NavigationView navigationMenu;
     private DrawerLayout menuLayout;
+    private Toolbar toolbar;
+    private ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationMenu = (NavigationView) findViewById(R.id.navigation_menu);
         navigationMenu.setNavigationItemSelectedListener(this);
 
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        actionBar = getSupportActionBar();
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_drawer);
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     private void showNoActiveLotteryError() {
@@ -62,6 +70,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void closeMenu() {
         menuLayout.closeDrawer(GravityCompat.START, true);
+    }
+
+    private void openMenu() {
+        menuLayout.openDrawer(GravityCompat.START, true);
     }
 
     @Override
@@ -105,5 +117,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         return false;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            if (!menuLayout.isDrawerOpen(GravityCompat.START)) {
+                openMenu();
+            } else {
+                closeMenu();
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

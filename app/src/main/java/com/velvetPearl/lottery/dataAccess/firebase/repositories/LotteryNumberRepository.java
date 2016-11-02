@@ -50,7 +50,7 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
                     Log.d(LOG_TAG, String.format("LotteryNumber (ID %s) added.", lotteryNum.getId()));
                     Ticket ticket = lottery.getTickets().get(lotteryNum.getTicketId());
                     ticket.addLotteryNumber(lotteryNum);
-                    ApplicationDomain.getInstance().prizeRepository.getPrizeForNumber(lotteryNum.getId());
+                    ApplicationDomain.getInstance().prizeRepository.loadPrizeForNumber(lotteryNum.getId());
                     ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_NUMBER_UPDATE);
                 }
             }
@@ -65,7 +65,7 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
                     Log.d(LOG_TAG, String.format("LotteryNumber (ID %s) changed.", lotteryNum.getId()));
                     Ticket ticket = lottery.getTickets().get(lotteryNum.getTicketId());
                     ticket.addLotteryNumber(lotteryNum);
-                    ApplicationDomain.getInstance().prizeRepository.getPrizeForNumber(lotteryNum.getId());
+                    ApplicationDomain.getInstance().prizeRepository.loadPrizeForNumber(lotteryNum.getId());
                     ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_NUMBER_UPDATE);
                 }
             }

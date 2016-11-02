@@ -65,7 +65,7 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
                 entity.setId(dataSnapshot.getKey());
                 ApplicationDomain.getInstance().setActiveLottery(entity);
                 ApplicationDomain.getInstance().ticketRepository.loadTicketsForLottery(entity.getId());
-                ApplicationDomain.getInstance().prizeRepository.loadPrizesForLottery(entity.getId());
+                ApplicationDomain.getInstance().prizeRepository.loadAvailablePrizesForLottery(entity.getId());
                 ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_LOADED);
             }
 

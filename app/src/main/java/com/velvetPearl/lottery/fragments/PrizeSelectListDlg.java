@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.AppLaunchChecker;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,16 +120,29 @@ public class PrizeSelectListDlg extends DialogFragment implements Observer {
     }
 
     private void drawWinner() {
+        boolean allowMultiWinnings = PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean(getString(R.string.preference_multi_winner_key), false);
+
         // Get all lottery numbers without a prize
         ArrayList<LotteryNumber> numbersEligibleForWin = new ArrayList<>();
         TreeMap<Object, Ticket> tickets = ApplicationDomain.getInstance().getActiveLottery().getTickets();
         for (Object ticketId : tickets.keySet()) {
             Ticket ticket = tickets.get(ticketId);
+
+            ArrayList<LotteryNumber> availableFromTicket = new ArrayList<>();
             for (LotteryNumber number : ticket.getLotteryNumbers()) {
                 if (number.getWinningPrize() == null) {
-                    numbersEligibleForWin.add(number);
+                    availableFromTicket.add(number);
+                } else {
+                    if (!allowMultiWinnings) {
+                        // Stop looking through the ticket since it already has a winner and
+                        // multiply winnings are disallowed. And prevent the already-looked-through
+                        // numbers of the ticket to be added.
+                        availableFromTicket.clear();
+                        break;
+                    }
                 }
             }
+            numbersEligibleForWin.addAll(availableFromTicket);
         }
 
         // Check for all numbers having won

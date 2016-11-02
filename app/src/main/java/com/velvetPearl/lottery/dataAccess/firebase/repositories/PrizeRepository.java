@@ -152,27 +152,6 @@ public class PrizeRepository extends FirebaseRepository implements IPrizeReposit
                     ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.PRIZE_UPDATE);
                 }
 
-//                Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
-//                if (lottery != null) {
-//                    Log.d(LOG_TAG, String.format("Prize (ID %s) added.", prize.getId()));
-//                    lottery.addPrize(prize);
-//
-////                    if (prize.getNumberId() != null) {
-////                        TreeMap<Object, Ticket> tickets = ApplicationDomain.getInstance().getActiveLottery().getTickets();
-////                        for (Object ticketId : tickets.keySet()) {
-////                            Ticket ticket = tickets.get(ticketId);
-////                            for (LotteryNumber number : ticket.getLotteryNumbers()) {
-////                                if (number.getId().equals(prize.getNumberId())) {
-////                                    number.setWinningPrize(prize);
-////                                    ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.PRIZE_UPDATE);
-////                                    return;
-////                                }
-////                            }
-////                        }
-////                    }
-//
-//                    ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.PRIZE_UPDATE);
-//                }
             }
 
             @Override
@@ -200,13 +179,6 @@ public class PrizeRepository extends FirebaseRepository implements IPrizeReposit
                     }
                 }
                 ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.PRIZE_UPDATE);
-
-//                Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
-//                if (lottery != null) {
-//                    Log.d(LOG_TAG, String.format("Prize (ID %s) changed.", prize.getId()));
-//                    lottery.addPrize(prize);
-//                    ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.PRIZE_UPDATE);
-//                }
             }
 
             @Override

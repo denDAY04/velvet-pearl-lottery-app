@@ -1,6 +1,7 @@
 package com.velvetPearl.lottery;
 
 import com.google.firebase.database.FirebaseDatabase;
+import com.velvetPearl.lottery.dataAccess.firebase.repositories.FirebaseRepository;
 import com.velvetPearl.lottery.dataAccess.firebase.repositories.LotteryNumberRepository;
 import com.velvetPearl.lottery.dataAccess.firebase.repositories.LotteryRepository;
 import com.velvetPearl.lottery.dataAccess.firebase.repositories.PrizeRepository;
@@ -158,5 +159,16 @@ public class ApplicationDomain extends Observable {
 
     public void setPrizeToBeWon(Prize prizeToBeWon) {
         this.prizeToBeWon = prizeToBeWon;
+    }
+
+    public void clearActiveLottery() {
+        activeLottery = null;
+        editingPrize = null;
+        editingTicket = null;
+
+        ((FirebaseRepository)lotteryRepository).detachAndRemoveAllQueryObjects();
+        ((FirebaseRepository)ticketRepository).detachAndRemoveAllQueryObjects();
+        ((FirebaseRepository)prizeRepository).detachAndRemoveAllQueryObjects();
+        ((FirebaseRepository)lotteryNumberRepository).detachAndRemoveAllQueryObjects();
     }
 }

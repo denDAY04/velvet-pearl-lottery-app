@@ -105,7 +105,7 @@ public class History extends Fragment implements Observer {
                     args.putString("lotteryId", (String) item.getId());
                     Fragment destination = new LotteryHome();
                     destination.setArguments(args);
-                    ApplicationDomain.getInstance().setActiveLottery(null);
+                    ApplicationDomain.getInstance().clearActiveLottery();
                     getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     getFragmentManager().beginTransaction().replace(R.id.main_fragment_container,destination).addToBackStack(null).commit();
                 }

@@ -1,0 +1,8 @@
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:key="multi_winner_checkbox"
+        android:title="@string/multi_winner_settings_title"
+        android:summary="@string/multi_winner_settings_summary"
+        android:defaultValue="true"/>
+</PreferenceScreen>

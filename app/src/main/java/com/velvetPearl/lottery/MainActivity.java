@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.velvetPearl.lottery.fragments.History;
+import com.velvetPearl.lottery.fragments.Preferences;
 import com.velvetPearl.lottery.fragments.Prizes;
 import com.velvetPearl.lottery.fragments.Tickets;
 import com.velvetPearl.lottery.fragments.Welcome;
@@ -111,6 +112,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             closeMenu();
             getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Prizes()).addToBackStack(null).commit();
 
+        } else if (pressedId == R.id.menu_preferences) {
+            closeMenu();
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Preferences()).addToBackStack(null).commit();
         } else if (pressedId == R.id.menu_about) {
             closeMenu();
             // TODO switch to about page

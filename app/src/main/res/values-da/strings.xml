@@ -76,4 +76,6 @@
     <string name="settings">Indstillinger</string>
     <string name="multi_winner_settings_title" >Tillad flere gevinster per billet</string>
     <string name="multi_winner_settings_summary" >Flere lotteri nummre fra samme billet kan vinde.</string>
+    <string name="minimum">Minimum</string>
+    <string name="maximum">Maximum</string>
 </resources>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/number_range"/>
+    <RelativeLayout
+        android:id="@+id/new_lottery_range_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/new_lottery_min_num"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingStart="20dp"
+            android:paddingEnd="10dp"
+            android:inputType="number"
+            android:hint="@string/minimum" />
+        <TextView
+            android:id="@+id/new_lottery_range_separator"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_toEndOf="@+id/new_lottery_min_num"
+            android:layout_toStartOf="@+id/new_lottery_max_num"
+            android:text=" - "/>
+        <EditText
+            android:id="@+id/new_lottery_max_num"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:paddingStart="10dp"
+            android:paddingEnd="20dp"
+            android:inputType="number"
+            android:hint="@string/maximum" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/price_per_number"/>
+    <EditText
+        android:id="@+id/new_lottery_price_per_num"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:inputType="number"
+        android:hint="@string/price"/>
+</LinearLayout>

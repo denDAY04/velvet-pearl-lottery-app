@@ -79,4 +79,6 @@
     <string name="multi_winner_settings_title" >Allow multiple prizes per ticket</string>
     <string name="multi_winner_settings_summary" >Multiple lottery numbers from the same ticket can win.</string>
     <string name="preference_multi_winner_key" translatable="false">preference_multi_winner</string>
+    <string name="minimum">Minimum</string>
+    <string name="maximum">Maximum</string>
 </resources>

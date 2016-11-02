@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.velvetPearl.lottery.MainActivity;
 import com.velvetPearl.lottery.R;
 
 
@@ -32,6 +33,8 @@ public class Welcome extends Fragment {
                 getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new History()).addToBackStack(null).commit();
             }
         });
+
+        ((MainActivity) getActivity()).disableActiveLotteryMenuItems();
 
         return fragView;
     }

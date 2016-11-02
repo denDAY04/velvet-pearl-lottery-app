@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.velvetPearl.lottery.MainActivity;
 import com.velvetPearl.lottery.R;
 import com.velvetPearl.lottery.ApplicationDomain;
 import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
@@ -44,7 +46,7 @@ public class History extends Fragment implements Observer {
         loadingDlg.show();
         loadHistory();
 
-        ApplicationDomain.getInstance().setActiveLottery(null);
+        ((MainActivity) getActivity()).disableActiveLotteryMenuItems();
 
         return fragView;
     }
@@ -104,6 +106,7 @@ public class History extends Fragment implements Observer {
                     Fragment destination = new LotteryHome();
                     destination.setArguments(args);
                     ApplicationDomain.getInstance().setActiveLottery(null);
+                    getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     getFragmentManager().beginTransaction().replace(R.id.main_fragment_container,destination).addToBackStack(null).commit();
                 }
             });

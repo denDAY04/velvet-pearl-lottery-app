@@ -20,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.velvetPearl.lottery.MainActivity;
 import com.velvetPearl.lottery.R;
 import com.velvetPearl.lottery.ApplicationDomain;
 import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
@@ -66,6 +67,7 @@ public class Prizes extends Fragment implements Observer, View.OnClickListener {
 
     private void initUi(View root) {
         getActivity().setTitle(R.string.prizes);
+        ((MainActivity) getActivity()).enableActiveLotteryMenuItems();
 
         title = (TextView) root.findViewById(R.id.list_title);
         title.setText(R.string.prizes);

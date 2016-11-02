@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         actionBar = getSupportActionBar();
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_drawer);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
@@ -131,5 +131,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void disableActiveLotteryMenuItems() {
+        navigationMenu.getMenu().findItem(R.id.menu_tickets).setEnabled(false);
+        navigationMenu.getMenu().findItem(R.id.menu_winners).setEnabled(false);
+        navigationMenu.getMenu().findItem(R.id.menu_prizes).setEnabled(false);
+    }
+
+    public void enableActiveLotteryMenuItems() {
+        navigationMenu.getMenu().findItem(R.id.menu_tickets).setEnabled(true);
+        navigationMenu.getMenu().findItem(R.id.menu_winners).setEnabled(true);
+        navigationMenu.getMenu().findItem(R.id.menu_prizes).setEnabled(true);
     }
 }

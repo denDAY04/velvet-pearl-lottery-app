@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.velvetPearl.lottery.MainActivity;
 import com.velvetPearl.lottery.R;
 import com.velvetPearl.lottery.ApplicationDomain;
 import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
@@ -44,6 +45,7 @@ public class Tickets extends Fragment implements Observer, View.OnClickListener 
 
         ApplicationDomain.getInstance().addObserver(this);
         getActivity().setTitle(R.string.tickets);
+        ((MainActivity) getActivity()).enableActiveLotteryMenuItems();
         title = (TextView) root.findViewById(R.id.list_title);
         title.setText(R.string.tickets);
         ticketsListView = (ListView) root.findViewById(R.id.list_container);

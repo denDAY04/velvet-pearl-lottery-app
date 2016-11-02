@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.velvetPearl.lottery.MainActivity;
 import com.velvetPearl.lottery.R;
 import com.velvetPearl.lottery.ApplicationDomain;
 import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
@@ -66,6 +67,7 @@ public class Winners extends Fragment implements View.OnClickListener, Observer 
 
     private void initUi(View root) {
         getActivity().setTitle(R.string.winners);
+        ((MainActivity) getActivity()).enableActiveLotteryMenuItems();
 
         drawWinnerBtn = (ImageButton) root.findViewById(R.id.list_new_button);
         titleLabel = (TextView) root.findViewById(R.id.list_title);

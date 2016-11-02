@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.velvetPearl.lottery.MainActivity;
 import com.velvetPearl.lottery.R;
 import com.velvetPearl.lottery.ApplicationDomain;
 import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
@@ -84,6 +85,7 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
      */
     private void initUi(View view) {
         getActivity().setTitle(R.string.lottery);
+        ((MainActivity) getActivity()).enableActiveLotteryMenuItems();
 
         timestampLab = (TextView) view.findViewById(R.id.lotteryhome_timestamp);
         lotteryNumRangeLab = (TextView) view.findViewById(R.id.lotteryhome_num_range_var);

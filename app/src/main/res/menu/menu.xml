@@ -7,10 +7,12 @@
         <menu>
             <item
                 android:id="@+id/menu_new_lottery"
-                android:title="@string/new_lottery" />
+                android:title="@string/new_lottery"
+                android:icon="@drawable/ic_add_circle_outline_black_18dp"/>
             <item
                 android:id="@+id/menu_history"
-                android:title="@string/lottery_history" />
+                android:title="@string/lottery_history"
+                android:icon="@drawable/ic_history_black_18dp"/>
         </menu>
     </item>
 
@@ -20,13 +22,16 @@
         <menu>
             <item
                 android:id="@+id/menu_tickets"
-                android:title="@string/tickets" />
+                android:title="@string/tickets"
+                android:icon="@drawable/ic_description_black_18dp"/>
             <item
                 android:id="@+id/menu_winners"
-                android:title="@string/winners" />
+                android:title="@string/winners"
+                android:icon="@drawable/ic_star_border_black_18dp"/>
             <item
                 android:id="@+id/menu_prizes"
-                android:title="@string/prizes" />
+                android:title="@string/prizes"
+                android:icon="@drawable/ic_redeem_black_18dp"/>
         </menu>
     </item>
 
@@ -36,8 +41,13 @@
         android:title="@string/misc">
         <menu>
             <item
+                android:id="@+id/menu_settings"
+                android:title="@string/settings"
+                android:icon="@drawable/ic_settings_black_18dp"/>
+            <item
                 android:id="@+id/menu_about"
-                android:title="@string/about" />
+                android:title="@string/about"
+                android:icon="@drawable/ic_info_outline_black_18dp"/>
         </menu>
     </item>
 </menu>

@@ -19,13 +19,18 @@
             android:gravity="center_vertical"
             android:layout_marginStart="5dp"
             android:textStyle="normal|bold" />
-        <ImageButton
-            android:src="@android:drawable/ic_input_add"
+        <!--<ImageButton-->
+            <!--android:src="@android:drawable/ic_input_add"-->
+            <!--android:id="@+id/list_new_button"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_marginEnd="10dp"/>-->
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/list_new_button"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="10dp"/>
+            android:src="@drawable/ic_action_new"/>
     </LinearLayout>
 
     <ListView

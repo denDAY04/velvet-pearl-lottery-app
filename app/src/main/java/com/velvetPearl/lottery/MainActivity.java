@@ -64,6 +64,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         actionBar = getSupportActionBar();
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+
+        navigationMenu.getHeaderView(0).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                closeMenu();
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Welcome()).addToBackStack(null).commit();
+            }
+        });
     }
 
     private void showNoActiveLotteryError() {

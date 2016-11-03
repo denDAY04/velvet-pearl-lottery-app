@@ -81,4 +81,15 @@
     <string name="preference_multi_winner_key" translatable="false">preference_multi_winner</string>
     <string name="minimum">Minimum</string>
     <string name="maximum">Maximum</string>
+    <string name="create_lottery">Create lottery</string>
+    <string name="name">Name</string>
+    <string name="new_lottery_name_hint">Give the lottery a name</string>
+    <string name="new_lottery_error_missing_name">Missing name.</string>
+    <string name="new_lottery_error_min_not_int">Range minimum must be a whole number.</string>
+    <string name="new_lottery_error_max_not_int">Range maximum must be a whole number.</string>
+    <string name="new_lottery_error_min_negative" >Range minimum must have value 1 or higher.</string>
+    <string name="new_lottery_error_max_small">Range maximum must be bigger than minimum.</string>
+    <string name="new_lottery_error_price_not_double">Lottery number price must be a positive number.</string>
+    <string name="please_wait">Please wait</string>
+    <string name="creating_lottery">Creating lottery</string>
 </resources>

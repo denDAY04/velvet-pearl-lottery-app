@@ -2,7 +2,6 @@ package com.velvetPearl.lottery.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,7 @@ public class Welcome extends Fragment {
         fragView.findViewById(R.id.home_btn_new_lottery).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(LOG_TAG, "onClick: new lottery");
+                getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new NewLottery()).commit();
             }
         });
 

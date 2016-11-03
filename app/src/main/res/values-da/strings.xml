@@ -78,4 +78,15 @@
     <string name="multi_winner_settings_summary" >Flere lotteri nummre fra samme billet kan vinde.</string>
     <string name="minimum">Minimum</string>
     <string name="maximum">Maximum</string>
+    <string name="create_lottery">Opret lotteri</string>
+    <string name="name">Navn</string>
+    <string name="new_lottery_name_hint">Giv lotteriet et navn</string>
+    <string name="new_lottery_error_missing_name">Mangler navn.</string>
+    <string name="new_lottery_error_min_not_int">Talrækkens minimum skal være et heltal.</string>
+    <string name="new_lottery_error_max_not_int">Talrækkens maximum skal være et heltal.</string>
+    <string name="new_lottery_error_min_negative" >Talrækkens minimum skal være mindst 1.</string>
+    <string name="new_lottery_error_max_small">Talrækkens maximum skal være større end minimum.</string>
+    <string name="new_lottery_error_price_not_double">Pris for lotteri nummer skal være et positivt tal.</string>
+    <string name="please_wait">Vent venligst</string>
+    <string name="creating_lottery">Opretter lotteri</string>
 </resources>

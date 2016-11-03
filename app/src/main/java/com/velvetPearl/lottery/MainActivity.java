@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.velvetPearl.lottery.fragments.History;
+import com.velvetPearl.lottery.fragments.NewLottery;
 import com.velvetPearl.lottery.fragments.Preferences;
 import com.velvetPearl.lottery.fragments.Prizes;
 import com.velvetPearl.lottery.fragments.Tickets;
@@ -83,11 +84,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (pressedId == R.id.menu_new_lottery) {
             closeMenu();
-            // TODO switch to new lottery view
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new NewLottery()).addToBackStack(null).commit();
 
         } else if (pressedId == R.id.menu_history) {
             closeMenu();
             getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new History()).addToBackStack(null).commit();
+
         } else if (pressedId == R.id.menu_tickets) {
             if (ApplicationDomain.getInstance().getActiveLottery() == null) {
                 showNoActiveLotteryError();

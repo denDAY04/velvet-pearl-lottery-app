@@ -14,6 +14,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.velvetPearl.lottery.ApplicationDomain;
 import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
 import com.velvetPearl.lottery.dataAccess.firebase.FirebaseQueryObject;
+import com.velvetPearl.lottery.dataAccess.firebase.scheme.LotteryNumbersScheme;
 import com.velvetPearl.lottery.dataAccess.models.Prize;
 import com.velvetPearl.lottery.dataAccess.models.Ticket;
 import com.velvetPearl.lottery.dataAccess.repositories.ILotteryRepository;
@@ -146,11 +147,11 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
     }
 
     @Override
-    public Lottery saveLottery(Lottery lottery) throws TimeoutException {
-        if (lottery == null)
+    public Lottery saveLottery(Lottery lottery) {
+        if (lottery == null) {
             return null;
+        }
 
-        //authenticate();
         DatabaseReference dbObjRef = null;
         if (lottery.getId() != null && !((String)lottery.getId()).isEmpty()) {
             Log.d(LOG_TAG, "saveLottery: updating existing lottery with ID " + lottery.getId());
@@ -163,32 +164,13 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
             lottery.setId(dbObjRef.getKey());
         }
 
-        // TODO: save other entities from lottery
-
         HashMap<String, Object> objMap = new HashMap<>();
+        objMap.put(LotteriesScheme.Children.NAME, lottery.getName());
         objMap.put(LotteriesScheme.Children.CREATED,lottery.getCreated());
         objMap.put(LotteriesScheme.Children.PRICE_PER_LOTTERY_NUM, lottery.getPricePerLotteryNum());
         objMap.put(LotteriesScheme.Children.LOTTERY_NUM_LOWER_BOUND, lottery.getLotteryNumLowerBound());
         objMap.put(LotteriesScheme.Children.LOTTERY_NUM_UPPER_BOUND, lottery.getLotteryNumUpperBound());
-        dbObjRef.setValue(objMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                synchronized (lock) {
-                    unlockedByNotify = true;
-                    lock.notify();
-                }
-            }
-        });
-
-        synchronized (lock) {
-            try {
-                unlockedByNotify = false;
-                lock.wait(LOCK_TIMEOUT_MS);
-            } catch (InterruptedException e) {
-                Log.d(LOG_TAG, "saveLottery: waiting on save action interrupted");
-            }
-        }
-        verifyAsyncTask();
+        dbObjRef.setValue(objMap);
 
         return lottery;
     }

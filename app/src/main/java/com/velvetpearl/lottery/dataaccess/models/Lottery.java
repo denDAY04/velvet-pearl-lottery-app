@@ -15,11 +15,10 @@ public class Lottery {
     private double pricePerLotteryNum;
     private int lotteryNumLowerBound;
     private int lotteryNumUpperBound;
+    private String name;
 
     private TreeMap<Object, Prize> prizes;
-    //private List<Ticket> tickets;
     private TreeMap<Object, Ticket> tickets;
-    //private ArrayList<LotteryNumber> lotteryNumbers;
 
     public Lottery() {
         tickets = new TreeMap<>();
@@ -136,5 +135,13 @@ public class Lottery {
         sb.append(String.format(", #prizes %d", prizes != null ? prizes.size() : 0));
 
         return sb.toString();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

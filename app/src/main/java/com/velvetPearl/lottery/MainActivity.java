@@ -1,27 +1,20 @@
 package com.velvetPearl.lottery;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.webkit.WebView;
 import android.widget.Toast;
 
+import com.velvetPearl.lottery.fragments.About;
 import com.velvetPearl.lottery.fragments.History;
 import com.velvetPearl.lottery.fragments.NewLottery;
 import com.velvetPearl.lottery.fragments.Preferences;
@@ -30,8 +23,9 @@ import com.velvetPearl.lottery.fragments.Tickets;
 import com.velvetPearl.lottery.fragments.Welcome;
 import com.velvetPearl.lottery.fragments.Winners;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.InetAddress;
+import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -126,12 +120,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (pressedId == R.id.menu_preferences) {
             closeMenu();
             getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Preferences()).addToBackStack(null).commit();
+
         } else if (pressedId == R.id.menu_about) {
             closeMenu();
-            // TODO switch to about page
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new About()).addToBackStack(null).commit();
         }
 
-        return false;
+        return true;
     }
 
     @Override

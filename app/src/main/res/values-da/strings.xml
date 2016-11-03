@@ -91,5 +91,6 @@
     <string name="creating_lottery">Opretter lotteri</string>
     <string name="created">Oprettet</string>
     <string name="new_ticket">Ny billet</string>
-    <string name="logo_description">Velvet Pearl logo</string>
+    <string name="about_error_loading">"Kunne ikke vise  'Om appen' siden. "</string>
+    <string name="about_language_warning">Denne side er kun tilgænglig på engelsk.</string>
 </resources>

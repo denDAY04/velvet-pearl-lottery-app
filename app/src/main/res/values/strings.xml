@@ -95,4 +95,6 @@
     <string name="created">Created</string>
     <string name="new_ticket">New Ticket</string>
     <string name="logo_description" translatable="false">Velvet Pearl logo</string>
+    <string name="about_error_loading">Could not display the about page.</string>
+    <string name="about_language_warning">This page is only available in English.</string>
 </resources>

@@ -92,4 +92,5 @@
     <string name="new_lottery_error_price_not_double">Lottery number price must be a positive number.</string>
     <string name="please_wait">Please wait</string>
     <string name="creating_lottery">Creating lottery</string>
+    <string name="created">Created</string>
 </resources>

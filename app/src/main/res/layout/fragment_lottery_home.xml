@@ -18,11 +18,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:id="@+id/lotteryhome_title"
+                android:id="@+id/lotteryhome_name"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:layout_gravity="center_horizontal"
                 android:textSize="27sp"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:maxLines="1"/>
         </TableRow>
         <TableRow
             android:layout_weight="1">

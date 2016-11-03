@@ -34,6 +34,7 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
     private static final String LOG_TAG = "LotteryHome";
 
     // UI refs
+    private TextView lotteryNameLab = null;
     private TextView timestampLab = null;
     private TextView lotteryNumRangeLab = null;
     private TextView pricePerNumLab = null;
@@ -87,6 +88,7 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
         getActivity().setTitle(R.string.lottery);
         ((MainActivity) getActivity()).enableActiveLotteryMenuItems();
 
+        lotteryNameLab = (TextView) view.findViewById(R.id.lotteryhome_name);
         timestampLab = (TextView) view.findViewById(R.id.lotteryhome_timestamp);
         lotteryNumRangeLab = (TextView) view.findViewById(R.id.lotteryhome_num_range_var);
         pricePerNumLab = (TextView) view.findViewById(R.id.lotteryhome_price_per_number_var);
@@ -122,10 +124,12 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
     public void updateUi() {
         if (loadingDialog.isShowing())
             loadingDialog.dismiss();
+
         Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
+        lotteryNameLab.setText(lottery.getName());
         Locale locale = Locale.getDefault();
         String timestamp = SimpleDateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(new Date(lottery.getCreated()));
-        timestampLab.setText(String.format(locale, "%s", timestamp));
+        timestampLab.setText(String.format(locale, "%s %s", getString(R.string.created), timestamp));
         lotteryNumRangeLab.setText(String.format(locale, "%d - %d", lottery.getLotteryNumLowerBound(), lottery.getLotteryNumUpperBound()));
         pricePerNumLab.setText(String.format(locale, "%.2f", lottery.getPricePerLotteryNum()));
         int count = 0;

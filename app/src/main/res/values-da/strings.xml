@@ -89,4 +89,5 @@
     <string name="new_lottery_error_price_not_double">Pris for lotteri nummer skal være et positivt tal.</string>
     <string name="please_wait">Vent venligst</string>
     <string name="creating_lottery">Opretter lotteri</string>
+    <string name="created">Oprettet</string>
 </resources>

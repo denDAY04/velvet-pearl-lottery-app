@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -43,8 +44,7 @@ public class Winners extends Fragment implements View.OnClickListener, Observer 
 
     private static final String LOG_TAG = "WinnersFragment";
 
-    private ImageButton drawWinnerBtn;
-    private TextView titleLabel;
+    private Button drawWinnerBtn;
     private ListView winnersListView;
 
     @Nullable
@@ -69,12 +69,11 @@ public class Winners extends Fragment implements View.OnClickListener, Observer 
         getActivity().setTitle(R.string.winners);
         ((MainActivity) getActivity()).enableActiveLotteryMenuItems();
 
-        drawWinnerBtn = (ImageButton) root.findViewById(R.id.list_new_button);
-        titleLabel = (TextView) root.findViewById(R.id.list_title);
+        drawWinnerBtn = (Button) root.findViewById(R.id.list_new_button);
         winnersListView = (ListView) root.findViewById(R.id.list_container);
 
         drawWinnerBtn.setOnClickListener(this);
-        titleLabel.setText(R.string.winners);
+        drawWinnerBtn.setText(R.string.draw_winner);
     }
 
     public void updateUi() {

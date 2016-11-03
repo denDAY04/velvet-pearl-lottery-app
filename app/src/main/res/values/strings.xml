@@ -93,4 +93,5 @@
     <string name="please_wait">Please wait</string>
     <string name="creating_lottery">Creating lottery</string>
     <string name="created">Created</string>
+    <string name="new_ticket">New Ticket</string>
 </resources>

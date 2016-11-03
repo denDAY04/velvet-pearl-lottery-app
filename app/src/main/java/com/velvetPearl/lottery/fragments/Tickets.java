@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -36,8 +37,7 @@ public class Tickets extends Fragment implements Observer, View.OnClickListener 
 
     // UI fields
     private ListView ticketsListView = null;
-    private ImageButton newTicketBtn = null;
-    private TextView title = null;
+    private Button newTicketBtn = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,11 +46,10 @@ public class Tickets extends Fragment implements Observer, View.OnClickListener 
         ApplicationDomain.getInstance().addObserver(this);
         getActivity().setTitle(R.string.tickets);
         ((MainActivity) getActivity()).enableActiveLotteryMenuItems();
-        title = (TextView) root.findViewById(R.id.list_title);
-        title.setText(R.string.tickets);
         ticketsListView = (ListView) root.findViewById(R.id.list_container);
-        newTicketBtn = (ImageButton) root.findViewById(R.id.list_new_button);
+        newTicketBtn = (Button) root.findViewById(R.id.list_new_button);
         newTicketBtn.setOnClickListener(this);
+        newTicketBtn.setText(R.string.new_ticket);
 
 
         updateUi();
@@ -62,7 +61,6 @@ public class Tickets extends Fragment implements Observer, View.OnClickListener 
     public void onDestroyView() {
         ticketsListView = null;
         newTicketBtn = null;
-        title = null;
         ApplicationDomain.getInstance().deleteObserver(this);
         super.onDestroyView();
     }

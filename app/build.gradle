@@ -30,5 +30,4 @@ dependencies {
     compile 'com.google.firebase:firebase-auth:9.4.0'
     compile 'com.android.support:support-v4:25.0.0'
     compile 'com.takisoft.fix:preference-v7:25.0.0.0'       // https://github.com/Gericop/Android-Support-Preference-V7-Fix
-    //compile 'com.android.support:preference-v7:24.2.0'
 }

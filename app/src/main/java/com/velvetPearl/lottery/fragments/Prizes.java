@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,9 +41,8 @@ public class Prizes extends Fragment implements Observer, View.OnClickListener {
     private static final String LOG_TAG = "PrizesFragment";
 
     // UI fields
-    private TextView title = null;
     private ListView listView = null;
-    private ImageButton newButton = null;
+    private Button newButton = null;
 
     @Nullable
     @Override
@@ -58,7 +58,6 @@ public class Prizes extends Fragment implements Observer, View.OnClickListener {
 
     @Override
     public void onDestroyView() {
-        title = null;
         listView = null;
         newButton = null;
         ApplicationDomain.getInstance().deleteObserver(this);
@@ -69,13 +68,11 @@ public class Prizes extends Fragment implements Observer, View.OnClickListener {
         getActivity().setTitle(R.string.prizes);
         ((MainActivity) getActivity()).enableActiveLotteryMenuItems();
 
-        title = (TextView) root.findViewById(R.id.list_title);
-        title.setText(R.string.prizes);
-
         listView = (ListView) root.findViewById(R.id.list_container);
 
-        newButton = (ImageButton) root.findViewById(R.id.list_new_button);
+        newButton = (Button) root.findViewById(R.id.list_new_button);
         newButton.setOnClickListener(this);
+        newButton.setText(R.string.new_prize);
     }
 
     private void updateUi() {

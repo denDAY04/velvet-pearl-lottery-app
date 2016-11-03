@@ -22,7 +22,7 @@ public class Welcome extends Fragment {
         fragView.findViewById(R.id.home_btn_new_lottery).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new NewLottery()).commit();
+                getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new NewLottery()).addToBackStack(null).commit();
             }
         });
 

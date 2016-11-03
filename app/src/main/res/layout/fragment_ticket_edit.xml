@@ -4,18 +4,6 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:gravity="center_vertical"
-        android:id="@+id/ticket_edit_title"
-        android:text="@string/ticket"
-        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-        android:layout_marginStart="5dp"
-        android:textAllCaps="false"
-        android:textStyle="normal|bold" />
-
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -88,7 +76,7 @@
                 android:textSize="22sp" />
             <ImageButton
                 android:id="@+id/ticket_edit_new_number"
-                android:src="@android:drawable/ic_input_add"
+                android:src="@drawable/ic_action_new"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

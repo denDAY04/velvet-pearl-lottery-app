@@ -14,22 +14,24 @@ public class LotteryListViewModel {
 
     private final Object id;
     private final long created;
+    private final String name;
 
     public LotteryListViewModel(Lottery entityModel) {
         created = entityModel.getCreated();
         id = entityModel.getId();
+        name = entityModel.getName();
     }
 
     public Object getId() {
         return id;
     }
 
-    /**
-     * Print the object by its created-time in format \"MMM DD YYYY hh:mm\".
-     * @return the generated string.
-     */
-    @Override
-    public String toString() {
+
+    public String getCreatedFormated() {
         return SimpleDateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(new Date(created));
+    }
+
+    public String getName() {
+        return name;
     }
 }

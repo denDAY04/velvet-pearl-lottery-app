@@ -79,7 +79,8 @@
             android:layout_marginEnd="20dp"
             android:inputType="number"
             android:hint="@string/minimum"
-            android:layout_gravity="center_vertical"/>
+            android:layout_gravity="center_vertical"
+            android:nextFocusDown="@+id/new_lottery_max_num"/>
         <TextView
             android:id="@+id/new_lottery_range_separator"
             android:layout_width="0dp"

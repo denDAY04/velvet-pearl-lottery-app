@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.velvetPearl.lottery.fragments.About;
 import com.velvetPearl.lottery.fragments.History;
+import com.velvetPearl.lottery.fragments.LotteryHome;
 import com.velvetPearl.lottery.fragments.NewLottery;
 import com.velvetPearl.lottery.fragments.Preferences;
 import com.velvetPearl.lottery.fragments.Prizes;
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 closeMenu();
                 ApplicationDomain.getInstance().clearActiveLottery();
                 getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Welcome()).addToBackStack(null).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Welcome()).commit();
             }
         });
     }
@@ -88,47 +89,70 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int pressedId = item.getItemId();
 
-        if (pressedId == R.id.menu_new_lottery) {
-            closeMenu();
-            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new NewLottery()).addToBackStack(null).commit();
+        switch (pressedId) {
 
-        } else if (pressedId == R.id.menu_history) {
-            closeMenu();
-            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new History()).addToBackStack(null).commit();
+            case R.id.menu_new_lottery:
+                closeMenu();
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new NewLottery()).addToBackStack(null).commit();
+                break;
 
-        } else if (pressedId == R.id.menu_tickets) {
-            if (ApplicationDomain.getInstance().getActiveLottery() == null) {
-                showNoActiveLotteryError();
+            case R.id.menu_history:
+                closeMenu();
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new History()).addToBackStack(null).commit();
+                break;
+
+            case R.id.menu_home:
+                if (ApplicationDomain.getInstance().getActiveLottery() == null) {
+                    showNoActiveLotteryError();
+                    return false;
+                }
+                closeMenu();
+                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new LotteryHome()).commit();
+                break;
+
+            case R.id.menu_tickets:
+                if (ApplicationDomain.getInstance().getActiveLottery() == null) {
+                    showNoActiveLotteryError();
+                    return false;
+                }
+                closeMenu();
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Tickets()).addToBackStack(null).commit();
+                break;
+
+            case R.id.menu_winners:
+                if (ApplicationDomain.getInstance().getActiveLottery() == null) {
+                    showNoActiveLotteryError();
+                    return false;
+                }
+                closeMenu();
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Winners()).addToBackStack(null).commit();
+                break;
+
+            case R.id.menu_prizes:
+                if (ApplicationDomain.getInstance().getActiveLottery() == null) {
+                    showNoActiveLotteryError();
+                    return false;
+                }
+                closeMenu();
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Prizes()).addToBackStack(null).commit();
+                break;
+
+            case R.id.menu_preferences:
+                closeMenu();
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Preferences()).addToBackStack(null).commit();
+                break;
+
+            case R.id.menu_about:
+                closeMenu();
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new About()).addToBackStack(null).commit();
+                break;
+
+            default:
+                Log.d(LOG_TAG, "Unexpected menu option.");
                 return false;
-            }
-            closeMenu();
-            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Tickets()).addToBackStack(null).commit();
 
-        } else if (pressedId == R.id.menu_winners) {
-            if (ApplicationDomain.getInstance().getActiveLottery() == null) {
-                showNoActiveLotteryError();
-                return false;
-            }
-            closeMenu();
-            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Winners()).addToBackStack(null).commit();
-
-        } else if (pressedId == R.id.menu_prizes) {
-            if (ApplicationDomain.getInstance().getActiveLottery() == null) {
-                showNoActiveLotteryError();
-                return false;
-            }
-            closeMenu();
-            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Prizes()).addToBackStack(null).commit();
-
-        } else if (pressedId == R.id.menu_preferences) {
-            closeMenu();
-            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Preferences()).addToBackStack(null).commit();
-
-        } else if (pressedId == R.id.menu_about) {
-            closeMenu();
-            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new About()).addToBackStack(null).commit();
         }
-
         return true;
     }
 
@@ -147,12 +171,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void disableActiveLotteryMenuItems() {
+        navigationMenu.getMenu().findItem(R.id.menu_home).setEnabled(false);
         navigationMenu.getMenu().findItem(R.id.menu_tickets).setEnabled(false);
         navigationMenu.getMenu().findItem(R.id.menu_winners).setEnabled(false);
         navigationMenu.getMenu().findItem(R.id.menu_prizes).setEnabled(false);
     }
 
     public void enableActiveLotteryMenuItems() {
+        navigationMenu.getMenu().findItem(R.id.menu_home).setEnabled(true);
         navigationMenu.getMenu().findItem(R.id.menu_tickets).setEnabled(true);
         navigationMenu.getMenu().findItem(R.id.menu_winners).setEnabled(true);
         navigationMenu.getMenu().findItem(R.id.menu_prizes).setEnabled(true);

@@ -21,6 +21,10 @@
         android:title="@string/active_lottery">
         <menu>
             <item
+                android:id="@+id/menu_home"
+                android:title="@string/home"
+                android:icon="@drawable/ic_home_black_18dp"/>
+            <item
                 android:id="@+id/menu_tickets"
                 android:title="@string/tickets"
                 android:icon="@drawable/ic_description_black_18dp"/>

@@ -14,40 +14,24 @@ import java.util.concurrent.TimeoutException;
 public abstract class FirebaseRepository {
 
     protected static final String LOG_TAG = "FirebaseRepository";
-    protected static final long LOCK_TIMEOUT_MS = 10000;
 
     protected FirebaseDatabase dbContext = null;
-    protected Object lock = new Object();
-    protected boolean unlockedByNotify = false;
-
     protected HashMap<String, FirebaseQueryObject> dataAccessorsCollection;
+
 
     protected FirebaseRepository(FirebaseDatabase dbContext) {
         this.dbContext = dbContext;
         dataAccessorsCollection = new HashMap<>();
     }
 
-
     /**
-     * Verify whether the last async task was completed successfully, as determined by an internal
-     * flag. If not, a timeout exception is thrown to indicate the event.
-     * @throws TimeoutException if the flag was not set.
-     */
-    protected void verifyAsyncTask() throws TimeoutException {
-        if (!unlockedByNotify)
-            throw new TimeoutException();
-    }
-
-    /**
-     * Stop syncing Firebase changes denoted by the key and remove the stored query and
-     * listener pair.
+     * Stop syncing Firebase changes denoted by the key.
      * @param key Unique key denoting the pair to be removed.
      */
-    protected void removeEntityListener(String key) {
+    protected void detatchEntityListener(String key) {
         FirebaseQueryObject dataAccessPair = dataAccessorsCollection.get(key);
         if (dataAccessPair != null) {
             dataAccessPair.query.removeEventListener(dataAccessPair.listener);
-            dataAccessorsCollection.remove(key);
         }
     }
 
@@ -69,8 +53,7 @@ public abstract class FirebaseRepository {
      */
     public void detachAndRemoveAllQueryObjects() {
         for ( String key : dataAccessorsCollection.keySet()) {
-            FirebaseQueryObject dataAccessPair = dataAccessorsCollection.get(key);
-            dataAccessPair.query.removeEventListener(dataAccessPair.listener);
+            detatchEntityListener(key);
         }
         dataAccessorsCollection.clear();
     }

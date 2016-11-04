@@ -9,7 +9,9 @@ import java.util.concurrent.TimeoutException;
  */
 public interface IPrizeRepository {
 
-    void loadPrizeForNumber(Object numberId);
+    void startPrizeSyncForLotteryNumber(Object numberId);
+
+    void stopPrizeSyncForLotteryNumber(Object numberId);
 
     void loadAvailablePrizesForLottery(Object lotteryId);
 

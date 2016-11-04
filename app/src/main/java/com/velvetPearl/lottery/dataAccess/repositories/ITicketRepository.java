@@ -15,7 +15,9 @@ public interface ITicketRepository {
      * @param lotteryId
      * @throws TimeoutException if the action did not complete before a given timeout period.
      */
-    void loadTicketsForLottery(Object lotteryId);
+    void startTicketSyncForLottery(Object lotteryId);
+
+    void stopTicketSyncForLottery(Object lotteryId);
 
     /**
      *

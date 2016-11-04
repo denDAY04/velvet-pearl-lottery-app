@@ -1,10 +1,7 @@
 package com.velvetPearl.lottery.dataAccess.firebase.repositories;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -14,7 +11,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.velvetPearl.lottery.ApplicationDomain;
 import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
 import com.velvetPearl.lottery.dataAccess.firebase.FirebaseQueryObject;
-import com.velvetPearl.lottery.dataAccess.firebase.scheme.LotteryNumbersScheme;
 import com.velvetPearl.lottery.dataAccess.models.Prize;
 import com.velvetPearl.lottery.dataAccess.models.Ticket;
 import com.velvetPearl.lottery.dataAccess.repositories.ILotteryRepository;
@@ -26,7 +22,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.TreeMap;
-import java.util.concurrent.TimeoutException;
 
 /**
  * Created by Stensig on 22-Sep-16.
@@ -65,7 +60,7 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
                 Lottery entity = dataSnapshot.getValue(Lottery.class);
                 entity.setId(dataSnapshot.getKey());
                 ApplicationDomain.getInstance().setActiveLottery(entity);
-                ApplicationDomain.getInstance().ticketRepository.loadTicketsForLottery(entity.getId());
+                ApplicationDomain.getInstance().ticketRepository.startTicketSyncForLottery(entity.getId());
                 ApplicationDomain.getInstance().prizeRepository.loadAvailablePrizesForLottery(entity.getId());
                 ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_LOADED);
             }
@@ -86,6 +81,7 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 Log.d(LOG_TAG, "loadLottery onChildRemoved ID " + dataSnapshot.getKey());
                 ApplicationDomain.getInstance().setActiveLottery(null);
+                ApplicationDomain.getInstance().ticketRepository.stopTicketSyncForLottery(dataSnapshot.getKey());
                 ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_REMOVED);
             }
 

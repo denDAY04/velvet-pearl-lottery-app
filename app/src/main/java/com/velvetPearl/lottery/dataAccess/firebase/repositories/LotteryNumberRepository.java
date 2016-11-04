@@ -32,7 +32,7 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
 
 
     @Override
-    public void fetchLotteryNumbersForTicket(final Object ticketId) {
+    public void startLotteryNumbersSyncForTicket(final Object ticketId) {
         if (ticketId == null || ticketId.getClass() != String.class) {
             return;
         }
@@ -50,7 +50,7 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
                     Log.d(LOG_TAG, String.format("LotteryNumber (ID %s) added.", lotteryNum.getId()));
                     Ticket ticket = lottery.getTickets().get(lotteryNum.getTicketId());
                     ticket.addLotteryNumber(lotteryNum);
-                    ApplicationDomain.getInstance().prizeRepository.loadPrizeForNumber(lotteryNum.getId());
+                    ApplicationDomain.getInstance().prizeRepository.startPrizeSyncForLotteryNumber(lotteryNum.getId());
                     ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_NUMBER_UPDATE);
                 }
             }
@@ -65,7 +65,7 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
                     Log.d(LOG_TAG, String.format("LotteryNumber (ID %s) changed.", lotteryNum.getId()));
                     Ticket ticket = lottery.getTickets().get(lotteryNum.getTicketId());
                     ticket.addLotteryNumber(lotteryNum);
-                    ApplicationDomain.getInstance().prizeRepository.loadPrizeForNumber(lotteryNum.getId());
+                    ApplicationDomain.getInstance().prizeRepository.startPrizeSyncForLotteryNumber(lotteryNum.getId());
                     ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_NUMBER_UPDATE);
                 }
             }
@@ -79,6 +79,7 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
                 if (lottery != null) {
                     Log.d(LOG_TAG, String.format("LotteryNumber (ID %s) removed.", lotteryNum.getId()));
                     lottery.getTickets().get(lotteryNum.getTicketId()).removeLotteryNumber(lotteryNum);
+                    ApplicationDomain.getInstance().prizeRepository.stopPrizeSyncForLotteryNumber(lotteryNum.getId());
                     ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_NUMBER_UPDATE);
                 }
             }
@@ -90,7 +91,7 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w(LOG_TAG, "fetchLotteryNumbersForTicket cancelled", databaseError.toException());
+                Log.w(LOG_TAG, "startLotteryNumbersSyncForTicket cancelled", databaseError.toException());
             }
         };
         attachAndStoreQueryObject((String)ticketId, qObj);
@@ -110,6 +111,14 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
         }
 
         dbContext.getReference(LotteryNumbersScheme.LABEL).child((String) entity.getId()).removeValue();
+    }
+
+    @Override
+    public void stopLotteryNumbersSyncForTicket(Object ticketId) {
+        if (ticketId != null) {
+            Log.d(LOG_TAG, String.format("Detaching lottery number listener for ticket ID %s.",(String) ticketId));
+            detatchEntityListener((String) ticketId);
+        }
     }
 
     @Override

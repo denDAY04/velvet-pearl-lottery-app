@@ -60,7 +60,13 @@ public class Ticket {
             throw new IllegalArgumentException("Lottery number does not have an ID.");
         }
 
+        Prize oldWinningPrize = null;
+        if (lotteryNumbers.containsKey(number.getId())) {
+            oldWinningPrize = lotteryNumbers.get(number.getId()).getWinningPrize();
+        }
+
         lotteryNumbers.put(number.getId(), number);
+        lotteryNumbers.get(number.getId()).setWinningPrize(oldWinningPrize);
     }
 
     public Object getId() {

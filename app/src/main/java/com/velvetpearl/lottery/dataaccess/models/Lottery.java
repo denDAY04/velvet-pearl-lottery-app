@@ -1,5 +1,8 @@
 package com.velvetPearl.lottery.dataAccess.models;
 
+import com.velvetPearl.lottery.ApplicationDomain;
+import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
+
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,8 +91,46 @@ public class Lottery {
     }
 
     public void removePrize(Object prizeId) {
-        if (prizeId != null) {
+        if (prizeId == null) {
+            return;
+        }
+
+        Prize prize = prizes.get(prizeId);
+        if (prize == null) {
+            return;
+        }
+
+        // In case the prize has been assigned to a lottery number, find the number and remove its reference to the prize
+        if (prize.getNumberId() != null) {
+            for (Object ticketId : tickets.keySet()) {
+                Ticket ticket = tickets.get(ticketId);
+                for (LotteryNumber number : ticket.getLotteryNumbers()) {
+                    if (number.getId().equals(prize.getNumberId())) {
+                        number.setWinningPrize(null);
+                        prizes.remove(prizeId);
+                        ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_NUMBER_UPDATE);
+                        return;
+                    }
+                }
+            }
+        } else {
             prizes.remove(prizeId);
+        }
+    }
+
+    public void changePrize(Prize newPrize) {
+        if (newPrize == null) {
+            return;
+        }
+
+        if (newPrize.getId() == null) {
+            throw new IllegalArgumentException("New-Prize ID is null.");
+        }
+
+        if (prizes.containsKey(newPrize.getId())) {
+            prizes.get(newPrize.getId()).copy(newPrize);
+        } else {
+            prizes.put(newPrize.getId(), newPrize);
         }
     }
 

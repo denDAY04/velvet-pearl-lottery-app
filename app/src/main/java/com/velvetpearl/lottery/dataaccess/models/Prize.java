@@ -13,6 +13,13 @@ public class Prize {
     private Object numberId;
     private Object lotteryId;
 
+    public void copy(Prize other) {
+        id = other.id;
+        name = other.name;
+        numberId = other.numberId;
+        lotteryId = other.lotteryId;
+    }
+
     public String getName() {
         return name;
     }

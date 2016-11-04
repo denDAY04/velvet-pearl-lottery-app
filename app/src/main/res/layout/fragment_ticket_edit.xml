@@ -60,7 +60,7 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dip"
-            android:background="#000000" />
+            android:background="@color/datapad_color_accent" />
 
         <TableRow android:layout_weight="1">
             <TextView
@@ -73,6 +73,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginStart="10dp"
+                android:gravity="center_vertical"
                 android:textSize="22sp" />
             <ImageButton
                 android:id="@+id/ticket_edit_new_number"
@@ -81,7 +82,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginEnd="10dp"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"
+                android:tint="@color/datapad_text_primary" />
         </TableRow>
     </TableLayout>
 

@@ -3,4 +3,14 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="datapad_background">#010e19</color>
+    <color name="datapad_color_accent">#1f6c86</color>
+    <color name="datapad_foreground">#00749c</color>
+    <color name="datapad_text_primary">#00bfff</color>
+    <color name="datapad_color_background">#010e19</color>
+    <color name="datapad_window_background">#010e19</color>
+    <color name="datapad_text_secondary">#0099cc</color>
+    <color name="datapad_color_primary">#03050e</color>
+    <color name="datapad_button_background">#021c31</color>
+    <color name="datapad_text_hint">#668c99</color>
 </resources>

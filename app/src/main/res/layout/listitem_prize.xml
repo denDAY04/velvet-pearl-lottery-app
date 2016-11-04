@@ -15,6 +15,7 @@
         android:maxLines="1"
         android:text="Prize name"
         android:textSize="18sp"
-        android:textStyle="normal|bold" />
+        android:textStyle="normal|bold"
+        style="@style/Datapad"/>
 
 </LinearLayout>

@@ -76,10 +76,9 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
                 lotteryNum.setId(dataSnapshot.getKey());
 
                 Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
-                if (lottery != null && lottery.getTickets() != null) {
+                if (lottery != null) {
                     Log.d(LOG_TAG, String.format("LotteryNumber (ID %s) removed.", lotteryNum.getId()));
-                    Ticket ticket = lottery.getTickets().get(lotteryNum.getTicketId());
-                    ticket.removeLotteryNumber(lotteryNum);
+                    lottery.getTickets().get(lotteryNum.getTicketId()).removeLotteryNumber(lotteryNum);
                     ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_NUMBER_UPDATE);
                 }
             }
@@ -105,7 +104,9 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
 
         // Remove the prize associated with the lottery number
         if (entity.getWinningPrize() != null) {
-            ApplicationDomain.getInstance().prizeRepository.deletePrize(entity.getWinningPrize());
+            Prize prize = entity.getWinningPrize();
+            prize.setNumberId( null);
+            ApplicationDomain.getInstance().prizeRepository.savePrize(prize);
         }
 
         dbContext.getReference(LotteryNumbersScheme.LABEL).child((String) entity.getId()).removeValue();

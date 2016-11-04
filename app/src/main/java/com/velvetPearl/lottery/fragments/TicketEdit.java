@@ -62,9 +62,7 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
 
         ApplicationDomain.getInstance().addObserver(this);
 
-        if (savedInstanceState == null) {
-            model = ApplicationDomain.getInstance().getEditingTicket();
-        }
+        model = ApplicationDomain.getInstance().getEditingTicket();
 
         initUi(root);
         return root;

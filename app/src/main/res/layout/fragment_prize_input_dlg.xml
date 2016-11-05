@@ -55,19 +55,19 @@
         android:layout_weight="2"
         style="?android:attr/buttonBarStyle">
         <Button
-            android:id="@+id/prize_input_dlg_save_btn"
-            android:layout_height="match_parent"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="@string/save"
-            style="?android:attr/buttonBarButtonStyle" />
-        <Button
             android:id="@+id/prize_input_dlg_cancel_btn"
             android:layout_height="match_parent"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:text="@string/cancel"
             style="?android:attr/buttonBarButtonStyle"/>
+        <Button
+            android:id="@+id/prize_input_dlg_save_btn"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/save"
+            style="?android:attr/buttonBarButtonStyle" />
     </TableRow>
 
 </TableLayout>

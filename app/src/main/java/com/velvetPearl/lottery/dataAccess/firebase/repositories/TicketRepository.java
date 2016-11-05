@@ -40,44 +40,50 @@ public class TicketRepository extends FirebaseRepository implements ITicketRepos
         qObj.listener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
+                if (lottery == null) {
+                    return;
+                }
+
                 Ticket ticket = dataSnapshot.getValue(Ticket.class);
                 ticket.setId(dataSnapshot.getKey());
+                Log.d(LOG_TAG, String.format("Ticket (ID %s) added.", ticket.getId()));
 
-                Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
-                if (lottery != null) {
-                    Log.d(LOG_TAG, String.format("Ticket (ID %s) added.", ticket.getId()));
-                    lottery.addTicket(ticket);
-                    ApplicationDomain.getInstance().lotteryNumberRepository.startLotteryNumbersSyncForTicket(ticket.getId());
-                    ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.TICKET_LIST_UPDATE);
-                }
+                lottery.addTicket(ticket);
+                ApplicationDomain.getInstance().lotteryNumberRepository.startLotteryNumbersSyncForTicket(ticket.getId());
+                ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.TICKET_LIST_UPDATE);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
+                if (lottery == null) {
+                    return;
+                }
+
                 Ticket ticket = dataSnapshot.getValue(Ticket.class);
                 ticket.setId(dataSnapshot.getKey());
+                Log.d(LOG_TAG, String.format("Ticket (ID %s) changed.", ticket.getId()));
 
-                Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
-                if (lottery != null) {
-                    Log.d(LOG_TAG, String.format("Ticket (ID %s) changed.", ticket.getId()));
-                    lottery.getTickets().put(ticket.getId(), ticket);
-                    ApplicationDomain.getInstance().lotteryNumberRepository.startLotteryNumbersSyncForTicket(ticket.getId());
-                    ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.TICKET_LIST_UPDATE);
-                }
+                lottery.getTickets().put(ticket.getId(), ticket);
+                ApplicationDomain.getInstance().lotteryNumberRepository.startLotteryNumbersSyncForTicket(ticket.getId());
+                ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.TICKET_LIST_UPDATE);
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
+                if (lottery == null) {
+                    return;
+                }
+
                 Ticket ticket = dataSnapshot.getValue(Ticket.class);
                 ticket.setId(dataSnapshot.getKey());
+                Log.d(LOG_TAG, String.format("Ticket (ID %s) removed.", ticket.getId()));
 
-                Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
-                if (lottery != null) {
-                    Log.d(LOG_TAG, String.format("Ticket (ID %s) removed.", ticket.getId()));
-                    lottery.getTickets().remove(ticket.getId());
-                    ApplicationDomain.getInstance().lotteryNumberRepository.stopLotteryNumbersSyncForTicket(ticket.getId());
-                    ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.TICKET_LIST_UPDATE);
-                }
+                lottery.getTickets().remove(ticket.getId());
+                ApplicationDomain.getInstance().lotteryNumberRepository.stopLotteryNumbersSyncForTicket(ticket.getId());
+                ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.TICKET_LIST_UPDATE);
             }
 
             @Override

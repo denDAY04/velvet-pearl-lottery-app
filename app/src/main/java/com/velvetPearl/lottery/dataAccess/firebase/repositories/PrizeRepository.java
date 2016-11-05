@@ -49,15 +49,17 @@ public class PrizeRepository extends FirebaseRepository implements IPrizeReposit
                 Log.d(LOG_TAG, String.format("Prize (ID %s) loaded with lotteryId.", prize.getId(), numberId));
 
                 Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
-                lottery.addPrize(prize);
-                Map<Object, Ticket> tickets = lottery.getTickets();
-                for (Object ticketId : tickets.keySet()) {
-                    Ticket ticket = tickets.get(ticketId);
-                    for (LotteryNumber number : ticket.getLotteryNumbers()) {
-                        if (number.getId().equals(prize.getNumberId())) {
-                            number.setWinningPrize(prize);
-                            ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.PRIZE_UPDATE);
-                            return;
+                if (lottery != null) {
+                    lottery.addPrize(prize);
+                    Map<Object, Ticket> tickets = lottery.getTickets();
+                    for (Object ticketId : tickets.keySet()) {
+                        Ticket ticket = tickets.get(ticketId);
+                        for (LotteryNumber number : ticket.getLotteryNumbers()) {
+                            if (number.getId().equals(prize.getNumberId())) {
+                                number.setWinningPrize(prize);
+                                ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.PRIZE_UPDATE);
+                                return;
+                            }
                         }
                     }
                 }
@@ -71,27 +73,29 @@ public class PrizeRepository extends FirebaseRepository implements IPrizeReposit
                 prize.setId(dataSnapshot.getKey());
                 Log.d(LOG_TAG, String.format("lotteryId changed for prize (ID %s).", prize.getId(), numberId));
 
-                Map<Object, Ticket> tickets = ApplicationDomain.getInstance().getActiveLottery().getTickets();
-                boolean removedOldReference = false;
-                boolean setNewReference = false;
-                for (Object ticketId : tickets.keySet()) {
-                    Ticket ticket = tickets.get(ticketId);
-                    for (LotteryNumber number : ticket.getLotteryNumbers()) {
-                        if (number.getWinningPrize() != null && number.getWinningPrize().getId().equals(prize.getId())) {
-                            number.setWinningPrize(null);
-                            removedOldReference = true;
-                        }
-                        if (number.getId().equals(prize.getNumberId())) {
-                            number.setWinningPrize(prize);
-                            setNewReference = true;
-                        }
+                Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
+                if (lottery != null) {
+                    Map<Object, Ticket> tickets = lottery.getTickets();
+                    boolean removedOldReference = false;
+                    boolean setNewReference = false;
+                    for (Object ticketId : tickets.keySet()) {
+                        Ticket ticket = tickets.get(ticketId);
+                        for (LotteryNumber number : ticket.getLotteryNumbers()) {
+                            if (number.getWinningPrize() != null && number.getWinningPrize().getId().equals(prize.getId())) {
+                                number.setWinningPrize(null);
+                                removedOldReference = true;
+                            }
+                            if (number.getId().equals(prize.getNumberId())) {
+                                number.setWinningPrize(prize);
+                                setNewReference = true;
+                            }
 
+                            if (removedOldReference && setNewReference) break;
+                        }
                         if (removedOldReference && setNewReference) break;
                     }
-                    if (removedOldReference && setNewReference) break;
+                    ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.PRIZE_UPDATE);
                 }
-
-                ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.PRIZE_UPDATE);
             }
 
             @Override
@@ -100,15 +104,18 @@ public class PrizeRepository extends FirebaseRepository implements IPrizeReposit
                 Object prizeId = dataSnapshot.getKey();
                 Log.d(LOG_TAG, String.format("lotteryId removed for prize (ID %s).", prizeId, numberId));
 
-                Map<Object, Ticket> tickets = ApplicationDomain.getInstance().getActiveLottery().getTickets();
-                boolean done = false;
-                for (Object ticketId : tickets.keySet()) {
-                    Ticket ticket = tickets.get(ticketId);
-                    for (LotteryNumber number : ticket.getLotteryNumbers()) {
-                        if (number.getWinningPrize() != null && number.getWinningPrize().getId().equals(prizeId)) {
-                            number.setWinningPrize(null);
-                            ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.PRIZE_UPDATE);
-                            return;
+                Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
+                if (lottery != null) {
+                    Map<Object, Ticket> tickets = lottery.getTickets();
+                    boolean done = false;
+                    for (Object ticketId : tickets.keySet()) {
+                        Ticket ticket = tickets.get(ticketId);
+                        for (LotteryNumber number : ticket.getLotteryNumbers()) {
+                            if (number.getWinningPrize() != null && number.getWinningPrize().getId().equals(prizeId)) {
+                                number.setWinningPrize(null);
+                                ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.PRIZE_UPDATE);
+                                return;
+                            }
                         }
                     }
                 }
@@ -147,29 +154,37 @@ public class PrizeRepository extends FirebaseRepository implements IPrizeReposit
         qObj.listener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
+                if (lottery == null) {
+                    return;
+                }
                 Prize prize = dataSnapshot.getValue(Prize.class);
                 prize.setId(dataSnapshot.getKey());
 
                 // Ignore prizes that have been won and thus have a lottery number reference
                 if (prize.getNumberId() == null) {
                     Log.d(LOG_TAG, String.format("Prize (ID %s) added.", prize.getId()));
-                    ApplicationDomain.getInstance().getActiveLottery().addPrize(prize);
+                    lottery.addPrize(prize);
                     ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.PRIZE_UPDATE);
                 }
-
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
+                if (lottery == null) {
+                    return;
+                }
+
                 Prize prize = dataSnapshot.getValue(Prize.class);
                 prize.setId(dataSnapshot.getKey());
-
                 Log.d(LOG_TAG, String.format("Prize (ID %s) changed.", prize.getId()));
-                ApplicationDomain.getInstance().getActiveLottery().changePrize(prize);
+
+                lottery.changePrize(prize);
 
                 // If change was a number winning the prize, set the prize reference in the number
                 if (prize.getNumberId() != null) {
-                    Map<Object, Ticket> tickets = ApplicationDomain.getInstance().getActiveLottery().getTickets();
+                    Map<Object, Ticket> tickets = lottery.getTickets();
                     boolean done = false;
                     for (Object ticketId : tickets.keySet()) {
                         Ticket ticket = tickets.get(ticketId);
@@ -188,11 +203,16 @@ public class PrizeRepository extends FirebaseRepository implements IPrizeReposit
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
+                if (lottery == null) {
+                    return;
+                }
+
                 Prize prize = dataSnapshot.getValue(Prize.class);
                 prize.setId(dataSnapshot.getKey());
 
                 Log.d(LOG_TAG, String.format("Prize (ID %s) removed.", prize.getId()));
-                ApplicationDomain.getInstance().getActiveLottery().removePrize(prize.getId());
+                lottery.removePrize(prize.getId());
                 ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.PRIZE_UPDATE);
             }
 

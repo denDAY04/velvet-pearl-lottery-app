@@ -18,6 +18,7 @@ import com.velvetPearl.lottery.dataAccess.firebase.scheme.LotteryNumbersScheme;
 import com.velvetPearl.lottery.dataAccess.models.LotteryNumber;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Stensig on 30-Sep-16.
@@ -42,46 +43,68 @@ public class LotteryNumberRepository extends FirebaseRepository implements ILott
         qObj.listener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
+                if (lottery == null) {
+                    return;
+                }
+
+                Map<Object, Ticket> tickets = lottery.getTickets();
+                if (tickets == null) {
+                    return;
+                }
+
                 LotteryNumber lotteryNum = dataSnapshot.getValue(LotteryNumber.class);
                 lotteryNum.setId(dataSnapshot.getKey());
+                Log.d(LOG_TAG, String.format("LotteryNumber (ID %s) added.", lotteryNum.getId()));
 
-                Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
-                if (lottery != null && lottery.getTickets() != null) {
-                    Log.d(LOG_TAG, String.format("LotteryNumber (ID %s) added.", lotteryNum.getId()));
-                    Ticket ticket = lottery.getTickets().get(lotteryNum.getTicketId());
-                    ticket.addLotteryNumber(lotteryNum);
-                    ApplicationDomain.getInstance().prizeRepository.startPrizeSyncForLotteryNumber(lotteryNum.getId());
-                    ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_NUMBER_UPDATE);
-                }
+
+                Ticket ticket = tickets.get(lotteryNum.getTicketId());
+                ticket.addLotteryNumber(lotteryNum);
+                ApplicationDomain.getInstance().prizeRepository.startPrizeSyncForLotteryNumber(lotteryNum.getId());
+                ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_NUMBER_UPDATE);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
+                if (lottery == null) {
+                    return;
+                }
+
+                Map<Object, Ticket> tickets = lottery.getTickets();
+                if (tickets == null) {
+                    return;
+                }
+
                 LotteryNumber lotteryNum = dataSnapshot.getValue(LotteryNumber.class);
                 lotteryNum.setId(dataSnapshot.getKey());
+                Log.d(LOG_TAG, String.format("LotteryNumber (ID %s) changed.", lotteryNum.getId()));
 
-                Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
-                if (lottery != null && lottery.getTickets() != null) {
-                    Log.d(LOG_TAG, String.format("LotteryNumber (ID %s) changed.", lotteryNum.getId()));
-                    Ticket ticket = lottery.getTickets().get(lotteryNum.getTicketId());
-                    ticket.addLotteryNumber(lotteryNum);
-                    ApplicationDomain.getInstance().prizeRepository.startPrizeSyncForLotteryNumber(lotteryNum.getId());
-                    ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_NUMBER_UPDATE);
-                }
+                Ticket ticket = tickets.get(lotteryNum.getTicketId());
+                ticket.addLotteryNumber(lotteryNum);
+                ApplicationDomain.getInstance().prizeRepository.startPrizeSyncForLotteryNumber(lotteryNum.getId());
+                ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_NUMBER_UPDATE);
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
+                if (lottery == null) {
+                    return;
+                }
+
+                Map<Object, Ticket> tickets = lottery.getTickets();
+                if (tickets == null) {
+                    return;
+                }
+
                 LotteryNumber lotteryNum = dataSnapshot.getValue(LotteryNumber.class);
                 lotteryNum.setId(dataSnapshot.getKey());
+                Log.d(LOG_TAG, String.format("LotteryNumber (ID %s) removed.", lotteryNum.getId()));
 
-                Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
-                if (lottery != null) {
-                    Log.d(LOG_TAG, String.format("LotteryNumber (ID %s) removed.", lotteryNum.getId()));
-                    lottery.getTickets().get(lotteryNum.getTicketId()).removeLotteryNumber(lotteryNum);
-                    ApplicationDomain.getInstance().prizeRepository.stopPrizeSyncForLotteryNumber(lotteryNum.getId());
-                    ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_NUMBER_UPDATE);
-                }
+               tickets.get(lotteryNum.getTicketId()).removeLotteryNumber(lotteryNum);
+                ApplicationDomain.getInstance().prizeRepository.stopPrizeSyncForLotteryNumber(lotteryNum.getId());
+                ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.LOTTERY_NUMBER_UPDATE);
             }
 
             @Override

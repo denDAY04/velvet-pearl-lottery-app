@@ -90,7 +90,12 @@ public class PrizeSelectListDlg extends DialogFragment implements Observer {
                                 getFragmentManager().popBackStack();
                             }
                         })
-                        .setNegativeButton(R.string.cancel, null);
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dismiss();
+                            }
+                        });
                 dlgBuilder.create().show();
             }
         });

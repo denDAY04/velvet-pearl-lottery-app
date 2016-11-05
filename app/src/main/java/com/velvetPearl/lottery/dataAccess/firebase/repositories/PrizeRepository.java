@@ -212,7 +212,7 @@ public class PrizeRepository extends FirebaseRepository implements IPrizeReposit
                 prize.setId(dataSnapshot.getKey());
 
                 Log.d(LOG_TAG, String.format("Prize (ID %s) removed.", prize.getId()));
-                lottery.removePrize(prize.getId());
+                lottery.removePrize((String) prize.getId());
                 ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.PRIZE_UPDATE);
             }
 

@@ -90,7 +90,7 @@ public class Lottery {
         prizes.put(prize.getId(), prize);
     }
 
-    public void removePrize(Object prizeId) {
+    public void removePrize(String prizeId) {
         if (prizeId == null) {
             return;
         }
@@ -153,6 +153,14 @@ public class Lottery {
         }
 
         tickets.put(ticket.getId(), ticket);
+    }
+
+    public void removeTicket(String prizeId) {
+        if (prizeId == null) {
+            return;
+        }
+
+        prizes.remove(prizeId);
     }
 
     @Override

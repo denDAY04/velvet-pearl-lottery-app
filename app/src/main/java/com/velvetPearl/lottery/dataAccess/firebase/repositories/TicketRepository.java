@@ -65,7 +65,7 @@ public class TicketRepository extends FirebaseRepository implements ITicketRepos
                 ticket.setId(dataSnapshot.getKey());
                 Log.d(LOG_TAG, String.format("Ticket (ID %s) changed.", ticket.getId()));
 
-                lottery.getTickets().put(ticket.getId(), ticket);
+                lottery.addTicket(ticket);
                 ApplicationDomain.getInstance().lotteryNumberRepository.startLotteryNumbersSyncForTicket(ticket.getId());
                 ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.TICKET_LIST_UPDATE);
             }
@@ -81,7 +81,7 @@ public class TicketRepository extends FirebaseRepository implements ITicketRepos
                 ticket.setId(dataSnapshot.getKey());
                 Log.d(LOG_TAG, String.format("Ticket (ID %s) removed.", ticket.getId()));
 
-                lottery.getTickets().remove(ticket.getId());
+                lottery.removeTicket((String) ticket.getId());
                 ApplicationDomain.getInstance().lotteryNumberRepository.stopLotteryNumbersSyncForTicket(ticket.getId());
                 ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.TICKET_LIST_UPDATE);
             }

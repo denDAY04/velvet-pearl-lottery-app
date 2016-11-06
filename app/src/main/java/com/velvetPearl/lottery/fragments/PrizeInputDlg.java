@@ -63,7 +63,7 @@ public class PrizeInputDlg extends DialogFragment implements View.OnClickListene
         saveBtn.setOnClickListener(this);
         cancelBtn.setOnClickListener(this);
 
-        setStyle(DialogFragment.STYLE_NO_FRAME, R.style.Datapad_Dialog);
+        //setStyle(DialogFragment.STYLE_NO_FRAME, R.style.Datapad_Dialog);
     }
 
     @Override

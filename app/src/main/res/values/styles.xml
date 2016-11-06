@@ -17,7 +17,7 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="Datapad" parent="PreferenceFixTheme.NoActionBar" >
+    <style name="Datapad" parent="AppTheme.NoActionBar" >
         <item name="android:windowBackground">@color/datapad_window_background</item>
         <item name="colorAccent">@color/datapad_color_accent</item>
         <item name="android:colorForeground">@color/datapad_foreground</item>
@@ -31,8 +31,40 @@
         <item name="android:textColorHint">@color/datapad_text_hint</item>
     </style>
     <style name="Datapad.Dialog" parent="AppTheme.PopupOverlay">
-        <item name="android:colorBackground">@color/datapad_background</item>
-        <item name="android:windowBackground">@color/datapad_background</item>
+        <!--<item name="android:windowBackground">@color/datapad_button_background</item>-->
+        <!--<item name="android:colorForeground">@color/datapad_button_background</item>-->
+        <!--<item name="android:colorForegroundInverse">@color/datapad_button_background</item>-->
+        <!--<item name="android:colorBackground">@color/datapad_button_background</item>-->
+        <!--<item name="android:colorBackgroundCacheHint">@color/datapad_button_background</item>-->
+        <!--<item name="colorBackgroundFloating">@color/datapad_button_background</item>-->
+
+
+
+        <item name="android:textColorPrimary">@color/datapad_text_primary</item>
+        <item name="colorAccent">@color/datapad_color_accent</item>
+        <item name="android:background">@color/datapad_background</item>
+
+        <item name="android:windowTitleBackgroundStyle">@color/datapad_background</item>
+        <item name="android:actionBarStyle">@color/datapad_background</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+
+
+        <!--<item name="android:textColorPrimaryInverse">@color/datapad_background</item>-->
+        <!--<item name="android:textColorSecondary">@color/datapad_background</item>-->
+        <!--<item name="android:textColorSecondaryInverse">@color/datapad_background</item>-->
+        <!--<item name="android:textColorTertiary">@color/datapad_background</item>-->
+        <!--<item name="android:textColorTertiaryInverse">@color/datapad_background</item>-->
+        <!--<item name="android:textColorPrimaryDisableOnly">@color/datapad_background</item>-->
+        <!--<item name="android:textColorPrimaryInverseDisableOnly">@color/datapad_background</item>-->
+        <!--<item name="android:textColorHint">@color/datapad_background</item>-->
+        <!--<item name="android:textColorHintInverse">@color/datapad_background</item>-->
+        <!--<item name="android:textColorHighlight">@color/datapad_background</item>-->
+
+        <!--<item name="colorControlNormal">@color/datapad_background</item>-->
+        <!--<item name="colorControlHighlight">@color/datapad_background</item>-->
+        <!--<item name="colorButtonNormal">@color/datapad_background</item>-->
+        <!--<item name="colorSwitchThumbNormal">@color/datapad_background</item>-->
     </style>
 
 </resources>

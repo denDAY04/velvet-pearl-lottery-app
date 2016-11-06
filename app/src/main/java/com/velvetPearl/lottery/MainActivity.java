@@ -1,8 +1,10 @@
 package com.velvetPearl.lottery;
 
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -45,8 +47,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         initUi();
         if (savedInstanceState == null) {
+            Log.d(LOG_TAG, "No saved instance state.");
             getSupportFragmentManager().beginTransaction().add(R.id.main_fragment_container, new Welcome()).commit();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        if (ApplicationDomain.getInstance().getActiveLottery() != null) {
+            outState.putString("lotteryId", (String) ApplicationDomain.getInstance().getActiveLottery().getId());
+        }
+
+        super.onSaveInstanceState(outState, outPersistentState);
     }
 
     private void initUi() {

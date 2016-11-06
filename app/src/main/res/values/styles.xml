@@ -30,4 +30,9 @@
         <item name="android:statusBarColor">@color/datapad_color_primary</item>
         <item name="android:textColorHint">@color/datapad_text_hint</item>
     </style>
+    <style name="Datapad.Dialog" parent="AppTheme.PopupOverlay">
+        <item name="android:colorBackground">@color/datapad_background</item>
+        <item name="android:windowBackground">@color/datapad_background</item>
+    </style>
+
 </resources>

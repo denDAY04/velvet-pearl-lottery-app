@@ -1,6 +1,9 @@
 package com.velvetPearl.lottery.fragments;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -59,6 +62,8 @@ public class PrizeInputDlg extends DialogFragment implements View.OnClickListene
 
         saveBtn.setOnClickListener(this);
         cancelBtn.setOnClickListener(this);
+
+        setStyle(DialogFragment.STYLE_NO_FRAME, R.style.Datapad_Dialog);
     }
 
     @Override

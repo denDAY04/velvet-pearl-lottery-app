@@ -6,6 +6,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -52,6 +53,8 @@ public class NewLotteryNumDlg extends DialogFragment implements View.OnClickList
         specificNumBtn.setOnClickListener(this);
 
         errorLabel.setText(null);
+
+        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
     }
 
 

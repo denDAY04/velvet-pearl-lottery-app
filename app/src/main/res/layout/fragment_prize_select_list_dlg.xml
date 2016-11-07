@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:theme="@style/Datapad.Dialog">
 
     <TextView
         android:id="@+id/list_title"
         android:text="@string/select_prize_to_win"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-        android:layout_gravity="center_vertical"
-        android:gravity="center"
-        android:layout_marginStart="5dp"
-        android:textStyle="normal|bold" />
+        style="@style/Datapad.Dialog.Title"/>
 
     <ListView
         android:id="@+id/list_container"

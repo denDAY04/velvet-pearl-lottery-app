@@ -12,6 +12,7 @@ import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -42,7 +43,7 @@ public class PrizeSelectListDlg extends DialogFragment implements Observer {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_prize_select_list_dlg, container, false);
+        View root = inflater.inflate(R.layout.fragment_prize_select_list_dlg, container);
         ApplicationDomain.getInstance().addObserver(this);
 
         initUi(root);
@@ -61,6 +62,8 @@ public class PrizeSelectListDlg extends DialogFragment implements Observer {
         prizeList = (ListView) root.findViewById(R.id.list_container);
         title = (TextView) root.findViewById(R.id.list_title);
         title.setText(R.string.select_prize_to_win);
+
+        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
     }
 
     private void updateUi() {

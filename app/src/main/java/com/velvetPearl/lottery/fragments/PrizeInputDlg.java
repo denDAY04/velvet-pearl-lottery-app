@@ -2,6 +2,8 @@ package com.velvetPearl.lottery.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,6 +11,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -34,7 +37,7 @@ public class PrizeInputDlg extends DialogFragment implements View.OnClickListene
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_prize_input_dlg, container, false);
+        View root = inflater.inflate(R.layout.fragment_prize_input_dlg, container);
 
         initUi(root);
         updateUi();
@@ -56,14 +59,16 @@ public class PrizeInputDlg extends DialogFragment implements View.OnClickListene
 
         if (ApplicationDomain.getInstance().getEditingPrize().getId() != null) {
             dialogTitle.setText(R.string.edit_ptize);
+            getDialog().setTitle(R.string.edit_ptize);
         } else {
             dialogTitle.setText(R.string.new_prize);
+            getDialog().setTitle(R.string.new_prize);
         }
 
         saveBtn.setOnClickListener(this);
         cancelBtn.setOnClickListener(this);
 
-        //setStyle(DialogFragment.STYLE_NO_FRAME, R.style.Datapad_Dialog);
+        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
     }
 
     @Override

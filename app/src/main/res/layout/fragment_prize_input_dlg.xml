@@ -13,12 +13,8 @@
         android:layout_weight="2">
         <TextView
             android:id="@+id/prize_input_dlg_title"
-            android:layout_width="0dp"
-            android:layout_weight="1"
             android:text="Title here"
-            android:gravity="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:textSize="27sp" />
+            style="@style/Datapad.Dialog.Title"/>
     </TableRow>
 
     <TableRow
@@ -35,7 +31,8 @@
             android:layout_weight="1"
             android:maxLines="1"
             android:scrollHorizontally="true"
-            android:inputType="text"/>
+            android:inputType="text"
+            android:minWidth="250dp"/>
     </TableRow>
 
     <TableRow

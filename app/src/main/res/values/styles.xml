@@ -52,4 +52,26 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat"/>
 
+    <style name="Datapad.Dialog.Title" parent="Datapad">
+           <item name="android:layout_width">match_parent</item>
+            <item name="android:layout_height">wrap_content</item>
+            <item name="android:gravity">center</item>
+            <item name="android:layout_marginTop">20dp</item>
+            <item name="android:textSize">27sp</item>
+            <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
+    </style>
+    <style name="Datapad" parent="AppTheme.NoActionBar" >
+        <item name="android:windowBackground">@color/datapad_window_background</item>
+        <item name="colorAccent">#ffff</item>
+        <item name="android:colorForeground">@color/datapad_foreground</item>
+        <item name="android:textColorPrimary">@color/datapad_text_primary</item>
+        <item name="android:textColorSecondary">@color/datapad_text_secondary</item>
+        <item name="android:textColorHint">@color/datapad_text_hint</item>
+                <item name="android:colorBackground">@color/datapad_color_background</item>
+                <item name="colorPrimary">@color/datapad_color_primary</item>
+                <item name="android:colorButtonNormal">@color/datapad_button_background</item>
+                <item name="android:navigationBarColor">@color/datapad_color_primary</item>
+                <item name="android:statusBarColor">@color/datapad_color_primary</item>
+    </style>
+
 </resources>

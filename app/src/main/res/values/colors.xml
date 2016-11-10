@@ -21,7 +21,12 @@
     <color name="datapad_statusbar">#303F9F</color>
     <color name="datapad_accent">#ff8300</color>
     <color name="datapad_button">#021c31</color>
-    <color name="datapad_text_primary">#00bfff</color>
-    <color name="datapad_text_secondary">#0084B0</color>
-    <color name="datapad_text_tertiary">#006485</color>
+
+    <color name="datapad_text_bright">#00bfff</color>
+    <color name="datapad_text_bright_disabled">#6c8993</color>
+    <color name="datapad_text_normal">#0084B0</color>
+    <color name="datapad_text_normal_disabled">#4c6067</color>
+    <color name="datapad_text_dark">#006485</color>
+    <color name="datapad_text_dark_disabled">#38474c</color>
+
 </resources>

@@ -1,7 +1,5 @@
 package com.velvetPearl.lottery.dataAccess.models;
 
-import io.realm.RealmObject;
-
 /**
  * Created by Andreas "denDAY" Stensig on 20-Sep-16.
  */

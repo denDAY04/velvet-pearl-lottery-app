@@ -22,6 +22,8 @@
         <!-- alert dialog themes -->
         <!--<item name="android:alertDialogTheme">@style/AppTheme.Dialog.Alert</item>-->
         <!--<item name="android:dialogTheme">@style/AppTheme.Dialog</item>-->
+
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
     <!--<style name="AppTheme.Dialog" parent="AppTheme.PopupOverlay">-->

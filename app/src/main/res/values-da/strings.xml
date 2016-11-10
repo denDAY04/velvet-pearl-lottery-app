@@ -18,7 +18,7 @@
     <string name="lottery">Lotteri</string>
     <string name="number_range">Nummer række</string>
     <string name="price_per_number">Pris pr. nummer</string>
-    <string name="tickets">Billetter</string>
+    <string name="tickets">Lodseddeler</string>
     <string name="prizes">Gevinster</string>
     <string name="winners">Vindere</string>
     <string name="home">Hjem</string>
@@ -30,7 +30,7 @@
     <string name="ticket">Billet</string>
     <string name="edit">Rediger</string>
     <string name="delete">Slet</string>
-    <string name="delete_ticket_confirm" >Er du sikker på du vil slette denne billet?</string>
+    <string name="delete_ticket_confirm" >Er du sikker på du vil slette denne lodseddel?</string>
     <string name="confirm">Bekræft</string>
     <string name="owner">Ejer</string>
     <string name="price">Gevinst</string>
@@ -40,7 +40,7 @@
     <string name="lottery_number">Lotteri nummer</string>
     <string name="delete_lottery_number_confirm" >Er du sikker på du vil slette dette lotteri nummer?</string>
     <string name="save_failed">Gem fejlede</string>
-    <string name="ticket_edit_owner_required">Navnet på billettens ejer er påkrævet.</string>
+    <string name="ticket_edit_owner_required">Navnet på lodseddlens ejer er påkrævet.</string>
     <string name="use_number">Brug nummer</string>
     <string name="random">Tilfældig</string>
     <string name="lottery_num_error_unavailable">Nummeret er ikke tilgængeligt.</string>
@@ -60,7 +60,7 @@
     <string name="draw_winner">Udtræk vinder</string>
     <string name="prize">Gevinst</string>
     <string name="winner">Vinder</string>
-    <string name="delete_winner_confirm" >Er du sikker på du vil slette denne gevist?\nHverken billet eller gevinst vil blive slettet.</string>
+    <string name="delete_winner_confirm" >Er du sikker på du vil slette denne vinder?\nHverken lodseddel eller gevinst vil blive slettet.</string>
     <string name="no_prizes_left">Ingen gevinster tilbage.</string>
     <string name="no_winless_numbers">Ingen lotteri nummre tilbage uden gevinst.</string>
     <string name="select_prize_to_win">Vælg gevinst der vindes</string>
@@ -74,8 +74,8 @@
     <string name="active_lottery">Aktivt Lotteri</string>
     <string name="misc">Andet</string>
     <string name="settings">Indstillinger</string>
-    <string name="multi_winner_settings_title" >Tillad flere gevinster per billet</string>
-    <string name="multi_winner_settings_summary" >Flere lotteri nummre fra samme billet kan vinde.</string>
+    <string name="multi_winner_settings_title" >Tillad flere gevinster per lodseddel</string>
+    <string name="multi_winner_settings_summary" >Flere lotteri nummre fra samme lodseddel kan vinde.</string>
     <string name="minimum">Minimum</string>
     <string name="maximum">Maximum</string>
     <string name="create_lottery">Opret lotteri</string>
@@ -90,8 +90,8 @@
     <string name="please_wait">Vent venligst</string>
     <string name="creating_lottery">Opretter lotteri</string>
     <string name="created">Oprettet</string>
-    <string name="new_ticket">Ny billet</string>
-    <string name="about_error_loading">"Kunne ikke vise  'Om appen' siden. "</string>
+    <string name="new_ticket">Ny lodseddel</string>
+    <string name="about_error_loading">"Kunne ikke vise 'Om appen' siden."</string>
     <string name="about_language_warning">Denne side er kun tilgænglig på engelsk.</string>
     <string name="new_number_description">Tilføj nyt lotteri nummer</string>
 </resources>

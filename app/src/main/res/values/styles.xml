@@ -56,7 +56,7 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat"/>
 
     <!--<style name="Datapad.Dialog.Title" parent="Datapad">-->
-    <style name="Datapad.Dialog.Title" parent="AppTheme.NoActionBar">
+    <style name="AppThemeDialogTitle" parent="AppTheme.NoActionBar">
            <item name="android:layout_width">match_parent</item>
             <item name="android:layout_height">wrap_content</item>
             <item name="android:gravity">center</item>
@@ -64,9 +64,5 @@
             <item name="android:textSize">27sp</item>
             <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
     </style>
-
-    <!--<style name="Datapad" parent="AppTheme.NoActionBar" >-->
-
-    <!--</style>-->
 
 </resources>

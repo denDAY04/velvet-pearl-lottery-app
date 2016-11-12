@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/list_title"
         android:text="@string/select_prize_to_win"
-        style="@style/Datapad.Dialog.Title"/>
+        style="@style/AppThemeDialogTitle"/>
 
     <ListView
         android:id="@+id/list_container"

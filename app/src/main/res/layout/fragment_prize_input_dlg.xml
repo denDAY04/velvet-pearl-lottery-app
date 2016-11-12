@@ -14,7 +14,7 @@
         <TextView
             android:id="@+id/prize_input_dlg_title"
             android:text="Title here"
-            style="@style/Datapad.Dialog.Title"/>
+            style="@style/AppThemeDialogTitle"/>
     </TableRow>
 
     <TableRow

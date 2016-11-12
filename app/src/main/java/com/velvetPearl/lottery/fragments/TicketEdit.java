@@ -122,7 +122,7 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
         // Set list of lottery numbers
         final ArrayList<LotteryNumberListViewModel> viewModels = convertToViewModels(model.getTicket().getLotteryNumbers(), model.getUnsavedNumbers());
         if (viewModels.size() > 0) {
-            numberList.setAdapter(new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, viewModels));
+            numberList.setAdapter(new ArrayAdapter(getContext(), R.layout.listitem_simple, R.id.list_item_label, viewModels));
             numberList.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
                 @Override
                 public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {

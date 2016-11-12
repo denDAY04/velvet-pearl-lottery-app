@@ -132,7 +132,7 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
                     menu.add(Menu.NONE, 0, 0, R.string.delete).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
-                            AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(getContext());
+                            AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(getContext(), R.style.AppTheme_Dialog_Alert);
                             dlgBuilder
                                     .setTitle(R.string.attention)
                                     .setMessage(R.string.delete_lottery_number_confirm)

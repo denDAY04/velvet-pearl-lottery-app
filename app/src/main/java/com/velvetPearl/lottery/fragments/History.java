@@ -65,19 +65,6 @@ public class History extends Fragment implements Observer {
      * This method does not show the dialog.
      */
     public void initLoadingDialog() {
-//        loadingDlg = new ProgressDialog(getContext());
-//        loadingDlg.setIndeterminate(true);
-//        loadingDlg.setMessage(getString(R.string.history_loading_history));
-//        loadingDlg.setCancelable(true);
-//        loadingDlg.setOnCancelListener(new DialogInterface.OnCancelListener() {
-//            @Override
-//            public void onCancel(DialogInterface dialogInterface) {
-//                // Switch back to home on cancel.
-//                Log.d(LOG_TAG, "progressDialog:onCancelListener canceling history data load");
-//                getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Welcome()).commit();
-//            }
-//        });
-//        loadingDlg.show();
         loadingDlg = ProgressDialog.show(getContext(), null, getString(R.string.history_loading_history), true, true, new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {

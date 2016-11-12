@@ -119,8 +119,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     return false;
                 }
                 closeMenu();
-                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new LotteryHome()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new LotteryHome()).addToBackStack(null).commit();
                 break;
 
             case R.id.menu_tickets:

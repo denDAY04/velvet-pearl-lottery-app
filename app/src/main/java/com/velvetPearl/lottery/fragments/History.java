@@ -42,6 +42,7 @@ public class History extends Fragment implements Observer {
         ApplicationDomain.getInstance().addObserver(this);
 
         historyListView = (ListView) fragView.findViewById(R.id.history_lottery_listview);
+        historyListView.setEmptyView(fragView.findViewById(R.id.empty_list_standin));
         getActivity().setTitle(R.string.lottery_history);
 
         initLoadingDialog();
@@ -130,9 +131,7 @@ public class History extends Fragment implements Observer {
             });
 
         } else {
-            ArrayList<String> tempList = new ArrayList<>();
-            tempList.add(getString(R.string.history_no_lotteries));
-            historyListView.setAdapter(new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, tempList));
+            historyListView.setAdapter(null);
         }
 
         if (loadingDlg.isShowing()) {

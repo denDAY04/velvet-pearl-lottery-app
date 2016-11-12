@@ -46,6 +46,7 @@ public class Tickets extends Fragment implements Observer, View.OnClickListener 
         getActivity().setTitle(R.string.tickets);
         ((MainActivity) getActivity()).enableActiveLotteryMenuItems();
         ticketsListView = (ListView) root.findViewById(R.id.list_container);
+        ticketsListView.setEmptyView(root.findViewById(R.id.empty_list_standin));
         newTicketBtn = (Button) root.findViewById(R.id.list_new_button);
         newTicketBtn.setOnClickListener(this);
         newTicketBtn.setText(R.string.new_ticket);
@@ -142,8 +143,7 @@ public class Tickets extends Fragment implements Observer, View.OnClickListener 
                 }
             });
         } else {
-            String[] tempList = new String[] {getString(R.string.none_found)};
-            ticketsListView.setAdapter(new ArrayAdapter(getActivity(), R.layout.listitem_simple, R.id.list_item_label, tempList));
+            ticketsListView.setAdapter(null);
         }
     }
 

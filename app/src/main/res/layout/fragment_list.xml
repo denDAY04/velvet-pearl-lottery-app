@@ -7,13 +7,24 @@
     android:orientation="vertical">
 
 
-    <ListView
-        android:id="@+id/list_container"
-        android:layout_weight="9"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        android:layout_weight="9"
+        android:orientation="vertical">
+        <ListView
+            android:id="@+id/list_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    </ListView>
+        </ListView>
+        <ViewStub
+            android:id="@+id/empty_list_standin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout="@layout/listitem_none_found" />
+    </LinearLayout>
+
     <Button
         android:id="@+id/list_new_button"
         android:layout_width="match_parent"

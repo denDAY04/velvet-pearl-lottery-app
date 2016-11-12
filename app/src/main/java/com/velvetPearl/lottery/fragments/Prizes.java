@@ -68,6 +68,7 @@ public class Prizes extends Fragment implements Observer, View.OnClickListener {
         ((MainActivity) getActivity()).enableActiveLotteryMenuItems();
 
         listView = (ListView) root.findViewById(R.id.list_container);
+        listView.setEmptyView(root.findViewById(R.id.empty_list_standin));
 
         newButton = (Button) root.findViewById(R.id.list_new_button);
         newButton.setOnClickListener(this);
@@ -137,8 +138,7 @@ public class Prizes extends Fragment implements Observer, View.OnClickListener {
                 }
             });
         } else {
-            String[] tempList = new String[] {getString(R.string.none_found)};
-            listView.setAdapter(new ArrayAdapter(getActivity(), R.layout.listitem_simple, R.id.list_item_label, tempList));
+            listView.setAdapter(null);
         }
     }
 

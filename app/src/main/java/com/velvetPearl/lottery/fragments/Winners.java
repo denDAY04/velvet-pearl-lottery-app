@@ -68,7 +68,7 @@ public class Winners extends Fragment implements View.OnClickListener, Observer 
 
         drawWinnerBtn = (Button) root.findViewById(R.id.list_new_button);
         winnersListView = (ListView) root.findViewById(R.id.list_container);
-
+        winnersListView.setEmptyView(root.findViewById(R.id.empty_list_standin));
         drawWinnerBtn.setOnClickListener(this);
         drawWinnerBtn.setText(R.string.draw_winner);
     }
@@ -145,8 +145,7 @@ public class Winners extends Fragment implements View.OnClickListener, Observer 
                 }
             });
         } else {
-            String[] tempList = new String[] {getString(R.string.none_found)};
-            winnersListView.setAdapter(new ArrayAdapter(getActivity(), R.layout.listitem_simple, R.id.list_item_label, tempList));
+            winnersListView.setAdapter(null);
         }
     }
 

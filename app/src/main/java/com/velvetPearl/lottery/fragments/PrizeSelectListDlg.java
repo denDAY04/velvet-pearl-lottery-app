@@ -81,7 +81,7 @@ public class PrizeSelectListDlg extends DialogFragment implements Observer {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 // Show confirmation dialog
-                AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(getContext());
+                AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(getContext(), R.style.AppTheme_Dialog_Alert);
                 dlgBuilder.setMessage(String.format(getString(R.string.prize_selection_confirmation), prizesEligibleForWin.get(position).getName()))
                         .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                             @Override

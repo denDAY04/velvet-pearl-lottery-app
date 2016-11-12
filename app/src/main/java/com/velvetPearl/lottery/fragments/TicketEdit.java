@@ -80,6 +80,7 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
         ownerInput = (EditText) fragmentView.findViewById(R.id.ticket_edit_owner_input);
         priceLabel = (TextView) fragmentView.findViewById(R.id.ticket_edit_price_var);
         numberList = (ListView) fragmentView.findViewById(R.id.ticket_edit_numbers_list);
+        numberList.setEmptyView(fragmentView.findViewById(R.id.empty_list_standin));
         saveBtn = (Button) fragmentView.findViewById(R.id.ticket_edit_save);
         newLotteryNumberBtn = (ImageButton) fragmentView.findViewById(R.id.ticket_edit_new_number);
 
@@ -166,18 +167,7 @@ public class TicketEdit extends Fragment implements Observer, View.OnClickListen
                 }
             });
         } else {
-            ArrayList<String> fillerList = new ArrayList<>();
-            fillerList.add("");
-            numberList.setAdapter(new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, fillerList){
-                @NonNull
-                @Override
-                public View getView(int position, View convertView, ViewGroup parent) {
-                    View itemView = super.getView(position, convertView, parent);
-                    TextView title = (TextView) itemView.findViewById(android.R.id.text1);
-                    title.setText(R.string.none_found);
-                    return itemView;
-                }
-            });
+            numberList.setAdapter(null);
         }
     }
 

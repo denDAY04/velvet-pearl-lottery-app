@@ -163,7 +163,7 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
     public void update(Observable o, Object arg) {
         if (arg.getClass() == DataAccessEvent.class) {
             if (arg == DataAccessEvent.LOTTERY_REMOVED) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AppTheme_Dialog_Alert);
                 builder.setTitle(getString(R.string.attention))
                         .setMessage(getString(R.string.lottery_was_deleted))
                         .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {

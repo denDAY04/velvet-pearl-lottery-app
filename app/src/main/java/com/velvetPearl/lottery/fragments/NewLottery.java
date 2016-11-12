@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -42,6 +43,7 @@ public class NewLottery extends Fragment implements View.OnClickListener, View.O
     private Button createBtn;
     private EditText nameInput;
     private TextView errorLabel;
+    private CheckBox allowMultiWinOnTicket;
 
     private AlertDialog savingDlg;
 
@@ -72,6 +74,7 @@ public class NewLottery extends Fragment implements View.OnClickListener, View.O
         cancelBtn = (Button) root.findViewById(R.id.new_lottery_cancel);
         createBtn = (Button) root.findViewById(R.id.new_lottery_create);
         nameInput = (EditText) root.findViewById(R.id.new_lottery_name);
+        allowMultiWinOnTicket = (CheckBox) root.findViewById(R.id.multi_winner_checkbox);
         errorLabel = (TextView) root.findViewById(R.id.new_lottery_error_lab);
         errorLabel.setText(null);
 
@@ -148,6 +151,7 @@ public class NewLottery extends Fragment implements View.OnClickListener, View.O
         lottery.setLotteryNumLowerBound(numMin);
         lottery.setLotteryNumUpperBound(numMax);
         lottery.setPricePerLotteryNum(price);
+        lottery.setTicketMultiWinEnabled(allowMultiWinOnTicket.isChecked());
         lottery = ApplicationDomain.getInstance().lotteryRepository.saveLottery(lottery);
         ApplicationDomain.getInstance().lotteryRepository.loadLottery(lottery.getId());
 

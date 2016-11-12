@@ -126,7 +126,8 @@ public class PrizeSelectListDlg extends DialogFragment implements Observer {
     }
 
     private void drawWinner() {
-        boolean allowMultiWinnings = PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean(getString(R.string.preference_multi_winner_key), false);
+        //boolean allowMultiWinnings = PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean(getString(R.string.preference_multi_winner_key), false);
+        boolean allowMultiWinnings = ApplicationDomain.getInstance().getActiveLottery().isTicketMultiWinEnabled();
 
         // Get all lottery numbers without a prize
         ArrayList<LotteryNumber> numbersEligibleForWin = new ArrayList<>();

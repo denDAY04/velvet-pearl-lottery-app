@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.velvetPearl.lottery.MainActivity;
@@ -42,6 +43,7 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
     private Button ticketsBtn = null;
     private Button winnersBtn = null;
     private Button prizesBtn = null;
+    private CheckBox allowMultiWinOnTicket = null;
 
     private ProgressDialog loadingDialog = null;
 
@@ -96,6 +98,7 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
         ticketsBtn = (Button) view.findViewById(R.id.lotteryhome_tickets_btn);
         winnersBtn = (Button) view.findViewById(R.id.lotteryhome_winners_btn);
         prizesBtn = (Button) view.findViewById(R.id.lotteryhome_prizes_btn);
+        allowMultiWinOnTicket = (CheckBox) view.findViewById(R.id.multi_winner_checkbox);
 
         ticketsBtn.setOnClickListener(this);
         winnersBtn.setOnClickListener(this);
@@ -132,6 +135,8 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
         timestampLab.setText(String.format(locale, "%s %s", getString(R.string.created), timestamp));
         lotteryNumRangeLab.setText(String.format(locale, "%d - %d", lottery.getLotteryNumLowerBound(), lottery.getLotteryNumUpperBound()));
         pricePerNumLab.setText(String.format(locale, "%.2f", lottery.getPricePerLotteryNum()));
+        allowMultiWinOnTicket.setChecked(lottery.isTicketMultiWinEnabled());
+
         int count = 0;
         if (lottery.getTickets() != null) {
             for (Object key : lottery.getTickets().keySet()) {

@@ -166,6 +166,7 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
         objMap.put(LotteriesScheme.Children.PRICE_PER_LOTTERY_NUM, lottery.getPricePerLotteryNum());
         objMap.put(LotteriesScheme.Children.LOTTERY_NUM_LOWER_BOUND, lottery.getLotteryNumLowerBound());
         objMap.put(LotteriesScheme.Children.LOTTERY_NUM_UPPER_BOUND, lottery.getLotteryNumUpperBound());
+        objMap.put(LotteriesScheme.Children.TICKET_MULTI_WINNER, lottery.isTicketMultiWinEnabled());
         dbObjRef.setValue(objMap);
 
         return lottery;

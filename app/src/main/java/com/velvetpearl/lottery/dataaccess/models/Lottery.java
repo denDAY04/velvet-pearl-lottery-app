@@ -4,8 +4,6 @@ import com.velvetPearl.lottery.ApplicationDomain;
 import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
 
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.TreeMap;
 
 
@@ -19,6 +17,7 @@ public class Lottery {
     private int lotteryNumLowerBound;
     private int lotteryNumUpperBound;
     private String name;
+    private boolean ticketMultiWinEnabled;
 
     private TreeMap<Object, Prize> prizes;
     private TreeMap<Object, Ticket> tickets;
@@ -192,5 +191,13 @@ public class Lottery {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isTicketMultiWinEnabled() {
+        return ticketMultiWinEnabled;
+    }
+
+    public void setTicketMultiWinEnabled(boolean ticketMultiWinEnabled) {
+        this.ticketMultiWinEnabled = ticketMultiWinEnabled;
     }
 }

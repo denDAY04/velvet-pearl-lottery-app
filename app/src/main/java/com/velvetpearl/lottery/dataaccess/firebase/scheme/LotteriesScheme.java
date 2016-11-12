@@ -12,5 +12,6 @@ public abstract class LotteriesScheme {
         public static final String PRICE_PER_LOTTERY_NUM = "pricePerLotteryNum";
         public static final String LOTTERY_NUM_LOWER_BOUND = "lotteryNumLowerBound";
         public static final String LOTTERY_NUM_UPPER_BOUND = "lotteryNumUpperBound";
+        public static final String TICKET_MULTI_WINNER = "ticketMultiWinEnabled";
     }
 }

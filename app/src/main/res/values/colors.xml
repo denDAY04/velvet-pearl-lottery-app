@@ -18,11 +18,11 @@
     <color name="datapad_accent">#ff8300</color>
     <color name="datapad_button">#021c31</color>
 
-    <color name="datapad_text_bright">#00bfff</color>
-    <color name="datapad_text_bright_disabled">#6c8993</color>
-    <color name="datapad_text_normal">#0084B0</color>
-    <color name="datapad_text_normal_disabled">#4c6067</color>
-    <color name="datapad_text_dark">#006485</color>
-    <color name="datapad_text_dark_disabled">#38474c</color>
+    <color name="datapad_text_primary_enabled">#00bfff</color>
+    <color name="datapad_text_primary_disabled">#6c8993</color>
+    <color name="datapad_text_secondary_enabled">#0084B0</color>
+    <color name="datapad_text_secondary_disabled">#4c6067</color>
+    <color name="datapad_text_tertiary_enabled">#00b3b3</color>
+    <color name="datapad_text_tertiary_disabled">#4c6767</color>
 
 </resources>

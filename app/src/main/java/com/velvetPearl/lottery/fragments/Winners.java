@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,9 +25,7 @@ import com.velvetPearl.lottery.MainActivity;
 import com.velvetPearl.lottery.R;
 import com.velvetPearl.lottery.ApplicationDomain;
 import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
-import com.velvetPearl.lottery.dataAccess.models.LotteryNumber;
 import com.velvetPearl.lottery.dataAccess.models.Prize;
-import com.velvetPearl.lottery.dataAccess.models.Ticket;
 import com.velvetPearl.lottery.viewModels.WinnerListViewModel;
 
 import java.util.ArrayList;
@@ -95,7 +92,7 @@ public class Winners extends Fragment implements View.OnClickListener, Observer 
 
                     TextView lotteryNumber = (TextView) itemView.findViewById(R.id.list_item_lottery_num);
                     TextView ticketOwner = (TextView) itemView.findViewById(R.id.list_item_ticket_owner);
-                    TextView prizeName = (TextView) itemView.findViewById(R.id.list_item_prize_name);
+                    TextView prizeName = (TextView) itemView.findViewById(R.id.list_item_label);
                     WinnerListViewModel model = viewModels.get(position);
 
                     lotteryNumber.setText(Integer.toString(model.getLotteryNumber()));
@@ -149,7 +146,7 @@ public class Winners extends Fragment implements View.OnClickListener, Observer 
             });
         } else {
             String[] tempList = new String[] {getString(R.string.none_found)};
-            winnersListView.setAdapter(new ArrayAdapter(getActivity(), R.layout.listitem_prize, R.id.list_item_prize_name, tempList));
+            winnersListView.setAdapter(new ArrayAdapter(getActivity(), R.layout.listitem_simple, R.id.list_item_label, tempList));
         }
     }
 

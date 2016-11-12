@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -144,7 +143,7 @@ public class Tickets extends Fragment implements Observer, View.OnClickListener 
             });
         } else {
             String[] tempList = new String[] {getString(R.string.none_found)};
-            ticketsListView.setAdapter(new ArrayAdapter(getActivity(), R.layout.listitem_prize, R.id.list_item_prize_name, tempList));
+            ticketsListView.setAdapter(new ArrayAdapter(getActivity(), R.layout.listitem_simple, R.id.list_item_label, tempList));
         }
     }
 

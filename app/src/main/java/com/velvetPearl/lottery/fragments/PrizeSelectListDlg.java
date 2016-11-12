@@ -1,11 +1,9 @@
 package com.velvetPearl.lottery.fragments;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.AppLaunchChecker;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.PreferenceManager;
@@ -69,12 +67,12 @@ public class PrizeSelectListDlg extends DialogFragment implements Observer {
     private void updateUi() {
         final ArrayList<Prize> prizesEligibleForWin = getAvailablePrizes();
 
-        prizeList.setAdapter(new ArrayAdapter(getContext(), R.layout.listitem_prize, R.id.list_item_prize_name, prizesEligibleForWin){
+        prizeList.setAdapter(new ArrayAdapter(getContext(), R.layout.listitem_simple, R.id.list_item_label, prizesEligibleForWin){
             @NonNull
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
-                TextView prizeName = (TextView) view.findViewById(R.id.list_item_prize_name);
+                TextView prizeName = (TextView) view.findViewById(R.id.list_item_label);
                 prizeName.setText(prizesEligibleForWin.get(position).getName());
                 return view;
             }

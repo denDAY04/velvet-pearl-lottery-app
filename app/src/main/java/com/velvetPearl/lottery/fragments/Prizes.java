@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -83,12 +82,12 @@ public class Prizes extends Fragment implements Observer, View.OnClickListener {
         }
 
         if (prizes.size() > 0) {
-            listView.setAdapter(new ArrayAdapter(getActivity(), R.layout.listitem_prize, R.id.list_item_prize_name, prizes) {
+            listView.setAdapter(new ArrayAdapter(getActivity(), R.layout.listitem_simple, R.id.list_item_label, prizes) {
                 @NonNull
                 @Override
                 public View getView(int position, View convertView, ViewGroup parent) {
                     View itemView = super.getView(position, convertView, parent);
-                    TextView prizeName = (TextView) itemView.findViewById(R.id.list_item_prize_name);
+                    TextView prizeName = (TextView) itemView.findViewById(R.id.list_item_label);
 
                     prizeName.setText(prizes.get(position).getName());
 
@@ -139,7 +138,7 @@ public class Prizes extends Fragment implements Observer, View.OnClickListener {
             });
         } else {
             String[] tempList = new String[] {getString(R.string.none_found)};
-            listView.setAdapter(new ArrayAdapter(getActivity(), R.layout.listitem_prize, R.id.list_item_prize_name, tempList));
+            listView.setAdapter(new ArrayAdapter(getActivity(), R.layout.listitem_simple, R.id.list_item_label, tempList));
         }
     }
 

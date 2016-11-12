@@ -22,17 +22,25 @@
 
         <!-- alert dialog themes -->
         <!--<item name="android:alertDialogTheme">@style/AppTheme.Dialog.Alert</item>-->
-        <!--<item name="android:dialogTheme">@style/AppTheme.Dialog</item>-->
+        <item name="android:dialogTheme">@style/AppTheme.Dialog</item>
 
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
-    <!--<style name="AppTheme.Dialog" parent="AppTheme.PopupOverlay">-->
-        <!--<item name="android:textColorPrimary">@color/datapad_text_primary</item>-->
-        <!--&lt;!&ndash;<item name="android:background">@color/datapad_background</item>&ndash;&gt;-->
-        <!--<item name="android:background">#ff0</item>-->
-        <!--<item name="android:textColorHint">@color/datapad_text_hint</item>-->
-    <!--</style>-->
+    <!-- theme for DialogFragments -->
+    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Dialog">
+        <!-- UI controls -->
+        <item name="colorAccent">@color/datapad_accent</item>
+
+        <!-- dialog background -->
+        <item name="android:windowBackground">@color/datapad_background</item>
+
+        <!-- varying text colors -->
+        <item name="android:textColorPrimary">@color/datapad_text_primary</item>
+        <item name="android:textColorSecondary">@color/datapad_text_secondary</item>
+        <item name="android:textColorTertiary">@color/datapad_text_tertiary</item>
+        <item name="android:textColorHint">@color/datapad_text_hint</item>
+    </style>
 
     <!--<style name="AppTheme.Dialog.Alert" parent="Theme.AppCompat.Dialog.Alert">-->
         <!--&lt;!&ndash; buttons color &ndash;&gt;-->
@@ -55,7 +63,6 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat"/>
 
-    <!--<style name="Datapad.Dialog.Title" parent="Datapad">-->
     <style name="AppThemeDialogTitle" parent="AppTheme.NoActionBar">
            <item name="android:layout_width">match_parent</item>
             <item name="android:layout_height">wrap_content</item>

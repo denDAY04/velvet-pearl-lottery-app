@@ -94,4 +94,5 @@
     <string name="about_error_loading">"Kunne ikke vise 'Om appen' siden."</string>
     <string name="about_language_warning">Denne side er kun tilgænglig på engelsk.</string>
     <string name="new_number_description">Tilføj nyt lotteri nummer</string>
+    <string name="delete_lottery_confirm">Er du sikker på du vil slette dette lotteri?</string>
 </resources>

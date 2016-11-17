@@ -9,6 +9,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -44,6 +47,7 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
     private Button winnersBtn = null;
     private Button prizesBtn = null;
     private CheckBox allowMultiWinOnTicket = null;
+    private MenuItem deleteMenu = null;
 
     private ProgressDialog loadingDialog = null;
 
@@ -51,6 +55,7 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_lottery_home, container, false);
+        setHasOptionsMenu(true);
 
         ApplicationDomain.getInstance().addObserver(this);
 
@@ -80,6 +85,12 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
         Log.d(LOG_TAG, "unsubscribing from model updates");
         ApplicationDomain.getInstance().deleteObserver(this);
         super.onDestroyView();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.lottery_home_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     /**
@@ -157,6 +168,26 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
         } else if (v == prizesBtn) {
             getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Prizes()).addToBackStack(null).commit();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_lottery_home_delete) {
+            AlertDialog.Builder confirmDialog = new AlertDialog.Builder(getContext(), R.style.AppTheme_Dialog_Alert);
+            confirmDialog
+                    .setTitle(R.string.attention)
+                    .setMessage(R.string.delete_lottery_confirm)
+                    .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            ApplicationDomain.getInstance().lotteryRepository.deleteLottery(ApplicationDomain.getInstance().getActiveLottery());
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, null);
+            confirmDialog.create().show();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

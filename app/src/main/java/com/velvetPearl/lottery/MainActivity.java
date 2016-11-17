@@ -1,5 +1,6 @@
 package com.velvetPearl.lottery;
 
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -12,6 +13,7 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -20,6 +22,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.Toast;
 
+import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
 import com.velvetPearl.lottery.fragments.About;
 import com.velvetPearl.lottery.fragments.History;
 import com.velvetPearl.lottery.fragments.LotteryHome;
@@ -33,8 +36,10 @@ import com.velvetPearl.lottery.fragments.Winners;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Observable;
+import java.util.Observer;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Observer {
 
     private static final String LOG_TAG = "MainActivity";
 
@@ -47,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ApplicationDomain.getInstance().addObserver(this);
 
         initUi();
         if (savedInstanceState == null) {
@@ -202,5 +209,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationMenu.getMenu().findItem(R.id.menu_tickets).setEnabled(true);
         navigationMenu.getMenu().findItem(R.id.menu_winners).setEnabled(true);
         navigationMenu.getMenu().findItem(R.id.menu_prizes).setEnabled(true);
+    }
+
+    @Override
+    public void update(Observable observable, Object args) {
+        if (args !=  null && args.getClass() == DataAccessEvent.class && args == DataAccessEvent.LOTTERY_REMOVED) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppTheme_Dialog_Alert);
+            builder.setTitle(getString(R.string.attention))
+                    .setMessage(getString(R.string.lottery_was_deleted))
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);  // Empty back stack
+                            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Welcome()).commit();
+                        }
+                    });
+            builder.create().show();
+        }
     }
 }

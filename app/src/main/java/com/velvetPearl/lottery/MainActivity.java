@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Color icon by inspiration of
+        // https://futurestud.io/tutorials/android-quick-tips-8-how-to-dynamically-tint-actionbar-menu-icons
         actionBar = getSupportActionBar();
         Drawable menuIcon = getDrawable(R.drawable.ic_menu_white_24dp);
         if (menuIcon != null) {

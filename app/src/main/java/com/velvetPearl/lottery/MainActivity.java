@@ -1,11 +1,14 @@
 package com.velvetPearl.lottery;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -70,7 +73,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         actionBar = getSupportActionBar();
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+        Drawable menuIcon = getDrawable(R.drawable.ic_menu_white_24dp);
+        if (menuIcon != null) {
+            DrawableCompat.setTint(menuIcon, ContextCompat.getColor(this, R.color.datapad_accent));
+        }
+        actionBar.setHomeAsUpIndicator(menuIcon);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
 

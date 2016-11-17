@@ -3,9 +3,13 @@ package com.velvetPearl.lottery.fragments;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -90,6 +94,14 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.lottery_home_menu, menu);
+
+        // Color icon by inspiration of
+        // https://futurestud.io/tutorials/android-quick-tips-8-how-to-dynamically-tint-actionbar-menu-icons
+        MenuItem menuDeleteItem = menu.findItem(R.id.menu_lottery_home_delete);
+        Drawable wrappedIcon = DrawableCompat.wrap(menuDeleteItem.getIcon());
+        DrawableCompat.setTint(wrappedIcon, ContextCompat.getColor(getContext(), R.color.datapad_accent));
+        menuDeleteItem.setIcon(wrappedIcon);
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 

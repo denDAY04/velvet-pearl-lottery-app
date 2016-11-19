@@ -96,4 +96,10 @@
     <string name="new_number_description">Tilføj nyt lotteri nummer</string>
     <string name="delete_lottery_confirm">Er du sikker på du vil slette dette lotteri?</string>
     <string name="print_to_file">Udskriv til fil</string>
+    <string name="print_to_file_confirm_message">Udskriv lotteriet til en fil?</string>
+    <string name="print_to_file_progress_message">Udskriver lotteriet til en fil</string>
+    <string name="print_save_to_device">Gem på enhed</string>
+    <string name="print_save_as">Gem som (.xml)</string>
+    <string name="print_to_file_finished">Færdigjort udskrivning til fil</string>
+    <string name="print_save_as_hint">Navnet på filen</string>
 </resources>

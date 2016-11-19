@@ -100,4 +100,12 @@
     <string name="new_number_description">Add new lottery number</string>
     <string name="delete_lottery_confirm">Are you sure you want to delete this lottery?</string>
     <string name="print_to_file">Print to file</string>
+    <string name="print_to_file_confirm_message">Print the lottery to a file?</string>
+    <string name="print_to_file_progress_message">Printing lottery to file</string>
+    <string name="print_to_file_finished">Finished printing file</string>
+    <string name="print_save_to_device">Save on device</string>
+    <string name="print_save_as">Save as (.xml)</string>
+    <string name="internal" translatable="false">Internal</string>
+    <string name="external" translatable="false">External</string>
+    <string name="print_save_as_hint">Name of the file</string>
 </resources>

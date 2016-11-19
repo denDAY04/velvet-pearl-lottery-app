@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:stretchColumns="*">
+
+    <TableRow>
+        <TextView
+            android:id="@+id/print_title"
+            android:layout_span="2"
+            style="@style/AppThemeDialogTitle"
+            android:text="@string/print_to_file"/>
+    </TableRow>
+
+    <TableRow
+        android:layout_weight="1"
+        android:layout_marginTop="10dp">
+        <TextView
+            android:id="@+id/print_save_as_lab"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:text="@string/print_save_as"/>
+        <EditText
+            android:id="@+id/print_save_as"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="10dp"
+            android:inputType="text"
+            android:hint="@string/print_save_as_hint"/>
+    </TableRow>
+
+    <TableRow
+        android:layout_weight="2"
+        android:layout_marginTop="10dp">
+        <TextView
+            android:id="@+id/print_storage_device_lab"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:text="@string/print_save_to_device"/>
+        <Switch
+            android:id="@+id/print_storage_device"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:checked="true"
+            android:text="@string/external"
+            android:textColor="@color/datapad_text_secondary"
+            android:layout_marginEnd="10dp"/>
+    </TableRow>
+
+    <TableRow
+        android:layout_weight="1"
+        android:layout_marginTop="20dp"
+        style="?android:attr/buttonBarStyle">
+        <Button
+            android:id="@+id/print_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/cancel"
+            style="?android:attr/buttonBarButtonStyle" />
+        <Button
+            android:id="@+id/print_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/confirm"
+            style="?android:attr/buttonBarButtonStyle" />
+    </TableRow>
+
+</TableLayout>

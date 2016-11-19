@@ -99,4 +99,5 @@
     <string name="about_language_warning">This page is only available in English.</string>
     <string name="new_number_description">Add new lottery number</string>
     <string name="delete_lottery_confirm">Are you sure you want to delete this lottery?</string>
+    <string name="print_to_file">Print to file</string>
 </resources>

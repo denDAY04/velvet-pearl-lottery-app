@@ -95,4 +95,5 @@
     <string name="about_language_warning">Denne side er kun tilgænglig på engelsk.</string>
     <string name="new_number_description">Tilføj nyt lotteri nummer</string>
     <string name="delete_lottery_confirm">Er du sikker på du vil slette dette lotteri?</string>
+    <string name="print_to_file">Udskriv til fil</string>
 </resources>

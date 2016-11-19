@@ -99,7 +99,14 @@
     <string name="print_to_file_confirm_message">Udskriv lotteriet til en fil?</string>
     <string name="print_to_file_progress_message">Udskriver lotteriet til en fil</string>
     <string name="print_save_to_device">Gem på enhed</string>
-    <string name="print_save_as">Gem som (.xml)</string>
+    <string name="print_save_as">Gem som (.vplf)</string>
     <string name="print_to_file_finished">Færdigjort udskrivning til fil</string>
     <string name="print_save_as_hint">Navnet på filen</string>
+    <string name="no_external_drive">Ingen eksterne drev fundet</string>
+    <string name="missing_file_name">Mangler filnavn</string>
+    <string name="file_exists">Filen eksistere allerede. Overskriv?</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nej</string>
+    <string name="an_error_happened">Der skete ne fejl</string>
+    <string name="print_to_file_cancelled">Udskriv til fil annulleret</string>
 </resources>

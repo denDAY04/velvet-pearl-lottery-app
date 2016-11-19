@@ -104,8 +104,15 @@
     <string name="print_to_file_progress_message">Printing lottery to file</string>
     <string name="print_to_file_finished">Finished printing file</string>
     <string name="print_save_to_device">Save on device</string>
-    <string name="print_save_as">Save as (.xml)</string>
+    <string name="print_save_as">Save as (.vplf)</string>
     <string name="internal" translatable="false">Internal</string>
     <string name="external" translatable="false">External</string>
     <string name="print_save_as_hint">Name of the file</string>
+    <string name="no_external_drive">Found no external drive</string>
+    <string name="missing_file_name">Missing file name</string>
+    <string name="file_exists">File already exist. Overwrite?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="an_error_happened">An error occured</string>
+    <string name="print_to_file_cancelled">Print to file cancelled</string>
 </resources>

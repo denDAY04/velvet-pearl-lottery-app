@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StatFs;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -131,7 +132,16 @@ public class PrintDlg extends DialogFragment implements View.OnClickListener {
                     Toast.makeText(getContext(), R.string.no_external_drive, Toast.LENGTH_SHORT).show();
                     return;
                 }
-                outputFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), fileName);
+
+                File destDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+                if (!destDir.exists()) {
+                    if (!destDir.mkdirs()) {
+                        Log.d(LOG_TAG, String.format("Failed to create directory %s for output file.", destDir.getPath()));
+                    } else {
+                        Log.d(LOG_TAG, String.format("Createed directory %s for output file.", destDir.getPath()));
+                    }
+                }
+                outputFile = new File(destDir, fileName);
             } else {
                 outputFile = new File(getContext().getFilesDir(), fileName);
             }
@@ -174,8 +184,15 @@ public class PrintDlg extends DialogFragment implements View.OnClickListener {
         printingTask = new AsyncTask() {
             @Override
             protected void onPostExecute(Object o) {
-                printingProgressDlg.dismiss();
-                Toast.makeText(getContext(), R.string.print_to_file_finished, Toast.LENGTH_SHORT).show();
+                if (printingProgressDlg != null && printingProgressDlg.isShowing()) {
+                    printingProgressDlg.dismiss();
+                }
+
+                String message = getString(R.string.print_to_file_finished);
+                if (o != null) {
+                    message = (String) o;
+                }
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                 getFragmentManager().popBackStack();
             }
 
@@ -192,7 +209,7 @@ public class PrintDlg extends DialogFragment implements View.OnClickListener {
                 if (printingProgressDlg != null && printingProgressDlg.isShowing()) {
                     printingProgressDlg.dismiss();
                 }
-                Toast.makeText(getContext(), R.string.print_to_file_cancelled, Toast.LENGTH_SHORT);
+                Toast.makeText(getContext(), R.string.print_to_file_cancelled, Toast.LENGTH_SHORT).show();
                 getFragmentManager().popBackStack();
             }
 
@@ -293,22 +310,18 @@ public class PrintDlg extends DialogFragment implements View.OnClickListener {
                     byte[] xmlData = xmlStringContainer.toString().getBytes();
                     Log.d(LOG_TAG, String.format("XML file will take up %f kB", xmlData.length / 1000.0));
 
-                    if (outputFile.getFreeSpace() < xmlData.length) {
-                        Toast.makeText(getContext(), R.string.print_to_file_space_error, Toast.LENGTH_SHORT);
-                        return null;
+                    // Check that there's space for the file
+                    StatFs stat = new StatFs(outputFile.getParent());
+                    if (stat.getAvailableBytes() < xmlData.length) {
+                        return getString(R.string.print_to_file_space_error);
                     }
-
 
                     FileOutputStream fileStream = new FileOutputStream(outputFile);
                     fileStream.write(xmlData);
                     fileStream.close();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Toast.makeText(getContext(), R.string.an_error_happened, Toast.LENGTH_SHORT);
-                    if (printingProgressDlg != null && printingProgressDlg.isShowing()) {
-                        printingProgressDlg.dismiss();
-                    }
-                    return null;
+                    return getString(R.string.an_error_happened);
                 }
 
                 return null;

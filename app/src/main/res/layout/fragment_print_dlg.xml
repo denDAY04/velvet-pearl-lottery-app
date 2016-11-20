@@ -22,12 +22,19 @@
             android:gravity="center_vertical"
             android:layout_marginStart="10dp"
             android:text="@string/print_save_as"/>
+    </TableRow>
+
+    <TableRow
+        android:layout_weight="1"
+        android:layout_marginTop="10dp">
         <EditText
             android:id="@+id/print_save_as"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginEnd="10dp"
+            android:layout_span="2"
             android:inputType="text"
+            android:scrollHorizontally="true"
+            android:maxLines="1"
             android:hint="@string/print_save_as_hint"/>
     </TableRow>
 

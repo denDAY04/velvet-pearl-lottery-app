@@ -29,6 +29,7 @@ import com.velvetPearl.lottery.dataAccess.models.Ticket;
 import org.xmlpull.v1.XmlSerializer;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Map;
@@ -49,6 +50,7 @@ public class PrintDlg extends DialogFragment implements View.OnClickListener {
     private static final String CREATED_TAG = "Created";
     private static final String RANGE_MIN_TAG = "MinLotteryNumber";
     private static final String RANGE_MAX_TAG = "MaxLotteryNumber";
+    private static final String ALLOW_MULTI_WINNING_PER_TICKET_TAG = "AllowMultipleWinningsPerTicket";
     private static final String TICKETS_ROOT_TAG = "Tickets";
     private static final String TICKET_TAG = "Ticket";
     private static final String TICKET_NUMBERS_ROOT_TAG = "LotteryNumbers";
@@ -57,7 +59,7 @@ public class PrintDlg extends DialogFragment implements View.OnClickListener {
     private static final String TICKET_OWNER_TAG = "Owner";
     private static final String PRIZES_ROOT_TAG = "Prizes";
     private static final String PRIZE_TAG = "Prize";
-    private static final String PRIZE_NUMBER_ATTR = "LotteryNumber";
+    private static final String PRIZE_WINNING_NUMBER_ID_ATTR = "LotteryNumber";
 
 
     private static final String FILE_EXTENSION = ".vplf";
@@ -153,7 +155,13 @@ public class PrintDlg extends DialogFragment implements View.OnClickListener {
     }
 
     private void printLotteryToFile() {
-        printingProgressDlg = ProgressDialog.show(getContext(), null, getString(R.string.print_to_file_progress_message), false, true, new DialogInterface.OnCancelListener() {
+        printingProgressDlg = new ProgressDialog(getContext());
+        printingProgressDlg.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        printingProgressDlg.setMessage(getString(R.string.print_to_file_progress_message));
+        printingProgressDlg.setProgress(0);
+        printingProgressDlg.setIndeterminate(false);
+        printingProgressDlg.setCancelable(true);
+        printingProgressDlg.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
                 printingTask.cancel(true);
@@ -161,13 +169,14 @@ public class PrintDlg extends DialogFragment implements View.OnClickListener {
                 getFragmentManager().popBackStack();
             }
         });
-        printingProgressDlg.setProgress(0);
+        printingProgressDlg.show();
 
         printingTask = new AsyncTask() {
             @Override
             protected void onPostExecute(Object o) {
                 printingProgressDlg.dismiss();
                 Toast.makeText(getContext(), R.string.print_to_file_finished, Toast.LENGTH_SHORT).show();
+                getFragmentManager().popBackStack();
             }
 
             @Override
@@ -180,7 +189,11 @@ public class PrintDlg extends DialogFragment implements View.OnClickListener {
 
             @Override
             protected void onCancelled(Object o) {
+                if (printingProgressDlg != null && printingProgressDlg.isShowing()) {
+                    printingProgressDlg.dismiss();
+                }
                 Toast.makeText(getContext(), R.string.print_to_file_cancelled, Toast.LENGTH_SHORT);
+                getFragmentManager().popBackStack();
             }
 
             @Override
@@ -193,15 +206,13 @@ public class PrintDlg extends DialogFragment implements View.OnClickListener {
                 Map<Object, Prize> prizes = lottery.getPrizes();
 
                 // Calculate the weight of each step in the process, with progress dialog being full at 1000 elements
-                int progressWeight =  1000 / (tickets.size() + prizes.size());
+                int progressWeight =  100 / (tickets.size() + prizes.size());
 
                 XmlSerializer xmlWriter = Xml.newSerializer();
-                StringWriter stringWriter = new StringWriter();
-
-
+                StringWriter xmlStringContainer = new StringWriter();
 
                 try {
-                    xmlWriter.setOutput(stringWriter);
+                    xmlWriter.setOutput(xmlStringContainer);
                     xmlWriter.startDocument("UTF-8", true);
                     xmlWriter.startTag(NAMESPACE, LOTTERY_ROOT_TAG);
 
@@ -222,6 +233,10 @@ public class PrintDlg extends DialogFragment implements View.OnClickListener {
                     xmlWriter.startTag(NAMESPACE, RANGE_MAX_TAG);
                     xmlWriter.text(Integer.toString(lottery.getLotteryNumUpperBound()));
                     xmlWriter.endTag(NAMESPACE, RANGE_MAX_TAG);
+
+                    xmlWriter.startTag(NAMESPACE, ALLOW_MULTI_WINNING_PER_TICKET_TAG);
+                    xmlWriter.text(Boolean.toString(lottery.isTicketMultiWinEnabled()));
+                    xmlWriter.endTag(NAMESPACE, ALLOW_MULTI_WINNING_PER_TICKET_TAG);
 
                     xmlWriter.startTag(NAMESPACE, TICKETS_ROOT_TAG);
                     for (Object ticketId : tickets.keySet()) {
@@ -253,12 +268,40 @@ public class PrintDlg extends DialogFragment implements View.OnClickListener {
                     }
                     xmlWriter.endTag(NAMESPACE, TICKETS_ROOT_TAG);
 
+                    xmlWriter.startTag(NAMESPACE, PRIZES_ROOT_TAG);
+                    for (Object prizeId : lottery.getPrizes().keySet()) {
+                        if (isCancelled()) {
+                            return null;
+                        }
 
+                        Prize prize = prizes.get(prizeId);
+                        if (prize != null) {
+                            xmlWriter.startTag(NAMESPACE, PRIZE_TAG);
+                            xmlWriter.attribute(NAMESPACE, ID_ATTR, (String)prize.getId());
+                            if (prize.getNumberId() != null) {
+                                xmlWriter.attribute(NAMESPACE, PRIZE_WINNING_NUMBER_ID_ATTR, (String)prize.getNumberId());
+                            }
+                            xmlWriter.text(prize.getName());
+                            xmlWriter.endTag(NAMESPACE, PRIZE_TAG);
+                        }
+                        publishProgress(progressWeight);
+                    }
+                    xmlWriter.endTag(NAMESPACE, PRIZES_ROOT_TAG);
                     xmlWriter.endTag(NAMESPACE, LOTTERY_ROOT_TAG);
+                    xmlWriter.endDocument();
+                    xmlWriter.flush();
+                    byte[] xmlData = xmlStringContainer.toString().getBytes();
+                    Log.d(LOG_TAG, String.format("XML file will take up %f kB", xmlData.length / 1000.0));
+
+                    if (outputFile.getFreeSpace() < xmlData.length) {
+                        Toast.makeText(getContext(), R.string.print_to_file_space_error, Toast.LENGTH_SHORT);
+                        return null;
+                    }
 
 
-                    // TODO xml datastream save to file
-
+                    FileOutputStream fileStream = new FileOutputStream(outputFile);
+                    fileStream.write(xmlData);
+                    fileStream.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                     Toast.makeText(getContext(), R.string.an_error_happened, Toast.LENGTH_SHORT);

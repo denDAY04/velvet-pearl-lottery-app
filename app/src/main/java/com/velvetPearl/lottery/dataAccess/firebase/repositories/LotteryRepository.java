@@ -138,6 +138,7 @@ public class LotteryRepository extends FirebaseRepository implements ILotteryRep
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.w(LOG_TAG, "loadAllLotteries: data read canceled", databaseError.toException());
+                ApplicationDomain.getInstance().broadcastChange(DataAccessEvent.ERROR);
             }
         });
     }

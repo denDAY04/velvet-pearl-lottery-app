@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.velvetPearl.lottery.MainActivity;
 import com.velvetPearl.lottery.R;
@@ -86,56 +87,64 @@ public class History extends Fragment implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        if (arg.getClass() != DataAccessEvent.class || arg != DataAccessEvent.LOTTERY_LIST_UPDATED) {
+        if (arg == null || arg.getClass() != DataAccessEvent.class ) {
             return;
         }
 
-        ArrayList<Lottery> lotteries = ApplicationDomain.getInstance().getAllLotteries();
-        if (lotteries.size() > 0) {
+        if (arg == DataAccessEvent.ERROR) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+                Toast.makeText(getContext(), getString(R.string.an_error_happened), Toast.LENGTH_SHORT).show();
+                getFragmentManager().popBackStack();
+            }
+        } else if (arg == DataAccessEvent.LOTTERY_LIST_UPDATED) {
+            ArrayList<Lottery> lotteries = ApplicationDomain.getInstance().getAllLotteries();
+            if (lotteries.size() > 0) {
 
-            final ArrayList<LotteryListViewModel> viewModels = new ArrayList<>();
-            for (Lottery entity : lotteries) {
-                viewModels.add(new LotteryListViewModel(entity));
+                final ArrayList<LotteryListViewModel> viewModels = new ArrayList<>();
+                for (Lottery entity : lotteries) {
+                    viewModels.add(new LotteryListViewModel(entity));
+                }
+
+                historyListView.setAdapter(new ArrayAdapter(getContext(), android.R.layout.simple_list_item_2, android.R.id.text1, viewModels){
+                    @NonNull
+                    @Override
+                    public View getView(int position, View convertView, ViewGroup parent) {
+                        View root = super.getView(position, convertView, parent);
+
+                        TextView heading = (TextView) root.findViewById(android.R.id.text1);
+                        TextView subheading = (TextView) root.findViewById(android.R.id.text2);
+
+                        LotteryListViewModel model = viewModels.get(position);
+                        heading.setText(model.getName());
+                        subheading.setText(model.getCreatedFormated());
+
+                        return root;
+                    }
+                });
+
+                // Add click listener for navigating to Lottery Home fragment on item click
+                historyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        LotteryListViewModel item = (LotteryListViewModel) historyListView.getItemAtPosition(i);
+                        Bundle args = new Bundle();
+                        args.putString("lotteryId", (String) item.getId());
+                        Fragment destination = new LotteryHome();
+                        destination.setArguments(args);
+                        ApplicationDomain.getInstance().clearActiveLottery();
+                        getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                        getFragmentManager().beginTransaction().replace(R.id.main_fragment_container,destination).addToBackStack(null).commit();
+                    }
+                });
+
+            } else {
+                historyListView.setAdapter(null);
             }
 
-            historyListView.setAdapter(new ArrayAdapter(getContext(), android.R.layout.simple_list_item_2, android.R.id.text1, viewModels){
-                @NonNull
-                @Override
-                public View getView(int position, View convertView, ViewGroup parent) {
-                    View root = super.getView(position, convertView, parent);
-
-                    TextView heading = (TextView) root.findViewById(android.R.id.text1);
-                    TextView subheading = (TextView) root.findViewById(android.R.id.text2);
-
-                    LotteryListViewModel model = viewModels.get(position);
-                    heading.setText(model.getName());
-                    subheading.setText(model.getCreatedFormated());
-
-                    return root;
-                }
-            });
-
-            // Add click listener for navigating to Lottery Home fragment on item click
-            historyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    LotteryListViewModel item = (LotteryListViewModel) historyListView.getItemAtPosition(i);
-                    Bundle args = new Bundle();
-                    args.putString("lotteryId", (String) item.getId());
-                    Fragment destination = new LotteryHome();
-                    destination.setArguments(args);
-                    ApplicationDomain.getInstance().clearActiveLottery();
-                    getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    getFragmentManager().beginTransaction().replace(R.id.main_fragment_container,destination).addToBackStack(null).commit();
-                }
-            });
-
-        } else {
-            historyListView.setAdapter(null);
-        }
-
-        if (loadingDlg.isShowing()) {
-            loadingDlg.dismiss();
+            if (loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
         }
     }
 }

@@ -110,4 +110,6 @@
     <string name="an_error_happened">Der skete ne fejl</string>
     <string name="print_to_file_cancelled">Udskriv til fil annulleret</string>
     <string name="print_to_file_space_error">Ikke nok fri plads</string>
+    <string name="authenticating">Autentificerer</string>
+    <string name="authentication_failed">Autentificering fejlede</string>
 </resources>

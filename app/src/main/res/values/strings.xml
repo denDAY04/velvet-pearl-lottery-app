@@ -116,4 +116,6 @@
     <string name="an_error_happened">An error occured</string>
     <string name="print_to_file_cancelled">Print to file cancelled</string>
     <string name="print_to_file_space_error">Insufficient free space</string>
+    <string name="authenticating">Authenticating</string>
+    <string name="authentication_failed">Authentication failed</string>
 </resources>

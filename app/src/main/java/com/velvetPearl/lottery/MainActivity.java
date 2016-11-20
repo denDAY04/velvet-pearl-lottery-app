@@ -1,5 +1,6 @@
 package com.velvetPearl.lottery;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -22,6 +23,10 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.velvetPearl.lottery.dataAccess.DataAccessEvent;
 import com.velvetPearl.lottery.fragments.About;
 import com.velvetPearl.lottery.fragments.History;
@@ -54,12 +59,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         ApplicationDomain.getInstance().addObserver(this);
-
         initUi();
+        authenticateFirebase();
+
         if (savedInstanceState == null) {
             Log.d(LOG_TAG, "No saved instance state.");
             getSupportFragmentManager().beginTransaction().add(R.id.main_fragment_container, new Welcome()).commit();
         }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        ApplicationDomain.getInstance().deleteObserver(this);
+        super.onDestroy();
     }
 
     @Override
@@ -226,5 +239,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     });
             builder.create().show();
         }
+    }
+
+    private void authenticateFirebase() {
+        final ProgressDialog authProgressDlg = ProgressDialog.show(this, null, getString(R.string.authenticating), true, true, new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                finish();
+            }
+        });
+
+        FirebaseAuth dbAuth = FirebaseAuth.getInstance();
+        dbAuth.signInAnonymously().addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (authProgressDlg.isShowing()) {
+                    authProgressDlg.dismiss();
+                }
+
+                if (!task.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(), R.string.authentication_failed, Toast.LENGTH_LONG).show();
+                    finish();
+                } else {
+                    Log.d(LOG_TAG, "Firebase authentication succeeded.");
+                }
+            }
+        });
     }
 }

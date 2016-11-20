@@ -202,26 +202,16 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_lottery_home_print:
-                AlertDialog.Builder printDialog = new AlertDialog.Builder(getContext(), R.style.AppTheme_Dialog_Alert);
-                printDialog.setMessage(R.string.print_to_file_confirm_message)
-                        .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                // Open dialog to enter new lottery number
-                                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                                Fragment prev = getFragmentManager().findFragmentByTag("dialog");
-                                if (prev != null) {
-                                    ft.remove(prev);
-                                }
-                                ft.addToBackStack(null);
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
 
-                                // Create and show the dialog.
-                                DialogFragment printDlg = new PrintDlg();
-                                printDlg.show(ft, "dialog");
-                            }
-                        })
-                        .setNegativeButton(R.string.cancel, null);
-                printDialog.create().show();
+                // Create and show the dialog.
+                DialogFragment printDlg = new PrintDlg();
+                printDlg.show(ft, "dialog");
                 return true;
 
             case R.id.menu_lottery_home_delete:
@@ -251,46 +241,4 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
         }
     }
 
-//    private void printLotteryToFile() {
-//        Log.d(LOG_TAG, "Printing lottery");
-//        final ProgressDialog progressDialog = ProgressDialog.show(getContext(), null, getString(R.string.print_to_file_progress_message), false, true, new DialogInterface.OnCancelListener() {
-//            @Override
-//            public void onCancel(DialogInterface dialogInterface) {
-//                // Todo stop the printing process
-//
-//                getFragmentManager().popBackStack();
-//            }
-//        });
-//        progressDialog.setProgress(0);
-//
-//        new AsyncTask() {
-//
-//            @Override
-//            protected void onPostExecute(Object o) {
-//                progressDialog.dismiss();
-//                Toast.makeText(getContext(), R.string.print_to_file_finished, Toast.LENGTH_SHORT);
-//            }
-//
-//            @Override
-//            protected void onProgressUpdate(Object[] values) {
-//                if (progressDialog != null && progressDialog.isShowing()) {
-//                    progressDialog.setProgress((int)values[0]);
-//                }
-//            }
-//
-//            @Override
-//            protected Object doInBackground(Object[] objects) {
-//                progressDialog.show();
-//
-//                Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();
-//
-//                File file;
-//                if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())){
-//                    file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), )
-//                }
-//
-//                return null;
-//            }
-//        }.execute();
-//    }
 }

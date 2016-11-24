@@ -11,6 +11,7 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.IdRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -223,6 +224,8 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 ApplicationDomain.getInstance().lotteryRepository.deleteLottery(ApplicationDomain.getInstance().getActiveLottery());
+                                getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Welcome()).commit();
                             }
                         })
                         .setNegativeButton(R.string.cancel, null);

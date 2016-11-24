@@ -115,4 +115,6 @@
     <string name="notification_service_description">Laver system notifikationer når et nyt Velvet Pearl Lotteri er oprettet.</string>
     <string name="enable_lottery_notifications">Aktiver lotteri notifikationer</string>
     <string name="enable_lottery_notifications_summary">Systemet laver notifikationer når andre brugere opretter nye lotterier.</string>
+    <string name="lottery_notification_title">Nyt Velvet Pearl Lotteri</string>
+    <string name="lottery_notification_text">%1$s blev oprettet.</string>
 </resources>

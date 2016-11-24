@@ -1,8 +1,13 @@
 package com.velvetPearl.lottery;
 
 import android.app.IntentService;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -17,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.velvetPearl.lottery.dataAccess.firebase.FirebaseQueryObject;
 import com.velvetPearl.lottery.dataAccess.firebase.scheme.LotteriesScheme;
 import com.velvetPearl.lottery.dataAccess.models.Lottery;
+import com.velvetPearl.lottery.fragments.LotteryHome;
 
 
 /**
@@ -26,6 +32,7 @@ import com.velvetPearl.lottery.dataAccess.models.Lottery;
 public class NotificationService extends IntentService {
 
     private static final String LOG_TAG = "NotificationService";
+    private static final int NOTIFICATION_ID = 1;
 
     private FirebaseQueryObject fbQueryObj;
     private long initialLotteryCount;
@@ -46,7 +53,7 @@ public class NotificationService extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleIntent(final Intent intent) {
         if (fbQueryObj != null) {
             Log.i(LOG_TAG, "Firebase query already active.");
             return;
@@ -88,6 +95,30 @@ public class NotificationService extends IntentService {
                 Lottery lottery = dataSnapshot.getValue(Lottery.class);
                 lottery.setId(dataSnapshot.getKey());
                 Log.i(LOG_TAG, String.format("onChildAdded %s", (String)lottery.getId()));
+                NotificationCompat.Builder notificationBuilder =
+                        new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(android.R.drawable.ic_menu_add)
+                        .setContentTitle(getString(R.string.lottery_notification_title))
+                        .setContentText(String.format(getString(R.string.lottery_notification_text),lottery.getName()))
+                        .setAutoCancel(true);
+
+                Intent targetActivity = new Intent(getApplicationContext(), MainActivity.class);
+                targetActivity.putExtra("lotteryId", (String) lottery.getId());
+
+                // The stack builder object will contain an artificial back stack for the
+                // started Activity.
+                // This ensures that navigating backward from the Activity leads out of
+                // your application to the Home screen.
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
+                // Adds the back stack for the Intent (but not the Intent itself)
+                stackBuilder.addParentStack(MainActivity.class);
+
+                // Adds the Intent that starts the Activity to the top of the stack
+                stackBuilder.addNextIntent(targetActivity);
+                PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                notificationBuilder.setContentIntent(resultPendingIntent);
+                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
             }
 
             @Override

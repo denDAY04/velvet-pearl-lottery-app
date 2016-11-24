@@ -76,9 +76,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
 
-        if (savedInstanceState == null) {
-            Log.d(LOG_TAG, "No saved instance state.");
-            getSupportFragmentManager().beginTransaction().add(R.id.main_fragment_container, new Welcome()).commit();
+        Intent intent = getIntent();
+        if (intent.hasExtra("lotteryId")) {
+            Log.i(LOG_TAG, "Saved instance state with lottery ID.");
+            Bundle args = new Bundle();
+            args.putString("lotteryId", intent.getStringExtra("lotteryId"));
+            Fragment lotteryHomeFragment = new LotteryHome();
+            lotteryHomeFragment.setArguments(args);
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, lotteryHomeFragment).commit();
+        } else {
+            if (savedInstanceState == null) {
+                Log.d(LOG_TAG, "No saved instance state.");
+                getSupportFragmentManager().beginTransaction().add(R.id.main_fragment_container, new Welcome()).commit();
+            }
         }
     }
 

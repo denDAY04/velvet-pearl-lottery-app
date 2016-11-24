@@ -112,4 +112,7 @@
     <string name="print_to_file_space_error">Ikke nok fri plads</string>
     <string name="authenticating">Autentificerer</string>
     <string name="authentication_failed">Autentificering fejlede</string>
+    <string name="notification_service_description">Laver system notifikationer når et nyt Velvet Pearl Lotteri er oprettet.</string>
+    <string name="enable_lottery_notifications">Aktiver lotteri notifikationer</string>
+    <string name="enable_lottery_notifications_summary">Systemet laver notifikationer når andre brugere opretter nye lotterier.</string>
 </resources>

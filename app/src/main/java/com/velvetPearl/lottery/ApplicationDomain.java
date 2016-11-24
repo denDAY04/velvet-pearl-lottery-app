@@ -1,5 +1,10 @@
 package com.velvetPearl.lottery;
 
+import android.app.ActivityManager;
+import android.app.Service;
+import android.content.Intent;
+import android.support.v4.app.ActivityManagerCompat;
+
 import com.google.firebase.database.FirebaseDatabase;
 import com.velvetPearl.lottery.dataAccess.firebase.repositories.FirebaseRepository;
 import com.velvetPearl.lottery.dataAccess.firebase.repositories.LotteryNumberRepository;
@@ -32,6 +37,7 @@ public class ApplicationDomain extends Observable {
     public final ITicketRepository ticketRepository;
     public final ILotteryNumberRepository lotteryNumberRepository;
     public final IPrizeRepository prizeRepository;
+    public Intent notificationService;
 
     private Lottery activeLottery;
     private ArrayList<Lottery> allLotteries;
@@ -58,6 +64,8 @@ public class ApplicationDomain extends Observable {
         ticketRepository = new TicketRepository(dbContext);
         lotteryNumberRepository = new LotteryNumberRepository(dbContext);
         prizeRepository = new PrizeRepository(dbContext);
+
+        notificationService = null;
 
         activeLottery = null;
         allLotteries = null;

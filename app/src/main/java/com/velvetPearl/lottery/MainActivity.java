@@ -2,20 +2,24 @@ package com.velvetPearl.lottery;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.AppLaunchChecker;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.SharedPreferencesCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -62,11 +66,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         initUi();
         authenticateFirebase();
 
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.preference_lottery_notifications), true)){
+            if (ApplicationDomain.getInstance().notificationService != null) {
+                Log.i(LOG_TAG, "Lottery notification service already running. Skipping.");
+            } else {
+                Log.i(LOG_TAG, "Starting lottery notification service.");
+                ApplicationDomain.getInstance().notificationService = new Intent(this, NotificationService.class);
+                startService(ApplicationDomain.getInstance().notificationService);
+            }
+        }
+
         if (savedInstanceState == null) {
             Log.d(LOG_TAG, "No saved instance state.");
             getSupportFragmentManager().beginTransaction().add(R.id.main_fragment_container, new Welcome()).commit();
         }
-
     }
 
     @Override
@@ -178,10 +191,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Prizes()).addToBackStack(null).commit();
                 break;
 
-//            case R.id.menu_preferences:
-//                closeMenu();
-//                getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Preferences()).addToBackStack(null).commit();
-//                break;
+            case R.id.menu_preferences:
+                closeMenu();
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Preferences()).addToBackStack(null).commit();
+                break;
 
             case R.id.menu_about:
                 closeMenu();

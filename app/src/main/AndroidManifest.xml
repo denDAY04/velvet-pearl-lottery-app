@@ -20,6 +20,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name=".NotificationService"
+            android:exported="false"
+            android:description="@string/notification_service_description"/>
     </application>
 
 </manifest>

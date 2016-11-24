@@ -118,4 +118,8 @@
     <string name="print_to_file_space_error">Insufficient free space</string>
     <string name="authenticating">Authenticating</string>
     <string name="authentication_failed">Authentication failed</string>
+    <string name="notification_service_description">Produces system notifications when a new Velvet Pearl Lottery is added.</string>
+    <string name="enable_lottery_notifications">Enable lottery notifications</string>
+    <string name="enable_lottery_notifications_summary">System pushes notifications when other users create new lotteries.</string>
+    <string name="preference_lottery_notifications" translatable="false">preference_lottery_notifications</string>
 </resources>

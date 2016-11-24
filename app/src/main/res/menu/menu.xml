@@ -44,10 +44,10 @@
         android:id="@+id/menu_subdiv_misc"
         android:title="@string/misc">
         <menu>
-            <!--<item-->
-                <!--android:id="@+id/menu_preferences"-->
-                <!--android:title="@string/settings"-->
-                <!--android:icon="@drawable/ic_settings_black_18dp"/>-->
+            <item
+                android:id="@+id/menu_preferences"
+                android:title="@string/settings"
+                android:icon="@drawable/ic_settings_black_18dp"/>
             <item
                 android:id="@+id/menu_about"
                 android:title="@string/about"

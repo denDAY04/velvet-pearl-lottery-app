@@ -224,8 +224,8 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 ApplicationDomain.getInstance().lotteryRepository.deleteLottery(ApplicationDomain.getInstance().getActiveLottery());
-                                getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                                getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Welcome()).commit();
+//                                getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//                                getFragmentManager().beginTransaction().replace(R.id.main_fragment_container, new Welcome()).commit();
                             }
                         })
                         .setNegativeButton(R.string.cancel, null);
@@ -239,7 +239,7 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
 
     @Override
     public void update(Observable o, Object arg) {
-        if (arg.getClass() == DataAccessEvent.class) {
+        if (arg.getClass() == DataAccessEvent.class && arg != DataAccessEvent.LOTTERY_REMOVED) {
             updateUi();
         }
     }

@@ -78,7 +78,6 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
 
             initLoadingDialog();
             initUi(root);
-            loadingDialog.show();
 
             ApplicationDomain.getInstance().lotteryNumberRepository.clearState();
             ApplicationDomain.getInstance().lotteryRepository.loadLottery(lotteryId);
@@ -165,7 +164,7 @@ public class LotteryHome extends Fragment implements View.OnClickListener, Obser
     }
 
     public void updateUi() {
-        if (loadingDialog.isShowing())
+        if (loadingDialog != null && loadingDialog.isShowing())
             loadingDialog.dismiss();
 
         Lottery lottery = ApplicationDomain.getInstance().getActiveLottery();

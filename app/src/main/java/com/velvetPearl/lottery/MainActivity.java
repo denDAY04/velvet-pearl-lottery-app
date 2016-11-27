@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             args.putString("lotteryId", intent.getStringExtra("lotteryId"));
             Fragment lotteryHomeFragment = new LotteryHome();
             lotteryHomeFragment.setArguments(args);
+            ApplicationDomain.getInstance().clearActiveLottery();
             getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, lotteryHomeFragment).commit();
         } else {
             if (savedInstanceState == null) {

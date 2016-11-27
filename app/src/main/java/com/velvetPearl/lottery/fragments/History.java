@@ -133,7 +133,6 @@ public class History extends Fragment implements Observer {
                         Fragment destination = new LotteryHome();
                         destination.setArguments(args);
                         ApplicationDomain.getInstance().clearActiveLottery();
-                        getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                         getFragmentManager().beginTransaction().replace(R.id.main_fragment_container,destination).addToBackStack(null).commit();
                     }
                 });

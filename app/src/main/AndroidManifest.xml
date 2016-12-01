@@ -23,6 +23,9 @@
         <service android:name=".NotificationService"
             android:exported="false"
             android:description="@string/notification_service_description"/>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="a2767412492511b12b227d62f62f755599d0160b" />
     </application>
 
 </manifest>
